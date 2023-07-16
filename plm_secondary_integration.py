@@ -1,22 +1,49 @@
 from transformers import (
     T5ForConditionalGeneration,
-    T5Tokenizer,
+    AutoTokenizer,
     TrainingArguments,
     Trainer,
+    set_seed,
 )
 from accelerate import Accelerator
 from datasets import load_dataset
+from transformers.trainer_utils import set_seed
+import logging
 import torch
 import numpy as np
+import sys
 
-tokenizer = T5Tokenizer.from_pretrained("ElnaggarLab/ankh-large")
+
+logger = logging.getLogger(__name__)
+
+# Initialize accelerator
+accelerator = Accelerator()
+
+# Setup logging
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    datefmt="%m/%d/%Y %H:%M:%S",
+    handlers=[logging.StreamHandler(sys.stdout)],
+)
+
+
+# Set seed before initializing model.
+set_seed(42)
+
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
 
 # load the dataset
 training_dataset = load_dataset(
     "proteinea/secondary_structure_prediction",
     data_files={"train": ["training_hhblits.csv"]},
 )
-casp12_dataset = load_dataset("proteinea/SSP", data_files={"test": ["CASP12.csv"]})
+casp12_dataset = load_dataset(
+    "proteinea/secondary_structure_prediction", data_files={"test": ["CASP12.csv"]}
+)
+
+casp14_dataset = load_dataset(
+    "proteinea/secondary_structure_prediction", data_files={"test": ["CASP14.csv"]}
+)
 
 input_column_name = "input"
 labels_column_name = "dssp3"
@@ -71,12 +98,22 @@ def preprocess_data(examples):
 
 
 # Process the datasets
-train_dataset = training_dataset.map(
-    preprocess_data, batched=True, remove_columns=training_dataset.column_names["train"]
-)
-valid_dataset = casp12_dataset.map(
-    preprocess_data, batched=True, remove_columns=casp12_dataset.column_names["test"]
-)
+with accelerator.main_process_first(desc="dataset map pre-processing"):
+    train_dataset = training_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=training_dataset.column_names["train"],
+    )
+    valid_dataset = casp12_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=casp12_dataset.column_names["test"],
+    )
+    test_dataset = casp14_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=casp14_dataset.column_names["test"],
+    )
 
 
 def q3_accuracy(y_true, y_pred):
@@ -104,19 +141,21 @@ model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
 # Prepare training args
 training_args = TrainingArguments(
     output_dir="./results",
-    num_train_epochs=50,
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
-    warmup_steps=100,
-    logging_dir="./logs",
-    logging_steps=1000,
+    learning_rate=3e-4,
+    do_train=True,
+    do_eval=True,
     evaluation_strategy="epoch",
-    fp16=True,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    logging_dir="./logs",
+    logging_strategy="epoch",
+    save_strategy="epoch",
     deepspeed="ds_config.json",
+    load_best_model_at_end=True,
+    metric_for_best_model="q3_accuracy",
+    greater_is_better=True,
+    num_train_epochs=20,
 )
-
-# Initialize accelerator
-accelerator = Accelerator()
 
 # Apply data and model parallelism, if specified in the deepspeed configuration
 model, train_dataset, valid_dataset, training_args = accelerator.prepare(
@@ -134,3 +173,6 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
+
+# Evaluate the model
+trainer.evaluate()
