@@ -5,7 +5,6 @@ from transformers import (
     Trainer,
     set_seed,
 )
-from accelerate import Accelerator
 from datasets import load_dataset
 from transformers.trainer_utils import set_seed
 import logging
@@ -15,9 +14,6 @@ import sys
 
 
 logger = logging.getLogger(__name__)
-
-# Initialize accelerator
-accelerator = Accelerator()
 
 # Setup logging
 logging.basicConfig(
@@ -82,11 +78,8 @@ def preprocess_data(examples):
         return_tensors="pt",
     )
 
-    # truncate and pad labels to match the sequence length
-    labels_encoded = [
-        [tag2id[tag] for tag in label] + [tag2id["<pad>"]] * (max_length - len(label))
-        for label in labels
-    ]
+    # encode labels
+    labels_encoded = [[tag2id[tag] for tag in label] for label in labels]
 
     assert len(inputs["input_ids"]) == len(labels_encoded)
 
@@ -97,23 +90,24 @@ def preprocess_data(examples):
     }
 
 
-# Process the datasets
-with accelerator.main_process_first(desc="dataset map pre-processing"):
-    train_dataset = training_dataset.map(
-        preprocess_data,
-        batched=True,
-        remove_columns=training_dataset.column_names["train"],
-    )
-    valid_dataset = casp12_dataset.map(
-        preprocess_data,
-        batched=True,
-        remove_columns=casp12_dataset.column_names["test"],
-    )
-    test_dataset = casp14_dataset.map(
-        preprocess_data,
-        batched=True,
-        remove_columns=casp14_dataset.column_names["test"],
-    )
+train_dataset = training_dataset.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=training_dataset.column_names["train"],
+    desc="Running tokenizer on dataset",
+)
+valid_dataset = casp12_dataset.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=casp12_dataset.column_names["test"],
+    desc="Running tokenizer on dataset",
+)
+test_dataset = casp14_dataset.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=casp14_dataset.column_names["test"],
+    desc="Running tokenizer on dataset",
+)
 
 
 def q3_accuracy(y_true, y_pred):
@@ -155,11 +149,7 @@ training_args = TrainingArguments(
     metric_for_best_model="q3_accuracy",
     greater_is_better=True,
     num_train_epochs=20,
-)
-
-# Apply data and model parallelism, if specified in the deepspeed configuration
-model, train_dataset, valid_dataset, training_args = accelerator.prepare(
-    model, train_dataset, valid_dataset, training_args
+    fp16=True,
 )
 
 # Initialize Trainer
