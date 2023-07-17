@@ -169,8 +169,8 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=valid_dataset,
+    train_dataset=train_dataset["train"],
+    eval_dataset=valid_dataset["test"],
     compute_metrics=compute_metrics,
 )
 
