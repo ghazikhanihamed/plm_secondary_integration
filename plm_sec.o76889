@@ -1,0 +1,55 @@
+[2023-07-17 15:39:11,877] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:39:13,498] [WARNING] [runner.py:196:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2023-07-17 15:39:13,525] [INFO] [runner.py:555:main] cmd = /home/h_ghazik/python_venv/bin/python3 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMl19 --master_addr=127.0.0.1 --master_port=29500 --enable_each_rank_log=None plm_secondary_integration.py
+[2023-07-17 15:39:14,809] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:39:16,018] [INFO] [launch.py:145:main] WORLD INFO DICT: {'localhost': [0, 1, 2]}
+[2023-07-17 15:39:16,018] [INFO] [launch.py:151:main] nnodes=1, num_local_procs=3, node_rank=0
+[2023-07-17 15:39:16,018] [INFO] [launch.py:162:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2]})
+[2023-07-17 15:39:16,019] [INFO] [launch.py:163:main] dist_world_size=3
+[2023-07-17 15:39:16,019] [INFO] [launch.py:165:main] Setting CUDA_VISIBLE_DEVICES=0,1,2
+[2023-07-17 15:39:17,675] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:39:17,738] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:39:17,815] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 199.02it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 398.43it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 293.35it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 369.80it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 475.22it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 351.28it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 437.64it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 413.60it/s]
+07/17/2023 15:39:21 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 353.26it/s]
+Running tokenizer on dataset:   0%|          | 0/10792 [00:00<?, ? examples/s]Running tokenizer on dataset:   0%|          | 0/10792 [00:00<?, ? examples/s]Running tokenizer on dataset:   0%|          | 0/10792 [00:00<?, ? examples/s]Running tokenizer on dataset:   9%|▉         | 1000/10792 [00:00<00:02, 3264.95 examples/s]Running tokenizer on dataset:   9%|▉         | 1000/10792 [00:00<00:03, 3175.23 examples/s]Running tokenizer on dataset:   9%|▉         | 1000/10792 [00:00<00:03, 2800.07 examples/s]Running tokenizer on dataset:  19%|█▊        | 2000/10792 [00:00<00:02, 3685.27 examples/s]Running tokenizer on dataset:  28%|██▊       | 3000/10792 [00:00<00:01, 4348.86 examples/s]Running tokenizer on dataset:  19%|█▊        | 2000/10792 [00:00<00:02, 3065.78 examples/s]Running tokenizer on dataset:  19%|█▊        | 2000/10792 [00:00<00:03, 2880.72 examples/s]Running tokenizer on dataset:  37%|███▋      | 4000/10792 [00:00<00:01, 4109.81 examples/s]Running tokenizer on dataset:  28%|██▊       | 3000/10792 [00:00<00:02, 3318.99 examples/s]Running tokenizer on dataset:  28%|██▊       | 3000/10792 [00:00<00:02, 3752.30 examples/s]Running tokenizer on dataset:  46%|████▋     | 5000/10792 [00:01<00:01, 4168.68 examples/s]Running tokenizer on dataset:  37%|███▋      | 4000/10792 [00:01<00:01, 3698.15 examples/s]Running tokenizer on dataset:  37%|███▋      | 4000/10792 [00:01<00:01, 4039.50 examples/s]Running tokenizer on dataset:  46%|████▋     | 5000/10792 [00:01<00:01, 3935.37 examples/s]Running tokenizer on dataset:  56%|█████▌    | 6000/10792 [00:01<00:01, 4217.93 examples/s]Running tokenizer on dataset:  46%|████▋     | 5000/10792 [00:01<00:01, 4236.64 examples/s]Running tokenizer on dataset:  56%|█████▌    | 6000/10792 [00:01<00:01, 4053.64 examples/s]Running tokenizer on dataset:  56%|█████▌    | 6000/10792 [00:01<00:01, 4285.20 examples/s]Running tokenizer on dataset:  65%|██████▍   | 7000/10792 [00:01<00:00, 4237.64 examples/s]Running tokenizer on dataset:  65%|██████▍   | 7000/10792 [00:01<00:00, 4122.80 examples/s]Running tokenizer on dataset:  74%|███████▍  | 8000/10792 [00:01<00:00, 4285.71 examples/s]Running tokenizer on dataset:  65%|██████▍   | 7000/10792 [00:01<00:00, 4272.35 examples/s]Running tokenizer on dataset:  83%|████████▎ | 9000/10792 [00:02<00:00, 4288.95 examples/s]Running tokenizer on dataset:  74%|███████▍  | 8000/10792 [00:02<00:00, 4154.30 examples/s]Running tokenizer on dataset:  74%|███████▍  | 8000/10792 [00:01<00:00, 4280.36 examples/s]Running tokenizer on dataset:  83%|████████▎ | 9000/10792 [00:02<00:00, 4259.80 examples/s]Running tokenizer on dataset:  83%|████████▎ | 9000/10792 [00:02<00:00, 4330.29 examples/s]Running tokenizer on dataset:  93%|█████████▎| 10000/10792 [00:02<00:00, 4300.49 examples/s]Running tokenizer on dataset: 100%|██████████| 10792/10792 [00:02<00:00, 4057.71 examples/s]                                                                                            Running tokenizer on dataset:  93%|█████████▎| 10000/10792 [00:02<00:00, 4209.07 examples/s]Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]Running tokenizer on dataset:  93%|█████████▎| 10000/10792 [00:02<00:00, 4239.60 examples/s]                                                                           Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]                                                                           Running tokenizer on dataset: 100%|██████████| 10792/10792 [00:02<00:00, 4217.89 examples/s]Running tokenizer on dataset: 100%|██████████| 10792/10792 [00:02<00:00, 4264.78 examples/s]                                                                                                                                                                                        Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                                                                                                      Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]                                                                                                                                                      Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 162, in <module>
+    bf16=True,
+  File "<string>", line 110, in __init__
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/training_args.py", line 1298, in __post_init__
+    "Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0"
+ValueError: Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0
+Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 162, in <module>
+    bf16=True,
+  File "<string>", line 110, in __init__
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/training_args.py", line 1298, in __post_init__
+    "Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0"
+ValueError: Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0
+Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 162, in <module>
+    bf16=True,
+  File "<string>", line 110, in __init__
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/training_args.py", line 1298, in __post_init__
+    "Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0"
+ValueError: Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0
+[2023-07-17 15:39:56,119] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 303849
+[2023-07-17 15:39:56,120] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 303850
+[2023-07-17 15:39:56,559] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 303851
+[2023-07-17 15:39:56,591] [ERROR] [launch.py:321:sigkill_handler] ['/home/h_ghazik/python_venv/bin/python3', '-u', 'plm_secondary_integration.py', '--local_rank=2'] exits with return code = 1

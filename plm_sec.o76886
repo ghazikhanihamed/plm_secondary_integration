@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/torch/__init__.py", line 172, in _load_global_deps
+    ctypes.CDLL(lib_path, mode=ctypes.RTLD_GLOBAL)
+  File "/usr/local/pkg/python-3.7.3/root/lib/python3.7/ctypes/__init__.py", line 356, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: /home/h_ghazik/python_venv/lib/python3.7/site-packages/torch/lib/../../nvidia/cublas/lib/libcublas.so.11: symbol cublasLtGetStatusString, version libcublasLt.so.11 not defined in file libcublasLt.so.11 with link time reference
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/h_ghazik/python_venv/bin/deepspeed", line 3, in <module>
+    from deepspeed.launcher.runner import main
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/__init__.py", line 10, in <module>
+    import torch
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/torch/__init__.py", line 217, in <module>
+    _load_global_deps()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/torch/__init__.py", line 178, in _load_global_deps
+    _preload_cuda_deps()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/torch/__init__.py", line 158, in _preload_cuda_deps
+    ctypes.CDLL(cublas_path)
+  File "/usr/local/pkg/python-3.7.3/root/lib/python3.7/ctypes/__init__.py", line 356, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: /home/h_ghazik/python_venv/lib/python3.7/site-packages/nvidia/cublas/lib/libcublas.so.11: symbol cublasLtGetStatusString, version libcublasLt.so.11 not defined in file libcublasLt.so.11 with link time reference

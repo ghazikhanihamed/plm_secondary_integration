@@ -1,0 +1,61 @@
+[2023-07-17 15:31:15,393] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:31:16,912] [WARNING] [runner.py:196:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2023-07-17 15:31:16,937] [INFO] [runner.py:555:main] cmd = /home/h_ghazik/python_venv/bin/python3 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMl19 --master_addr=127.0.0.1 --master_port=29500 --enable_each_rank_log=None plm_secondary_integration.py
+[2023-07-17 15:31:18,243] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:31:19,609] [INFO] [launch.py:145:main] WORLD INFO DICT: {'localhost': [0, 1, 2]}
+[2023-07-17 15:31:19,609] [INFO] [launch.py:151:main] nnodes=1, num_local_procs=3, node_rank=0
+[2023-07-17 15:31:19,610] [INFO] [launch.py:162:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2]})
+[2023-07-17 15:31:19,610] [INFO] [launch.py:163:main] dist_world_size=3
+[2023-07-17 15:31:19,610] [INFO] [launch.py:165:main] Setting CUDA_VISIBLE_DEVICES=0,1,2
+[2023-07-17 15:31:21,209] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:31:21,268] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:31:21,360] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+07/17/2023 15:31:24 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 304.77it/s]
+07/17/2023 15:31:24 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 268.57it/s]
+07/17/2023 15:31:24 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 304.93it/s]
+07/17/2023 15:31:24 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 326.08it/s]
+07/17/2023 15:31:25 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 303.78it/s]
+07/17/2023 15:31:25 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 364.98it/s]
+07/17/2023 15:31:25 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+07/17/2023 15:31:25 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 602.20it/s]
+100%|██████████| 1/1 [00:00<00:00, 379.51it/s]
+07/17/2023 15:31:25 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-ace647ec49cc0b7d.arrow
+07/17/2023 15:31:25 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]100%|██████████| 1/1 [00:00<00:00, 376.34it/s]
+07/17/2023 15:31:25 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-830396098a140c46.arrow
+Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                           07/17/2023 15:31:25 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-b75bba033b824f03.arrow
+                                                                           07/17/2023 15:31:25 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-7f6ffacbd1c89577.arrow
+07/17/2023 15:31:25 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-03f08aceb080f6c3.arrow
+Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                           07/17/2023 15:31:25 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-11f7131082e82029.arrow
+Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 162, in <module>
+    bf16=True,
+  File "<string>", line 110, in __init__
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/training_args.py", line 1298, in __post_init__
+    "Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0"
+ValueError: Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0
+Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 162, in <module>
+    bf16=True,
+  File "<string>", line 110, in __init__
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/training_args.py", line 1298, in __post_init__
+    "Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0"
+ValueError: Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0
+Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 162, in <module>
+    bf16=True,
+  File "<string>", line 110, in __init__
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/training_args.py", line 1298, in __post_init__
+    "Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0"
+ValueError: Your setup doesn't support bf16/gpu. You need torch>=1.10, using Ampere GPU with cuda>=11.0
+[2023-07-17 15:31:58,714] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 301938
+[2023-07-17 15:31:58,774] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 301939
+[2023-07-17 15:31:58,800] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 301940
+[2023-07-17 15:31:58,801] [ERROR] [launch.py:321:sigkill_handler] ['/home/h_ghazik/python_venv/bin/python3', '-u', 'plm_secondary_integration.py', '--local_rank=2'] exits with return code = 1

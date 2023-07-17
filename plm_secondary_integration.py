@@ -159,7 +159,7 @@ training_args = TrainingArguments(
     metric_for_best_model="q3_accuracy",
     greater_is_better=True,
     num_train_epochs=20,
-    fp16=True,
+    fp16=False,
 )
 
 # Initialize Trainer

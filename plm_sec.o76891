@@ -1,0 +1,119 @@
+[2023-07-17 15:45:02,634] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:45:04,361] [WARNING] [runner.py:196:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+[2023-07-17 15:45:04,385] [INFO] [runner.py:555:main] cmd = /home/h_ghazik/python_venv/bin/python3 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMl19 --master_addr=127.0.0.1 --master_port=29500 --enable_each_rank_log=None plm_secondary_integration.py
+[2023-07-17 15:45:05,760] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:45:07,163] [INFO] [launch.py:145:main] WORLD INFO DICT: {'localhost': [0, 1, 2]}
+[2023-07-17 15:45:07,163] [INFO] [launch.py:151:main] nnodes=1, num_local_procs=3, node_rank=0
+[2023-07-17 15:45:07,163] [INFO] [launch.py:162:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2]})
+[2023-07-17 15:45:07,163] [INFO] [launch.py:163:main] dist_world_size=3
+[2023-07-17 15:45:07,163] [INFO] [launch.py:165:main] Setting CUDA_VISIBLE_DEVICES=0,1,2
+[2023-07-17 15:45:08,809] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:45:08,886] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-17 15:45:08,910] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+07/17/2023 15:45:12 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 271.05it/s]
+07/17/2023 15:45:12 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 279.27it/s]
+07/17/2023 15:45:12 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 442.02it/s]
+07/17/2023 15:45:12 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 326.15it/s]
+07/17/2023 15:45:12 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]07/17/2023 15:45:12 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 299.64it/s]
+100%|██████████| 1/1 [00:00<00:00, 291.43it/s]
+07/17/2023 15:45:12 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 288.74it/s]
+07/17/2023 15:45:13 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 406.54it/s]
+07/17/2023 15:45:13 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
+  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 297.26it/s]
+Running tokenizer on dataset:   0%|          | 0/10792 [00:00<?, ? examples/s]07/17/2023 15:45:13 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-9cc27bb1099684b6.arrow
+07/17/2023 15:45:13 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-adb568cc369e91dc.arrow
+Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]                                                                           Running tokenizer on dataset:   0%|          | 0/10792 [00:00<?, ? examples/s]Running tokenizer on dataset:   9%|▉         | 1000/10792 [00:00<00:02, 4149.96 examples/s]Running tokenizer on dataset:   9%|▉         | 1000/10792 [00:00<00:02, 3756.24 examples/s]Running tokenizer on dataset:  19%|█▊        | 2000/10792 [00:00<00:02, 4202.51 examples/s]Running tokenizer on dataset:  28%|██▊       | 3000/10792 [00:00<00:01, 4947.15 examples/s]Running tokenizer on dataset:  19%|█▊        | 2000/10792 [00:00<00:02, 3234.41 examples/s]Running tokenizer on dataset:  37%|███▋      | 4000/10792 [00:00<00:01, 5005.83 examples/s]Running tokenizer on dataset:  28%|██▊       | 3000/10792 [00:00<00:02, 3839.47 examples/s]Running tokenizer on dataset:  46%|████▋     | 5000/10792 [00:00<00:01, 5455.96 examples/s]Running tokenizer on dataset:  56%|█████▌    | 6000/10792 [00:01<00:00, 5485.26 examples/s]Running tokenizer on dataset:  37%|███▋      | 4000/10792 [00:01<00:01, 4277.73 examples/s]Running tokenizer on dataset:  46%|████▋     | 5000/10792 [00:01<00:01, 4549.97 examples/s]Running tokenizer on dataset:  65%|██████▍   | 7000/10792 [00:01<00:00, 5330.25 examples/s]Running tokenizer on dataset:  56%|█████▌    | 6000/10792 [00:01<00:01, 4704.08 examples/s]Running tokenizer on dataset:  74%|███████▍  | 8000/10792 [00:01<00:00, 5246.06 examples/s]Running tokenizer on dataset:  83%|████████▎ | 9000/10792 [00:01<00:00, 5196.30 examples/s]Running tokenizer on dataset:  65%|██████▍   | 7000/10792 [00:01<00:00, 4753.06 examples/s]Running tokenizer on dataset:  93%|█████████▎| 10000/10792 [00:01<00:00, 5111.10 examples/s]Running tokenizer on dataset:  74%|███████▍  | 8000/10792 [00:01<00:00, 4639.56 examples/s]Running tokenizer on dataset: 100%|██████████| 10792/10792 [00:02<00:00, 4617.66 examples/s]                                                                                            Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]Running tokenizer on dataset:  83%|████████▎ | 9000/10792 [00:02<00:00, 4620.44 examples/s]                                                                           Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]                                                                           Running tokenizer on dataset:  93%|█████████▎| 10000/10792 [00:02<00:00, 5007.91 examples/s]Running tokenizer on dataset: 100%|██████████| 10792/10792 [00:02<00:00, 5074.14 examples/s]                                                                                            Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                           Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]                                                                           [2023-07-17 15:45:39,734] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[2023-07-17 15:45:39,735] [INFO] [comm.py:594:init_distributed] cdb=None
+[2023-07-17 15:45:41,262] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[2023-07-17 15:45:41,263] [INFO] [comm.py:594:init_distributed] cdb=None
+[2023-07-17 15:45:41,263] [INFO] [comm.py:625:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[2023-07-17 15:45:43,516] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[2023-07-17 15:45:43,516] [INFO] [comm.py:594:init_distributed] cdb=None
+Rank: 2 partition count [3] and sizes[(626235052, False)] 
+Rank: 0 partition count [3] and sizes[(626235052, False)] 
+Rank: 1 partition count [3] and sizes[(626235052, False)] 
+  0%|          | 0/35980 [00:00<?, ?it/s]  0%|          | 1/35980 [00:02<24:48:09,  2.48s/it]  0%|          | 2/35980 [00:03<18:48:12,  1.88s/it]  0%|          | 3/35980 [00:05<16:53:01,  1.69s/it]  0%|          | 4/35980 [00:06<16:07:41,  1.61s/it]  0%|          | 5/35980 [00:08<15:50:29,  1.59s/it]  0%|          | 6/35980 [00:09<15:26:42,  1.55s/it]  0%|          | 7/35980 [00:11<15:27:46,  1.55s/it]  0%|          | 8/35980 [00:12<15:17:50,  1.53s/it]  0%|          | 9/35980 [00:14<15:21:04,  1.54s/it]  0%|          | 10/35980 [00:16<15:16:10,  1.53s/it]  0%|          | 11/35980 [00:17<15:20:20,  1.54s/it]  0%|          | 12/35980 [00:19<15:20:59,  1.54s/it]  0%|          | 13/35980 [00:20<15:16:02,  1.53s/it]  0%|          | 14/35980 [00:22<15:12:44,  1.52s/it]  0%|          | 15/35980 [00:23<15:09:54,  1.52s/it]  0%|          | 16/35980 [00:25<15:03:42,  1.51s/it]  0%|          | 17/35980 [00:26<15:02:00,  1.50s/it]Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 175, in <module>
+Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 175, in <module>
+Traceback (most recent call last):
+  File "plm_secondary_integration.py", line 175, in <module>
+    trainer.train()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1649, in train
+    trainer.train()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1649, in train
+    trainer.train()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1649, in train
+    ignore_keys_for_eval=ignore_keys_for_eval,
+      File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1938, in _inner_training_loop
+ignore_keys_for_eval=ignore_keys_for_eval,
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1938, in _inner_training_loop
+    ignore_keys_for_eval=ignore_keys_for_eval,
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1938, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 2770, in training_step
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 2770, in training_step
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 2770, in training_step
+    self.accelerator.backward(loss)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 1815, in backward
+    self.accelerator.backward(loss)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 1815, in backward
+    self.accelerator.backward(loss)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 1815, in backward
+    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/deepspeed.py", line 176, in backward
+    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/deepspeed.py", line 176, in backward
+    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/deepspeed.py", line 176, in backward
+    self.engine.step()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 2053, in step
+    self.engine.step()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 2053, in step
+    self.engine.step()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 2053, in step
+    self._take_model_step(lr_kwargs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 1960, in _take_model_step
+    self._take_model_step(lr_kwargs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 1960, in _take_model_step
+    self._take_model_step(lr_kwargs)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 1960, in _take_model_step
+    self.optimizer.step()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1657, in step
+    self.optimizer.step()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1657, in step
+    self.optimizer.step()
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1657, in step
+    self._update_scale(self.overflow)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1906, in _update_scale
+    self._update_scale(self.overflow)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1906, in _update_scale
+    self._update_scale(self.overflow)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1906, in _update_scale
+    self.loss_scaler.update_scale(has_overflow)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 176, in update_scale
+    self.loss_scaler.update_scale(has_overflow)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 176, in update_scale
+    self.loss_scaler.update_scale(has_overflow)
+  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 176, in update_scale
+    "Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.")
+Exception    : "Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.")Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.
+
+Exception: Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.
+    "Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.")
+Exception: Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.
+  0%|          | 17/35980 [00:28<16:37:01,  1.66s/it]
+[2023-07-17 15:46:51,328] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 305969
+[2023-07-17 15:46:51,389] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 305970
+[2023-07-17 15:46:51,390] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 305971
+[2023-07-17 15:46:51,416] [ERROR] [launch.py:321:sigkill_handler] ['/home/h_ghazik/python_venv/bin/python3', '-u', 'plm_secondary_integration.py', '--local_rank=2'] exits with return code = 1
