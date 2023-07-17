@@ -56,6 +56,11 @@ max_length = int(np.percentile(sequence_lengths, 95))
 unique_tags = set(
     tag for doc in training_dataset["train"][labels_column_name] for tag in doc
 )
+
+# add padding tag
+unique_tags.add('<pad>')
+
+
 tag2id = {tag: id for id, tag in enumerate(unique_tags)}
 id2tag = {id: tag for tag, id in tag2id.items()}
 
