@@ -22,6 +22,7 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)],
 )
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Set seed before initializing model.
 set_seed(42)
@@ -95,9 +96,9 @@ def preprocess_data(examples):
     assert len(inputs["input_ids"]) == len(labels_encoded)
 
     return {
-        "input_ids": inputs["input_ids"],
-        "attention_mask": inputs["attention_mask"],
-        "labels": torch.tensor(labels_encoded, dtype=torch.long),
+        "input_ids": inputs["input_ids"].to(device),
+        "attention_mask": inputs["attention_mask"].to(device),
+        "labels": torch.tensor(labels_encoded, dtype=torch.long).to(device),
     }
 
 
@@ -119,6 +120,10 @@ test_dataset = casp14_dataset.map(
     remove_columns=casp14_dataset.column_names["test"],
     desc="Running tokenizer on dataset",
 )
+
+train_dataset = train_dataset.to(device)
+valid_dataset = valid_dataset.to(device)
+test_dataset = test_dataset.to(device)
 
 
 def q3_accuracy(y_true, y_pred):
@@ -144,6 +149,7 @@ def compute_metrics(eval_pred):
 
 # Prepare the model
 model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
+model = model.to(device)
 
 # Prepare training args
 training_args = TrainingArguments(
