@@ -81,12 +81,18 @@ def preprocess_data(examples):
     # encode labels
     labels_encoded = [[tag2id[tag] for tag in label] for label in labels]
 
+    # Pad or truncate the labels to match the sequence length
+    labels_encoded = [
+        label[:max_length] + [tag2id["<pad>"]] * (max_length - len(label))
+        for label in labels_encoded
+    ]
+
     assert len(inputs["input_ids"]) == len(labels_encoded)
 
     return {
         "input_ids": inputs["input_ids"],
         "attention_mask": inputs["attention_mask"],
-        "labels": labels_encoded,
+        "labels": torch.tensor(labels_encoded, dtype=torch.long),
     }
 
 
@@ -116,8 +122,10 @@ def q3_accuracy(y_true, y_pred):
     y_true: List of actual values
     y_pred: List of predicted values
     """
-    y_true_flat = [tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
-    y_pred_flat = [tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
+    y_true_flat = [
+        tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
+    y_pred_flat = [
+        tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
     correct = sum(t == p for t, p in zip(y_true_flat, y_pred_flat))
     return correct / len(y_true_flat)
 
