@@ -126,20 +126,22 @@ def q3_accuracy(y_true, y_pred):
     y_true: List of actual values
     y_pred: List of predicted values
     """
-    y_true_flat = [tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
-    y_pred_flat = [tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
+    y_true_flat = [
+        tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
+    y_pred_flat = [
+        tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
     correct = sum(t == p for t, p in zip(y_true_flat, y_pred_flat))
     return correct / len(y_true_flat)
 
 
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
-    # if predictions is a tuple (which it is in the case of T5ForConditionalGeneration), 
-    # take the first element which are the logits
-    predictions = predictions[0] if isinstance(predictions, tuple) else predictions
+    predictions = predictions[0] if isinstance(
+        predictions, tuple) else predictions
+    # convert numpy ndarray to Tensor
+    predictions = torch.tensor(predictions)
     predictions = torch.argmax(predictions, dim=-1)
     return {"q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
-
 
 
 # Prepare the model
