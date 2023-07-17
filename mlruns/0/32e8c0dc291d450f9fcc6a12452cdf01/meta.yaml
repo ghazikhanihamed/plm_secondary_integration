@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/hamed/Documents/projects/plm_secondary_integration/mlruns/0/32e8c0dc291d450f9fcc6a12452cdf01/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 32e8c0dc291d450f9fcc6a12452cdf01
+run_name: ./results
+run_uuid: 32e8c0dc291d450f9fcc6a12452cdf01
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1689619594422
+status: 1
+tags: []
+user_id: hamed

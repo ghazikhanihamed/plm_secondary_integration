@@ -22,8 +22,6 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)],
 )
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 # Set seed before initializing model.
 set_seed(42)
 
@@ -59,7 +57,7 @@ unique_tags = set(
 )
 
 # add padding tag
-unique_tags.add('<pad>')
+unique_tags.add("<pad>")
 
 
 tag2id = {tag: id for id, tag in enumerate(unique_tags)}
@@ -128,10 +126,8 @@ def q3_accuracy(y_true, y_pred):
     y_true: List of actual values
     y_pred: List of predicted values
     """
-    y_true_flat = [
-        tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
-    y_pred_flat = [
-        tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
+    y_true_flat = [tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
+    y_pred_flat = [tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
     correct = sum(t == p for t, p in zip(y_true_flat, y_pred_flat))
     return correct / len(y_true_flat)
 
@@ -145,7 +141,6 @@ def compute_metrics(eval_pred):
 
 # Prepare the model
 model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
-model = model.to(device)
 
 # Prepare training args
 training_args = TrainingArguments(
@@ -164,11 +159,8 @@ training_args = TrainingArguments(
     metric_for_best_model="q3_accuracy",
     greater_is_better=True,
     num_train_epochs=20,
-    fp16=False,
+    fp16=True,
 )
-
-# print the optimizer
-print(training_args.optimizer)
 
 # Initialize Trainer
 trainer = Trainer(
