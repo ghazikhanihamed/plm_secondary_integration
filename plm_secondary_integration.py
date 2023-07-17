@@ -134,9 +134,12 @@ def q3_accuracy(y_true, y_pred):
 
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
-    # or your own way of getting predictions
+    # if predictions is a tuple (which it is in the case of T5ForConditionalGeneration), 
+    # take the first element which are the logits
+    predictions = predictions[0] if isinstance(predictions, tuple) else predictions
     predictions = torch.argmax(predictions, dim=-1)
     return {"q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
+
 
 
 # Prepare the model
