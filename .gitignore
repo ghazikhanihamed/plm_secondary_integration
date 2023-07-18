@@ -160,4 +160,4 @@ cython_debug/
 #.idea/
 
 # VSCode
-mlruns/
+wandb_config.json

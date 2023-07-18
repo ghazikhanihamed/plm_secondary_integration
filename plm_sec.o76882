@@ -1,79 +1,0 @@
-[2023-07-17 15:26:17,725] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:26:19,330] [WARNING] [runner.py:196:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
-[2023-07-17 15:26:19,364] [INFO] [runner.py:555:main] cmd = /home/h_ghazik/python_venv/bin/python3 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMl19 --master_addr=127.0.0.1 --master_port=29500 --enable_each_rank_log=None plm_secondary_integration.py
-[2023-07-17 15:26:20,540] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:26:21,688] [INFO] [launch.py:145:main] WORLD INFO DICT: {'localhost': [0, 1, 2]}
-[2023-07-17 15:26:21,688] [INFO] [launch.py:151:main] nnodes=1, num_local_procs=3, node_rank=0
-[2023-07-17 15:26:21,688] [INFO] [launch.py:162:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2]})
-[2023-07-17 15:26:21,688] [INFO] [launch.py:163:main] dist_world_size=3
-[2023-07-17 15:26:21,688] [INFO] [launch.py:165:main] Setting CUDA_VISIBLE_DEVICES=0,1,2
-[2023-07-17 15:26:23,228] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:26:23,250] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:26:23,322] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-07/17/2023 15:26:26 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 448.21it/s]
-07/17/2023 15:26:26 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 306.76it/s]
-07/17/2023 15:26:26 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 336.49it/s]
-07/17/2023 15:26:26 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]07/17/2023 15:26:26 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-100%|██████████| 1/1 [00:00<00:00, 331.15it/s]
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 704.81it/s]
-07/17/2023 15:26:26 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 427.03it/s]
-07/17/2023 15:26:27 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 370.82it/s]
-07/17/2023 15:26:27 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 417.80it/s]
-07/17/2023 15:26:27 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 366.15it/s]
-Running tokenizer on dataset:   0%|          | 0/10792 [00:00<?, ? examples/s]Running tokenizer on dataset:   0%|          | 0/10792 [00:00<?, ? examples/s]07/17/2023 15:26:27 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-028a85545d6456f7.arrow
-Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                           07/17/2023 15:26:27 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-bc15f02cb77dabee.arrow
-Running tokenizer on dataset:   9%|▉         | 1000/10792 [00:00<00:02, 3625.72 examples/s]Running tokenizer on dataset:   9%|▉         | 1000/10792 [00:00<00:02, 3810.98 examples/s]Running tokenizer on dataset:  19%|█▊        | 2000/10792 [00:00<00:02, 3613.10 examples/s]Running tokenizer on dataset:  19%|█▊        | 2000/10792 [00:00<00:02, 3508.39 examples/s]Running tokenizer on dataset:  28%|██▊       | 3000/10792 [00:00<00:01, 4156.76 examples/s]Running tokenizer on dataset:  28%|██▊       | 3000/10792 [00:00<00:01, 4040.10 examples/s]Running tokenizer on dataset:  37%|███▋      | 4000/10792 [00:00<00:01, 4389.87 examples/s]Running tokenizer on dataset:  37%|███▋      | 4000/10792 [00:00<00:01, 4311.37 examples/s]Running tokenizer on dataset:  46%|████▋     | 5000/10792 [00:01<00:01, 4511.12 examples/s]Running tokenizer on dataset:  46%|████▋     | 5000/10792 [00:01<00:01, 4322.42 examples/s]Running tokenizer on dataset:  56%|█████▌    | 6000/10792 [00:01<00:01, 4377.06 examples/s]Running tokenizer on dataset:  56%|█████▌    | 6000/10792 [00:01<00:01, 4350.57 examples/s]Running tokenizer on dataset:  65%|██████▍   | 7000/10792 [00:01<00:00, 4419.47 examples/s]Running tokenizer on dataset:  65%|██████▍   | 7000/10792 [00:01<00:00, 4397.35 examples/s]Running tokenizer on dataset:  74%|███████▍  | 8000/10792 [00:01<00:00, 4505.78 examples/s]Running tokenizer on dataset:  74%|███████▍  | 8000/10792 [00:01<00:00, 4433.60 examples/s]Running tokenizer on dataset:  83%|████████▎ | 9000/10792 [00:02<00:00, 4551.13 examples/s]Running tokenizer on dataset:  83%|████████▎ | 9000/10792 [00:02<00:00, 4556.81 examples/s]Running tokenizer on dataset:  93%|█████████▎| 10000/10792 [00:02<00:00, 4587.97 examples/s]Running tokenizer on dataset:  93%|█████████▎| 10000/10792 [00:02<00:00, 4605.41 examples/s]Running tokenizer on dataset: 100%|██████████| 10792/10792 [00:02<00:00, 4572.78 examples/s]Running tokenizer on dataset: 100%|██████████| 10792/10792 [00:02<00:00, 4552.61 examples/s]                                                                                                                                                                                        Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                           Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]                                                                           Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]                                                                                                                                                      [2023-07-17 15:26:55,906] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
-[2023-07-17 15:26:55,908] [INFO] [comm.py:594:init_distributed] cdb=None
-[2023-07-17 15:26:57,878] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
-[2023-07-17 15:26:57,878] [INFO] [comm.py:594:init_distributed] cdb=None
-[2023-07-17 15:26:59,171] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
-[2023-07-17 15:26:59,172] [INFO] [comm.py:594:init_distributed] cdb=None
-[2023-07-17 15:26:59,172] [INFO] [comm.py:625:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
-Traceback (most recent call last):
-  File "plm_secondary_integration.py", line 171, in <module>
-    compute_metrics=compute_metrics,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 349, in __init__
-    self.create_accelerator_and_postprocess()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 3970, in create_accelerator_and_postprocess
-Traceback (most recent call last):
-  File "plm_secondary_integration.py", line 171, in <module>
-    compute_metrics=compute_metrics,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 349, in __init__
-    self.create_accelerator_and_postprocess()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 3970, in create_accelerator_and_postprocess
-    gradient_accumulation_steps=self.args.gradient_accumulation_steps,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 282, in __init__
-    deepspeed_plugin.set_mixed_precision(mixed_precision)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/dataclasses.py", line 653, in set_mixed_precision
-    gradient_accumulation_steps=self.args.gradient_accumulation_steps,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 282, in __init__
-    deepspeed_plugin.set_mixed_precision(mixed_precision)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/dataclasses.py", line 653, in set_mixed_precision
-    f"`--mixed_precision` arg cannot be set to `{mixed_precision}` when `{diff_dtype}` is set in the DeepSpeed config file."
-ValueError: `--mixed_precision` arg cannot be set to `fp16` when `bf16` is set in the DeepSpeed config file.
-    f"`--mixed_precision` arg cannot be set to `{mixed_precision}` when `{diff_dtype}` is set in the DeepSpeed config file."
-ValueError: `--mixed_precision` arg cannot be set to `fp16` when `bf16` is set in the DeepSpeed config file.
-Traceback (most recent call last):
-  File "plm_secondary_integration.py", line 171, in <module>
-    compute_metrics=compute_metrics,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 349, in __init__
-    self.create_accelerator_and_postprocess()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 3970, in create_accelerator_and_postprocess
-    gradient_accumulation_steps=self.args.gradient_accumulation_steps,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 282, in __init__
-    deepspeed_plugin.set_mixed_precision(mixed_precision)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/dataclasses.py", line 653, in set_mixed_precision
-    f"`--mixed_precision` arg cannot be set to `{mixed_precision}` when `{diff_dtype}` is set in the DeepSpeed config file."
-ValueError: `--mixed_precision` arg cannot be set to `fp16` when `bf16` is set in the DeepSpeed config file.
-[2023-07-17 15:27:01,770] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 299935
-[2023-07-17 15:27:02,025] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 299936
-[2023-07-17 15:27:02,026] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 299937
-[2023-07-17 15:27:02,065] [ERROR] [launch.py:321:sigkill_handler] ['/home/h_ghazik/python_venv/bin/python3', '-u', 'plm_secondary_integration.py', '--local_rank=2'] exits with return code = 1

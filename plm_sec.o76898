@@ -1,123 +1,0 @@
-[2023-07-17 15:56:07,470] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:56:09,177] [WARNING] [runner.py:196:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
-[2023-07-17 15:56:09,200] [INFO] [runner.py:555:main] cmd = /home/h_ghazik/python_venv/bin/python3 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMCwgMSwgMl19 --master_addr=127.0.0.1 --master_port=29500 --enable_each_rank_log=None plm_secondary_integration.py
-[2023-07-17 15:56:10,513] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:56:11,875] [INFO] [launch.py:145:main] WORLD INFO DICT: {'localhost': [0, 1, 2]}
-[2023-07-17 15:56:11,875] [INFO] [launch.py:151:main] nnodes=1, num_local_procs=3, node_rank=0
-[2023-07-17 15:56:11,875] [INFO] [launch.py:162:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0, 1, 2]})
-[2023-07-17 15:56:11,875] [INFO] [launch.py:163:main] dist_world_size=3
-[2023-07-17 15:56:11,875] [INFO] [launch.py:165:main] Setting CUDA_VISIBLE_DEVICES=0,1,2
-[2023-07-17 15:56:13,882] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:56:13,890] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-17 15:56:13,891] [INFO] [real_accelerator.py:110:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-07/17/2023 15:56:17 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 500.22it/s]
-07/17/2023 15:56:17 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 409.48it/s]
-07/17/2023 15:56:17 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 642.90it/s]
-07/17/2023 15:56:17 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 801.20it/s]
-07/17/2023 15:56:18 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 971.58it/s]
-07/17/2023 15:56:18 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 1052.79it/s]
-07/17/2023 15:56:18 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 777.88it/s]
-07/17/2023 15:56:18 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 884.13it/s]
-07/17/2023 15:56:18 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-ace647ec49cc0b7d.arrow
-07/17/2023 15:56:18 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-12841895c97fd58d/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-de6a20ad77c8fc2f.arrow
-Running tokenizer on dataset:   0%|          | 0/18 [00:00<?, ? examples/s]07/17/2023 15:56:18 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 941.06it/s]
-                                                                           07/17/2023 15:56:18 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-7bf4b077d467fc14.arrow
-Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                           07/17/2023 15:56:18 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-fc5da85723815448.arrow
-07/17/2023 15:56:18 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-97958ba7915241de/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-8a93d25383bdc892.arrow
-Running tokenizer on dataset:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                           07/17/2023 15:56:18 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-a89e1921232f44fe/0.0.0/6954658bab30a358235fa864b05cf819af0e179325c740e4bc853bcc7ec513e1/cache-38cd488b641c34c1.arrow
-[2023-07-17 15:57:00,389] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
-[2023-07-17 15:57:00,390] [INFO] [comm.py:594:init_distributed] cdb=None
-[2023-07-17 15:57:01,067] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
-[2023-07-17 15:57:01,068] [INFO] [comm.py:594:init_distributed] cdb=None
-[2023-07-17 15:57:01,442] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
-[2023-07-17 15:57:01,443] [INFO] [comm.py:594:init_distributed] cdb=None
-[2023-07-17 15:57:01,443] [INFO] [comm.py:625:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
-Rank: 0 partition count [3] and sizes[(626235052, False)] 
-Rank: 2 partition count [3] and sizes[(626235052, False)] 
-Rank: 1 partition count [3] and sizes[(626235052, False)] 
-  0%|          | 0/35980 [00:00<?, ?it/s]  0%|          | 1/35980 [00:01<11:43:46,  1.17s/it]  0%|          | 2/35980 [00:01<8:34:43,  1.16it/s]   0%|          | 3/35980 [00:02<7:26:02,  1.34it/s]  0%|          | 4/35980 [00:03<6:58:20,  1.43it/s]  0%|          | 5/35980 [00:03<6:40:37,  1.50it/s]  0%|          | 6/35980 [00:04<6:26:29,  1.55it/s]  0%|          | 7/35980 [00:04<6:19:44,  1.58it/s]  0%|          | 8/35980 [00:05<6:15:03,  1.60it/s]  0%|          | 9/35980 [00:06<6:10:26,  1.62it/s]  0%|          | 10/35980 [00:06<6:09:26,  1.62it/s]  0%|          | 11/35980 [00:07<6:14:31,  1.60it/s]  0%|          | 12/35980 [00:07<6:13:47,  1.60it/s]  0%|          | 13/35980 [00:08<6:14:08,  1.60it/s]  0%|          | 14/35980 [00:09<6:12:17,  1.61it/s]  0%|          | 15/35980 [00:09<6:11:48,  1.61it/s]  0%|          | 16/35980 [00:10<6:09:11,  1.62it/s]  0%|          | 17/35980 [00:11<6:07:06,  1.63it/s]  0%|          | 18/35980 [00:11<6:05:25,  1.64it/s]  0%|          | 19/35980 [00:12<6:05:08,  1.64it/s]  0%|          | 20/35980 [00:12<6:05:41,  1.64it/s]  0%|          | 21/35980 [00:13<6:08:45,  1.63it/s]  0%|          | 22/35980 [00:14<6:10:21,  1.62it/s]  0%|          | 23/35980 [00:14<6:09:44,  1.62it/s]  0%|          | 24/35980 [00:15<6:09:52,  1.62it/s]  0%|          | 25/35980 [00:15<6:08:23,  1.63it/s]  0%|          | 26/35980 [00:16<6:06:42,  1.63it/s]  0%|          | 27/35980 [00:17<6:05:21,  1.64it/s]  0%|          | 28/35980 [00:17<6:06:19,  1.64it/s]  0%|          | 29/35980 [00:18<6:08:03,  1.63it/s]  0%|          | 30/35980 [00:19<6:10:04,  1.62it/s]  0%|          | 31/35980 [00:19<6:09:31,  1.62it/s]  0%|          | 32/35980 [00:20<6:09:06,  1.62it/s]Traceback (most recent call last):
-  File "plm_secondary_integration.py", line 175, in <module>
-Traceback (most recent call last):
-  File "plm_secondary_integration.py", line 175, in <module>
-Traceback (most recent call last):
-  File "plm_secondary_integration.py", line 175, in <module>
-    trainer.train()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1649, in train
-    trainer.train()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1649, in train
-    trainer.train()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1649, in train
-    ignore_keys_for_eval=ignore_keys_for_eval,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1938, in _inner_training_loop
-    ignore_keys_for_eval=ignore_keys_for_eval,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1938, in _inner_training_loop
-    ignore_keys_for_eval=ignore_keys_for_eval,
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 1938, in _inner_training_loop
-    tr_loss_step = self.training_step(model, inputs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 2770, in training_step
-    tr_loss_step = self.training_step(model, inputs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 2770, in training_step
-    tr_loss_step = self.training_step(model, inputs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/transformers/trainer.py", line 2770, in training_step
-    self.accelerator.backward(loss)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 1815, in backward
-    self.accelerator.backward(loss)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 1815, in backward
-    self.accelerator.backward(loss)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/accelerator.py", line 1815, in backward
-    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/deepspeed.py", line 176, in backward
-    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/deepspeed.py", line 176, in backward
-    self.deepspeed_engine_wrapped.backward(loss, **kwargs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/accelerate/utils/deepspeed.py", line 176, in backward
-    self.engine.step()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 2053, in step
-    self.engine.step()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 2053, in step
-    self.engine.step()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 2053, in step
-    self._take_model_step(lr_kwargs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 1960, in _take_model_step
-    self._take_model_step(lr_kwargs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 1960, in _take_model_step
-    self._take_model_step(lr_kwargs)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/engine.py", line 1960, in _take_model_step
-    self.optimizer.step()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1657, in step
-    self.optimizer.step()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1657, in step
-    self.optimizer.step()
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1657, in step
-    self._update_scale(self.overflow)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1906, in _update_scale
-    self._update_scale(self.overflow)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1906, in _update_scale
-    self._update_scale(self.overflow)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/zero/stage_1_and_2.py", line 1906, in _update_scale
-    self.loss_scaler.update_scale(has_overflow)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 176, in update_scale
-    self.loss_scaler.update_scale(has_overflow)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 176, in update_scale
-    self.loss_scaler.update_scale(has_overflow)
-  File "/home/h_ghazik/python_venv/lib/python3.7/site-packages/deepspeed/runtime/fp16/loss_scaler.py", line 176, in update_scale
-    "Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.")
-Exception: Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.
-    "Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.")
-Exception: Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.
-    "Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.")
-Exception: Current loss scale already at minimum - cannot decrease scale anymore. Exiting run.
-  0%|          | 32/35980 [00:21<6:35:42,  1.51it/s]
-[2023-07-17 15:58:05,076] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 42374
-[2023-07-17 15:58:05,097] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 42375
-[2023-07-17 15:58:05,110] [INFO] [launch.py:315:sigkill_handler] Killing subprocess 42376
-[2023-07-17 15:58:05,110] [ERROR] [launch.py:321:sigkill_handler] ['/home/h_ghazik/python_venv/bin/python3', '-u', 'plm_secondary_integration.py', '--local_rank=2'] exits with return code = 1
