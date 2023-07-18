@@ -162,7 +162,7 @@ def model_init():
     return T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
 
 
-def train_protein_structure_predictor(config, model_init, train_dataset, valid_dataset, tokenizer):
+def train_protein_structure_predictor(config):
     training_args = TrainingArguments(
         output_dir="./results",
         learning_rate=config["learning_rate"],
