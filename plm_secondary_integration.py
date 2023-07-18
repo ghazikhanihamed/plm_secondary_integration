@@ -172,7 +172,7 @@ def train_protein_structure_predictor(config):
         logging_dir="./logs",
         logging_strategy="steps",
         save_strategy="steps",
-        deepspeed="ds_config.json",
+        deepspeed="./ds_config.json",
         load_best_model_at_end=True,
         metric_for_best_model="eval_q3_accuracy",
         greater_is_better=True,
