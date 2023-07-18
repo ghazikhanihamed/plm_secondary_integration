@@ -186,7 +186,8 @@ def train_protein_structure_predictor(config):
         save_steps=500,
         seed=42,
         run_name="SS-Generation",
-        auto_find_batch_size=True,
+        per_device_train_batch_size=2,
+        per_device_eval_batch_size=2,
     )
     trainer = Trainer(
         model_init=model_init,
@@ -237,7 +238,7 @@ analysis = tune.run(
     search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
     scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
     config=config,
-    num_samples=100,
+    num_samples=10,
     resources_per_trial=resources_per_trial,
     callbacks=[WandbLoggerCallback(
         project=wandb_config["wandb"]["project"],
