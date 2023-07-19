@@ -33,7 +33,7 @@ wandb_config = {
     }
 }
 
-wandb.login(key=api_key, force=True, relogin=True)
+wandb.login(key=api_key)
 
 wandb.init()
 
@@ -258,7 +258,7 @@ best_trial = trainer.hyperparameter_search(
     n_trials=10,
     search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
     scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
-    kwargs={"resources_per_trial": resources_per_trial},
+    resources_per_trial=resources_per_trial,
 )
 
 # print out the best hyperparameters
