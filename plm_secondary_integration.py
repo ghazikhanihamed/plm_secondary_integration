@@ -11,7 +11,6 @@ import torch
 import sys
 
 from ray import tune
-from ray.air.integrations.wandb import WandbLoggerCallback
 from ray.tune.search.hyperopt import HyperOptSearch
 from ray.tune.schedulers import ASHAScheduler
 from ray.tune import CLIReporter
@@ -162,61 +161,79 @@ def model_init():
     return T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
 
 
-def train_protein_structure_predictor(config):
-    training_args = TrainingArguments(
-        output_dir="./results",
-        learning_rate=config["learning_rate"],
-        do_train=True,
-        do_eval=True,
-        evaluation_strategy="steps",
-        logging_dir="./logs",
-        logging_strategy="steps",
-        save_strategy="steps",
-        # deepspeed="./ds_config.json",
-        load_best_model_at_end=True,
-        metric_for_best_model="eval_q3_accuracy",
-        greater_is_better=True,
-        num_train_epochs=20,
-        fp16=True,
-        gradient_accumulation_steps=64,
-        weight_decay=config["weight_decay"],
-        max_grad_norm=1.0,
-        max_steps=-1,
-        logging_steps=500,
-        save_steps=500,
-        seed=42,
-        run_name="SS-Generation",
-        per_device_train_batch_size=2,
-        per_device_eval_batch_size=2,
-        log_level="error"
-    )
-    trainer = Trainer(
-        model_init=model_init,
-        args=training_args,
-        train_dataset=train_dataset["train"],
-        eval_dataset=valid_dataset["test"],
-        compute_metrics=compute_metrics,
-        tokenizer=tokenizer,
-    )
+deepspeed = {
+    "fp16": {
+        "enabled": "auto"
+    },
+    "optimizer": {
+        "type": "AdamW",
+                "params": {
+                    "lr": "auto",
+                    "weight_decay": "auto",
+                    "torch_adam": True,
+                    "adam_w_mode": True
+                }
+    },
+    "scheduler": {
+        "type": "WarmupDecayLR",
+                "params": {
+                    "warmup_min_lr": "auto",
+                    "warmup_max_lr": "auto",
+                    "warmup_num_steps": "auto",
+                    "total_num_steps": "auto"
+                }
+    },
+    "zero_optimization": {
+        "stage": 2,
+        "allgather_partitions": True,
+        "allgather_bucket_size": 2e8,
+        "overlap_comm": True,
+        "reduce_scatter": True,
+        "reduce_bucket_size": 2e8,
+        "contiguous_gradients": True
+    },
+    "gradient_accumulation_steps": "auto",
+    "gradient_clipping": "auto",
+    "steps_per_print": 2000,
+    "train_batch_size": "auto",
+    "train_micro_batch_size_per_gpu": "auto",
+    "wall_clock_breakdown": False
+}
 
-    train_result = trainer.train()
+training_args = TrainingArguments(
+    output_dir="./results",
+    do_train=True,
+    do_eval=True,
+    evaluation_strategy="steps",
+    logging_dir="./logs",
+    logging_strategy="steps",
+    save_strategy="steps",
+    deepspeed=deepspeed,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_q3_accuracy",
+    greater_is_better=True,
+    num_train_epochs=20,
+    fp16=False,
+    max_grad_norm=1.0,
+    max_steps=-1,
+    logging_steps=500,
+    save_steps=500,
+    seed=42,
+    run_name="SS-Generation",
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    log_level="error",
+    report_to="wandb",
+)
 
-    eval_result = trainer.evaluate()
-
-    wandb.log({
-        "train_loss": train_result.training_loss,
-        "eval_loss": eval_result.get("eval_loss", np.nan),
-        "q3_accuracy": eval_result.get("eval_q3_accuracy", np.nan),
-        "epoch": train_result.epoch,
-        "learning_rate": config["learning_rate"],
-        "weight_decay": config["weight_decay"],
-    })
-
-    if training_args.load_best_model_at_end:
-        trainer.model.save_pretrained('./best_model')
-
-    return eval_result
-
+trainer = Trainer(
+    model_init=model_init,
+    args=training_args,
+    train_dataset=train_dataset["train"],
+    eval_dataset=valid_dataset["test"],
+    compute_metrics=compute_metrics,
+    tokenizer=tokenizer,
+)
 
 # define the hyperparameters search space
 config = {
@@ -225,7 +242,7 @@ config = {
 }
 
 # configure the resources per trial for the GPUs
-resources_per_trial = {"gpu": 4}
+resources_per_trial = {"gpu": 4, "cpu": 10}
 
 # define the reporter to fetch the important information
 reporter = CLIReporter(
@@ -233,30 +250,14 @@ reporter = CLIReporter(
     metric_columns=["loss", "q3_accuracy", "training_iteration"],
 )
 
-# run ray.tune
-analysis = tune.run(
-    train_protein_structure_predictor,
+best_trial = trainer.hyperparameter_search(
+    hp_space=lambda _: config,
+    backend="ray",
+    n_trials=10,
     search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
     scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
-    config=config,
-    num_samples=10,
-    resources_per_trial=resources_per_trial,
-    callbacks=[WandbLoggerCallback(
-        project=wandb_config["wandb"]["project"],
-        api_key=api_key,
-        log_config=True
-    )],
-    progress_reporter=reporter,
-    local_dir="./ray_results",
+    kwargs={"resources_per_trial": resources_per_trial}
 )
 
-# get the best trial
-best_trial = analysis.get_best_trial("eval_q3_accuracy", "max", "last")
-
-# print the best trial's parameters
-best_params = best_trial.config
-print(f"Best trial's parameters: {best_params}")
-
-# retrain your model using the best parameters
-train_protein_structure_predictor(
-    best_params, model_init, train_dataset, valid_dataset, tokenizer)
+# print out the best hyperparameters
+print("Best trial hyperparameters:", best_trial.hyperparameters)
