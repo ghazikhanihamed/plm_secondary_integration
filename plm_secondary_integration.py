@@ -177,7 +177,7 @@ def train_protein_structure_predictor(config):
         metric_for_best_model="eval_q3_accuracy",
         greater_is_better=True,
         num_train_epochs=20,
-        fp16=False,
+        fp16=True,
         gradient_accumulation_steps=64,
         weight_decay=config["weight_decay"],
         max_grad_norm=1.0,
@@ -188,6 +188,7 @@ def train_protein_structure_predictor(config):
         run_name="SS-Generation",
         per_device_train_batch_size=2,
         per_device_eval_batch_size=2,
+        log_level="error"
     )
     trainer = Trainer(
         model_init=model_init,
