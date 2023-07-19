@@ -33,7 +33,9 @@ wandb_config = {
     }
 }
 
-wandb.login(key=api_key)
+wandb.login(key=api_key, force=True, relogin=True)
+
+wandb.init()
 
 logger = logging.getLogger(__name__)
 
@@ -222,7 +224,7 @@ training_args = TrainingArguments(
     run_name="SS-Generation",
     per_device_train_batch_size=2,
     per_device_eval_batch_size=2,
-    log_level="error",
+    log_level="info",
     report_to="wandb",
 )
 
@@ -242,7 +244,7 @@ config = {
 }
 
 # configure the resources per trial for the GPUs
-resources_per_trial = {"gpu": 4, "cpu": 10}
+resources_per_trial = {"gpu": 4}
 
 # define the reporter to fetch the important information
 reporter = CLIReporter(
@@ -255,7 +257,8 @@ best_trial = trainer.hyperparameter_search(
     backend="ray",
     n_trials=10,
     search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
-    scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max")
+    scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
+    kwargs={"resources_per_trial": resources_per_trial},
 )
 
 # print out the best hyperparameters
