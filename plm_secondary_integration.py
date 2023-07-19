@@ -255,8 +255,7 @@ best_trial = trainer.hyperparameter_search(
     backend="ray",
     n_trials=10,
     search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
-    scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
-    kwargs={"resources_per_trial": resources_per_trial}
+    scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max")
 )
 
 # print out the best hyperparameters
