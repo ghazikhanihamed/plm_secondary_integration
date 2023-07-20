@@ -10,32 +10,28 @@ import logging
 import torch
 import sys
 
-from ray import tune
-from ray.tune.search.hyperopt import HyperOptSearch
-from ray.tune.schedulers import ASHAScheduler
 from ray.tune import CLIReporter
 
-# import wandb
+
+import wandb
 
 import json
 
 import numpy as np
 
 
-# with open('wandb_config.json') as f:
-#     data = json.load(f)
+with open('wandb_config.json') as f:
+    data = json.load(f)
 
-# api_key = data['wandb']['api_key']
+api_key = data['wandb']['api_key']
 
-# wandb_config = {
-#     "wandb": {
-#         "project": "Protein-Structure-Prediction",
-#     }
-# }
+wandb_config = {
+    "wandb": {
+        "project": "Protein-Structure-Prediction",
+    }
+}
 
-# wandb.login(key=api_key)
-
-# wandb.init()
+wandb.login(key=api_key)
 
 logger = logging.getLogger(__name__)
 
@@ -225,10 +221,12 @@ training_args = TrainingArguments(
     save_steps=500,
     seed=42,
     run_name="SS-Generation",
-    per_device_train_batch_size=1,
+    per_device_train_batch_size=2,
     per_device_eval_batch_size=2,
     gradient_accumulation_steps=64,
     warmup_steps=100,
+    report_to="wandb",
+    on_each_node=False,
 )
 
 trainer = Trainer(
@@ -240,25 +238,23 @@ trainer = Trainer(
     tokenizer=tokenizer,
 )
 
-# define the hyperparameters search space
-config = {
-    "learning_rate": tune.loguniform(1e-6, 1e-2),
-    "weight_decay": tune.loguniform(1e-6, 1e-4),
-}
 
-# define the reporter to fetch the important information
-reporter = CLIReporter(
-    parameter_columns=["learning_rate", "weight_decay"],
-    metric_columns=["loss", "q3_accuracy", "training_iteration"],
-)
+def my_hp_space(trial):
+    return {
+        "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True),
+        "weight_decay": trial.suggest_float("weight_decay", 1e-6, 1e-4, log=True),
+    }
 
+
+# run the hyperparameter search using optuna
 best_trial = trainer.hyperparameter_search(
-    hp_space=lambda _: config,
-    backend="ray",
+    hp_space=my_hp_space,
+    compute_objective=None,
     n_trials=10,
-    search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
-    scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
+    direction="maximize",
+    backend="optuna",
 )
+
 
 # print out the best hyperparameters
 print("Best trial hyperparameters:", best_trial.hyperparameters)
