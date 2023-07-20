@@ -226,7 +226,7 @@ training_args = TrainingArguments(
     gradient_accumulation_steps=64,
     warmup_steps=100,
     report_to="wandb",
-    on_each_node=False,
+    log_on_each_node=False,
 )
 
 trainer = Trainer(
