@@ -15,27 +15,27 @@ from ray.tune.search.hyperopt import HyperOptSearch
 from ray.tune.schedulers import ASHAScheduler
 from ray.tune import CLIReporter
 
-import wandb
+# import wandb
 
 import json
 
 import numpy as np
 
 
-with open('wandb_config.json') as f:
-    data = json.load(f)
+# with open('wandb_config.json') as f:
+#     data = json.load(f)
 
-api_key = data['wandb']['api_key']
+# api_key = data['wandb']['api_key']
 
-wandb_config = {
-    "wandb": {
-        "project": "Protein-Structure-Prediction",
-    }
-}
+# wandb_config = {
+#     "wandb": {
+#         "project": "Protein-Structure-Prediction",
+#     }
+# }
 
-wandb.login(key=api_key)
+# wandb.login(key=api_key)
 
-wandb.init()
+# wandb.init()
 
 logger = logging.getLogger(__name__)
 
@@ -224,8 +224,8 @@ training_args = TrainingArguments(
     run_name="SS-Generation",
     per_device_train_batch_size=2,
     per_device_eval_batch_size=2,
-    log_level="info",
-    report_to="wandb",
+    # log_level="info",
+    # report_to="wandb",
 )
 
 trainer = Trainer(
@@ -244,7 +244,7 @@ config = {
 }
 
 # configure the resources per trial for the GPUs
-resources_per_trial = {"gpu": 4}
+# resources_per_trial = {"gpu": 4}
 
 # define the reporter to fetch the important information
 reporter = CLIReporter(
@@ -258,7 +258,7 @@ best_trial = trainer.hyperparameter_search(
     n_trials=10,
     search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
     scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
-    resources_per_trial=resources_per_trial,
+    # resources_per_trial=resources_per_trial,
 )
 
 # print out the best hyperparameters
