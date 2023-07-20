@@ -187,11 +187,15 @@ deepspeed = {
     },
     "zero_optimization": {
         "stage": 2,
+        "offload_optimizer": {
+            "device": "cpu",
+            "pin_memory": True
+        },
         "allgather_partitions": True,
-        "allgather_bucket_size": 2e8,
+        "allgather_bucket_size": 5e8,
         "overlap_comm": True,
         "reduce_scatter": True,
-        "reduce_bucket_size": 2e8,
+        "reduce_bucket_size": 5e8,
         "contiguous_gradients": True
     },
     "gradient_accumulation_steps": "auto",
@@ -215,24 +219,23 @@ training_args = TrainingArguments(
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
     num_train_epochs=20,
-    fp16=False,
     max_grad_norm=1.0,
     max_steps=-1,
     logging_steps=500,
     save_steps=500,
     seed=42,
     run_name="SS-Generation",
-    per_device_train_batch_size=2,
+    per_device_train_batch_size=1,
     per_device_eval_batch_size=2,
-    # log_level="info",
-    # report_to="wandb",
+    gradient_accumulation_steps=64,
+    warmup_steps=100,
 )
 
 trainer = Trainer(
     model_init=model_init,
     args=training_args,
     train_dataset=train_dataset["train"],
-    eval_dataset=valid_dataset["test"],
+    eval_dataset=valid_dataset["train"],
     compute_metrics=compute_metrics,
     tokenizer=tokenizer,
 )
@@ -242,9 +245,6 @@ config = {
     "learning_rate": tune.loguniform(1e-6, 1e-2),
     "weight_decay": tune.loguniform(1e-6, 1e-4),
 }
-
-# configure the resources per trial for the GPUs
-# resources_per_trial = {"gpu": 4}
 
 # define the reporter to fetch the important information
 reporter = CLIReporter(
@@ -258,7 +258,6 @@ best_trial = trainer.hyperparameter_search(
     n_trials=10,
     search_alg=HyperOptSearch(metric="eval_q3_accuracy", mode="max"),
     scheduler=ASHAScheduler(metric="eval_q3_accuracy", mode="max"),
-    # resources_per_trial=resources_per_trial,
 )
 
 # print out the best hyperparameters
