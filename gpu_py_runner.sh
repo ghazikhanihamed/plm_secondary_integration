@@ -3,7 +3,7 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=400G,g=6
+#$ -l m_mem_free=256G,g=4
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
@@ -13,7 +13,7 @@ gcc --version
 
 source ~/venv_secondary/bin/activate
 
-deepspeed --num_gpus=6 plm_secondary_integration.py 
+deepspeed --num_gpus=4 plm_secondary_integration.py 
 
 deactivate
 

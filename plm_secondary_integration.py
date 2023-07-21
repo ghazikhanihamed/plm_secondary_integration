@@ -10,10 +10,6 @@ import logging
 import torch
 import sys
 
-from transformers.trainer_callback import EarlyStoppingCallback
-
-from optuna.pruners import MedianPruner
-
 
 import wandb
 
@@ -223,7 +219,6 @@ trainer = Trainer(
     eval_dataset=valid_dataset,
     compute_metrics=compute_metrics,
     tokenizer=tokenizer,
-    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
 )
 
 
@@ -234,18 +229,14 @@ def my_hp_space(trial):
         "weight_decay": trial.suggest_float("weight_decay", 1e-6, 1e-3, log=True),
         "adam_epsilon": trial.suggest_float("adam_epsilon", 1e-9, 1e-7, log=True),
         "warmup_steps": trial.suggest_int("warmup_steps", 0, 500),
-        "per_device_train_batch_size": trial.suggest_categorical("per_device_train_batch_size", [1, 2, 4]),
-        "per_device_eval_batch_size": trial.suggest_categorical("per_device_eval_batch_size", [2, 4, 8]),
+        "per_device_train_batch_size": trial.suggest_categorical("per_device_train_batch_size", [1, 2]),
+        "per_device_eval_batch_size": trial.suggest_categorical("per_device_eval_batch_size", [2, 4]),
         "gradient_accumulation_steps": trial.suggest_int("gradient_accumulation_steps", 1, 64)
     }
 
 
 def my_hp_name(trial):
     return f"trial_{trial.number}"
-
-
-# MedianPruner stops the trials whose best intermediate result is worse than median
-pruner = MedianPruner(n_startup_trials=10, n_warmup_steps=5, interval_steps=1)
 
 
 # run the hyperparameter search using optuna
@@ -256,7 +247,6 @@ best_trial = trainer.hyperparameter_search(
     direction="maximize",
     backend="optuna",
     hp_name=my_hp_name,
-    pruner=pruner,
 )
 
 
