@@ -140,14 +140,14 @@ def preprocess_data(examples):
 train_dataset = train_dataset.map(
     preprocess_data,
     batched=True,
-    remove_columns=train_dataset.column_names["train"],
+    remove_columns=train_dataset.column_names,
     desc="Running tokenizer on dataset",
 )
 
 valid_dataset = validation_dataset.map(
     preprocess_data,
     batched=True,
-    remove_columns=validation_dataset.column_names["train"],
+    remove_columns=validation_dataset.column_names,
     desc="Running tokenizer on dataset",
 )
 
