@@ -31,6 +31,8 @@ wandb_config = {
 
 wandb.login(key=api_key)
 
+wandb.init(config=wandb_config)
+
 logger = logging.getLogger(__name__)
 
 # Setup logging
@@ -181,6 +183,9 @@ deepspeed = {
         "reduce_bucket_size": 5e8,
         "contiguous_gradients": True
     },
+    "gradient_clipping": "auto",
+    "gradient_accumulation_steps": "auto",
+    "train_batch_size": "auto",
     "train_micro_batch_size_per_gpu": "auto",
     "wall_clock_breakdown": False
 }
@@ -198,17 +203,11 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    max_grad_norm=1.0,
-    max_steps=-1,
     logging_steps=500,
     save_steps=500,
     seed=42,
     run_name="SS-Generation",
-    per_device_train_batch_size=2,
-    per_device_eval_batch_size=2,
-    gradient_accumulation_steps=64,
     report_to="wandb",
-    log_on_each_node=False,
     fp16=True,
 )
 
@@ -230,9 +229,6 @@ def my_hp_space(trial):
         "weight_decay": trial.suggest_float("weight_decay", 1e-6, 1e-3, log=True),
         "adam_epsilon": trial.suggest_float("adam_epsilon", 1e-9, 1e-7, log=True),
         "warmup_steps": trial.suggest_int("warmup_steps", 0, 500),
-        "per_device_train_batch_size": trial.suggest_categorical("per_device_train_batch_size", [1, 2]),
-        "per_device_eval_batch_size": trial.suggest_categorical("per_device_eval_batch_size", [2, 4]),
-        "gradient_accumulation_steps": trial.suggest_int("gradient_accumulation_steps", 1, 64)
     }
 
 

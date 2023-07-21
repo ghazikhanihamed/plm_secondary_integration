@@ -3,13 +3,12 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=256G,g=4
+#$ -l m_mem_free=128G,g=4
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
 
 module load gcc/10.1.0/default
-gcc --version
 
 source ~/venv_secondary/bin/activate
 
