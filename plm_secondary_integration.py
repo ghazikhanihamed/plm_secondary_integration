@@ -181,6 +181,7 @@ deepspeed = {
         "reduce_bucket_size": 5e8,
         "contiguous_gradients": True
     },
+    "train_micro_batch_size_per_gpu": "auto",
     "wall_clock_breakdown": False
 }
 
