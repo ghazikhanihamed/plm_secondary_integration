@@ -10,7 +10,9 @@ import logging
 import torch
 import sys
 
-from ray.tune import CLIReporter
+from transformers.trainer_callback import EarlyStoppingCallback
+
+from optuna.pruners import MedianPruner
 
 
 import wandb
@@ -32,8 +34,6 @@ wandb_config = {
 }
 
 wandb.login(key=api_key)
-
-wandb.init(config=wandb_config)
 
 logger = logging.getLogger(__name__)
 
@@ -182,27 +182,6 @@ def model_init():
 
 
 deepspeed = {
-    "fp16": {
-        "enabled": "auto"
-    },
-    "optimizer": {
-        "type": "AdamW",
-                "params": {
-                    "lr": "auto",
-                    "weight_decay": "auto",
-                    "torch_adam": True,
-                    "adam_w_mode": True
-                }
-    },
-    "scheduler": {
-        "type": "WarmupDecayLR",
-                "params": {
-                    "warmup_min_lr": "auto",
-                    "warmup_max_lr": "auto",
-                    "warmup_num_steps": "auto",
-                    "total_num_steps": "auto"
-                }
-    },
     "zero_optimization": {
         "stage": 2,
         "allgather_partitions": True,
@@ -212,13 +191,9 @@ deepspeed = {
         "reduce_bucket_size": 5e8,
         "contiguous_gradients": True
     },
-    "gradient_accumulation_steps": "auto",
-    "gradient_clipping": "auto",
-    "steps_per_print": 2000,
-    "train_batch_size": "auto",
-    "train_micro_batch_size_per_gpu": "auto",
     "wall_clock_breakdown": False
 }
+
 
 training_args = TrainingArguments(
     output_dir="./results",
@@ -232,7 +207,6 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=20,
     max_grad_norm=1.0,
     max_steps=-1,
     logging_steps=500,
@@ -244,7 +218,9 @@ training_args = TrainingArguments(
     gradient_accumulation_steps=64,
     report_to="wandb",
     log_on_each_node=False,
+    fp16=True,
 )
+
 
 trainer = Trainer(
     model_init=model_init,
@@ -253,14 +229,29 @@ trainer = Trainer(
     eval_dataset=valid_dataset,
     compute_metrics=compute_metrics,
     tokenizer=tokenizer,
+    callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
 )
 
 
 def my_hp_space(trial):
     return {
         "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True),
+        "num_train_epochs": trial.suggest_int("num_train_epochs", 2, 10),
         "weight_decay": trial.suggest_float("weight_decay", 1e-6, 1e-3, log=True),
+        "adam_epsilon": trial.suggest_float("adam_epsilon", 1e-9, 1e-7, log=True),
+        "warmup_steps": trial.suggest_int("warmup_steps", 0, 500),
+        "per_device_train_batch_size": trial.suggest_categorical("per_device_train_batch_size", [1, 2, 4]),
+        "per_device_eval_batch_size": trial.suggest_categorical("per_device_eval_batch_size", [2, 4, 8]),
+        "gradient_accumulation_steps": trial.suggest_int("gradient_accumulation_steps", 1, 64)
     }
+
+
+def my_hp_name(trial):
+    return f"trial_{trial.number}"
+
+
+# MedianPruner stops the trials whose best intermediate result is worse than median
+pruner = MedianPruner(n_startup_trials=10, n_warmup_steps=5, interval_steps=1)
 
 
 # run the hyperparameter search using optuna
@@ -270,6 +261,8 @@ best_trial = trainer.hyperparameter_search(
     n_trials=10,
     direction="maximize",
     backend="optuna",
+    hp_name=my_hp_name,
+    pruner=pruner,
 )
 
 
