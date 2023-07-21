@@ -50,19 +50,32 @@ set_seed(42)
 tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
 
 # load the dataset
-training_dataset = load_dataset(
+dataset = load_dataset(
     "proteinea/secondary_structure_prediction",
     data_files={"train": ["training_hhblits.csv"]},
 )
 
-# we randomly select 500 samples from the training set to use as our validation set
-validation_dataset = training_dataset["train"].train_test_split(
-    test_size=500, seed=42)
+# Decide on the number of validation samples
+num_validation_samples = 500
+
+# Calculate the number of training samples
+num_train_samples = len(dataset["train"]) - num_validation_samples
+
+# Specify the split
+train_test_split = dataset["train"].train_test_split(
+    test_size=num_validation_samples,
+    train_size=num_train_samples,
+    seed=42,  # For reproducibility
+)
+
+# Access the datasets
+train_dataset = train_test_split["train"]
+validation_dataset = train_test_split["test"]
 
 
 # ***************************************************** To be changed *****************************************************
 # For debugging purposes, we can use a subset of the training set and validation set
-training_dataset = training_dataset.select(range(100))
+train_dataset = train_dataset.select(range(100))
 validation_dataset = validation_dataset.select(range(100))
 # ***************************************************** To be changed *****************************************************
 
@@ -70,14 +83,14 @@ input_column_name = "input"
 labels_column_name = "dssp3"
 
 # concatenate all sequences
-all_sequences = list(training_dataset["train"][input_column_name])
+all_sequences = list(train_dataset[input_column_name])
 
 sequence_lengths = [len(seq.split()) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
 
 # Consider each label as a tag for each token
 unique_tags = set(
-    tag for doc in training_dataset["train"][labels_column_name] for tag in doc
+    tag for doc in train_dataset[labels_column_name] for tag in doc
 )
 
 # add padding tag
@@ -124,10 +137,10 @@ def preprocess_data(examples):
     }
 
 
-train_dataset = training_dataset.map(
+train_dataset = train_dataset.map(
     preprocess_data,
     batched=True,
-    remove_columns=training_dataset.column_names["train"],
+    remove_columns=train_dataset.column_names["train"],
     desc="Running tokenizer on dataset",
 )
 
@@ -236,8 +249,8 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model_init=model_init,
     args=training_args,
-    train_dataset=train_dataset["train"],
-    eval_dataset=valid_dataset["train"],
+    train_dataset=train_dataset,
+    eval_dataset=valid_dataset,
     compute_metrics=compute_metrics,
     tokenizer=tokenizer,
 )
