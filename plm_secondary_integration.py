@@ -33,6 +33,8 @@ wandb_config = {
 
 wandb.login(key=api_key)
 
+wandb.init(config=wandb_config)
+
 logger = logging.getLogger(__name__)
 
 # Setup logging
@@ -56,6 +58,13 @@ training_dataset = load_dataset(
 # we randomly select 500 samples from the training set to use as our validation set
 validation_dataset = training_dataset["train"].train_test_split(
     test_size=500, seed=42)
+
+
+# ***************************************************** To be changed *****************************************************
+# For debugging purposes, we can use a subset of the training set and validation set
+training_dataset = training_dataset.select(range(100))
+validation_dataset = validation_dataset.select(range(100))
+# ***************************************************** To be changed *****************************************************
 
 input_column_name = "input"
 labels_column_name = "dssp3"
@@ -183,10 +192,6 @@ deepspeed = {
     },
     "zero_optimization": {
         "stage": 2,
-        "offload_optimizer": {
-            "device": "cpu",
-            "pin_memory": True
-        },
         "allgather_partitions": True,
         "allgather_bucket_size": 5e8,
         "overlap_comm": True,
@@ -206,10 +211,10 @@ training_args = TrainingArguments(
     output_dir="./results",
     do_train=True,
     do_eval=True,
-    evaluation_strategy="steps",
+    evaluation_strategy="epochs",
     logging_dir="./logs",
-    logging_strategy="steps",
-    save_strategy="steps",
+    logging_strategy="epochs",
+    save_strategy="epochs",
     deepspeed=deepspeed,
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
@@ -224,7 +229,6 @@ training_args = TrainingArguments(
     per_device_train_batch_size=2,
     per_device_eval_batch_size=2,
     gradient_accumulation_steps=64,
-    warmup_steps=100,
     report_to="wandb",
     log_on_each_node=False,
 )
@@ -242,7 +246,7 @@ trainer = Trainer(
 def my_hp_space(trial):
     return {
         "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True),
-        "weight_decay": trial.suggest_float("weight_decay", 1e-6, 1e-4, log=True),
+        "weight_decay": trial.suggest_float("weight_decay", 1e-6, 1e-3, log=True),
     }
 
 
