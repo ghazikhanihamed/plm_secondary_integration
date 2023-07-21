@@ -31,8 +31,6 @@ wandb_config = {
 
 wandb.login(key=api_key)
 
-wandb.init(config=wandb_config)
-
 logger = logging.getLogger(__name__)
 
 # Setup logging
@@ -169,11 +167,19 @@ def compute_metrics(eval_pred):
 
 
 # Prepare the model
-def model_init():
+def model_init(trial):
     return T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
 
 
 deepspeed = {
+    "fp16": {
+        "enabled": "auto",
+        "loss_scale": 0,
+        "loss_scale_window": 1000,
+        "initial_scale_power": 16,
+        "hysteresis": 2,
+        "min_loss_scale": 1
+    },
     "zero_optimization": {
         "stage": 2,
         "allgather_partitions": True,
@@ -208,11 +214,11 @@ training_args = TrainingArguments(
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
-    fp16=True,
 )
 
 
 trainer = Trainer(
+    model=None,
     model_init=model_init,
     args=training_args,
     train_dataset=train_dataset,
