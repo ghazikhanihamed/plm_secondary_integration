@@ -73,12 +73,6 @@ train_dataset = train_test_split["train"]
 validation_dataset = train_test_split["test"]
 
 
-# ***************************************************** To be changed *****************************************************
-# For debugging purposes, we can use a subset of the training set and validation set
-train_dataset = train_dataset.select(range(100))
-validation_dataset = validation_dataset.select(range(100))
-# ***************************************************** To be changed *****************************************************
-
 input_column_name = "input"
 labels_column_name = "dssp3"
 
