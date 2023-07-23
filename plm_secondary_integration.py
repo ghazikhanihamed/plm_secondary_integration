@@ -23,9 +23,7 @@ with open('wandb_config.json') as f:
 api_key = data['wandb']['api_key']
 
 wandb_config = {
-    "wandb": {
-        "project": "Protein-Structure-Prediction",
-    }
+    "project": "Protein-Structure-Prediction",
 }
 
 wandb.login(key=api_key)
