@@ -1,23 +1,22 @@
+import torch
+from optuna.integration.wandb import WeightsAndBiasesCallback
+import optuna
 from transformers import (
     T5ForConditionalGeneration,
     AutoTokenizer,
     TrainingArguments,
     Trainer,
 )
-from datasets import load_dataset
+from datasets import load_dataset, concatenate_datasets
 from transformers.trainer_utils import set_seed
 import logging
-import torch
 import sys
 
-
 import wandb
-
 import json
-
 import numpy as np
 
-
+# Load Weights & Biases Configuration
 with open('wandb_config.json') as f:
     data = json.load(f)
 
@@ -46,27 +45,35 @@ set_seed(42)
 tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
 
 # load the dataset
-dataset = load_dataset(
+dataset1 = load_dataset(
     "proteinea/secondary_structure_prediction",
     data_files={"train": ["training_hhblits.csv"]},
 )
+dataset2 = load_dataset(
+    "proteinea/secondary_structure_prediction", data_files={'CASP12': ['CASP12.csv']})
+dataset3 = load_dataset(
+    "proteinea/secondary_structure_prediction", data_files={'CASP14': ['CASP14.csv']})
+dataset4 = load_dataset(
+    "proteinea/secondary_structure_prediction", data_files={'CB513': ['CB513.csv']})
+dataset5 = load_dataset(
+    "proteinea/secondary_structure_prediction", data_files={'TS115': ['TS115.csv']})
 
-# Decide on the number of validation samples
-num_validation_samples = 500
+# concatenate dataset1 and dataset4
+train_dataset = concatenate_datasets(
+    [dataset1["train"], dataset4["CB513"]])
 
-# Calculate the number of training samples
-num_train_samples = len(dataset["train"]) - num_validation_samples
+# The validation set will be dataset5
+validation_dataset = dataset5["TS115"]
 
-# Specify the split
-train_test_split = dataset["train"].train_test_split(
-    test_size=num_validation_samples,
-    train_size=num_train_samples,
-    seed=42,  # For reproducibility
-)
+# Two separate test datasets
+test_dataset1 = dataset2["CASP12"]
+test_dataset2 = dataset3["CASP14"]
 
-# Access the datasets
-train_dataset = train_test_split["train"]
-validation_dataset = train_test_split["test"]
+# Print the number of samples
+print(f"Number of training samples: {len(train_dataset)}")
+print(f"Number of validation samples: {len(validation_dataset)}")
+print(f"Number of test samples on CASP12: {len(test_dataset1)}")
+print(f"Number of test samples on CASP14: {len(test_dataset2)}")
 
 
 input_column_name = "input"
@@ -131,14 +138,28 @@ train_dataset = train_dataset.map(
     preprocess_data,
     batched=True,
     remove_columns=train_dataset.column_names,
-    desc="Running tokenizer on dataset",
+    desc="Running tokenizer on dataset for training",
 )
 
 valid_dataset = validation_dataset.map(
     preprocess_data,
     batched=True,
     remove_columns=validation_dataset.column_names,
-    desc="Running tokenizer on dataset",
+    desc="Running tokenizer on dataset for validation",
+)
+
+test_dataset1 = test_dataset1.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=test_dataset1.column_names,
+    desc="Running tokenizer on dataset for test",
+)
+
+test_dataset2 = test_dataset2.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=test_dataset2.column_names,
+    desc="Running tokenizer on dataset for test",
 )
 
 
@@ -197,61 +218,130 @@ deepspeed = {
 }
 
 
-training_args = TrainingArguments(
-    output_dir="./results",
-    do_train=True,
-    do_eval=True,
-    evaluation_strategy="epoch",
-    logging_dir="./logs",
-    logging_strategy="epoch",
-    save_strategy="epoch",
-    deepspeed=deepspeed,
-    load_best_model_at_end=True,
-    metric_for_best_model="eval_q3_accuracy",
-    greater_is_better=True,
-    logging_steps=500,
-    save_steps=500,
-    seed=42,
-    run_name="SS-Generation",
-    report_to="wandb",
-)
+def objective(trial):
+    # Suggest hyperparameters
+    learning_rate = trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True)
+    num_train_epochs = trial.suggest_int("num_train_epochs", 3, 20)
+    weight_decay = trial.suggest_float("weight_decay", 1e-6, 1e-3, log=True)
+    adam_epsilon = trial.suggest_float("adam_epsilon", 1e-9, 1e-7, log=True)
+    warmup_steps = trial.suggest_int("warmup_steps", 0, 500)
+
+    # Create a new training_args and use the hyperparameters
+    training_args = TrainingArguments(
+        output_dir="./results",
+        do_train=True,
+        do_eval=True,
+        evaluation_strategy="epoch",
+        logging_dir="./logs",
+        logging_strategy="epoch",
+        save_strategy="epoch",
+        deepspeed=deepspeed,
+        load_best_model_at_end=True,
+        metric_for_best_model="eval_q3_accuracy",
+        greater_is_better=True,
+        logging_steps=500,
+        save_steps=500,
+        seed=42,
+        run_name="SS-Generation",
+        report_to="wandb",
+        learning_rate=learning_rate,
+        num_train_epochs=num_train_epochs,
+        weight_decay=weight_decay,
+        adam_epsilon=adam_epsilon,
+        warmup_steps=warmup_steps,
+    )
+
+    # Create a new Trainer instance
+    trainer = Trainer(
+        model_init=model_init,
+        args=training_args,
+        train_dataset=train_dataset,
+        eval_dataset=valid_dataset,
+        compute_metrics=compute_metrics,
+        tokenizer=tokenizer,
+    )
+
+    # Train the model
+    trainer.train()
+
+    # Evaluate the model
+    metrics = trainer.evaluate()
+
+    trial.report(metrics["eval_q3_accuracy"],
+                 step=training_args.num_train_epochs)
+
+    # Handle pruning based on the intermediate value.
+    if trial.should_prune():
+        raise optuna.exceptions.TrialPruned()
+
+    # Return the evaluation metric for the trial
+    return metrics["eval_q3_accuracy"]
 
 
-trainer = Trainer(
-    model=None,
-    model_init=model_init,
-    args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=valid_dataset,
-    compute_metrics=compute_metrics,
-    tokenizer=tokenizer,
-)
+if __name__ == "__main__":
+    n_trials = 20
 
+    wandbc = WeightsAndBiasesCallback(
+        metric_name="eval_q3_accuracy", wandb_kwargs=wandb_config)
 
-def my_hp_space(trial):
-    return {
-        "learning_rate": trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True),
-        "num_train_epochs": trial.suggest_int("num_train_epochs", 2, 10),
-        "weight_decay": trial.suggest_float("weight_decay", 1e-6, 1e-3, log=True),
-        "adam_epsilon": trial.suggest_float("adam_epsilon", 1e-9, 1e-7, log=True),
-        "warmup_steps": trial.suggest_int("warmup_steps", 0, 500),
-    }
+    pruner = optuna.pruners.MedianPruner()
+    study = optuna.create_study(direction="maximize", pruner=pruner)
+    study.optimize(objective, n_trials=n_trials, callbacks=[wandbc])
 
+    print("Number of finished trials: ", len(study.trials))
 
-def my_hp_name(trial):
-    return f"trial_{trial.number}"
+    print("Best trial:")
+    trial = study.best_trial
 
+    print("  Value: ", trial.value)
 
-# run the hyperparameter search using optuna
-best_trial = trainer.hyperparameter_search(
-    hp_space=my_hp_space,
-    compute_objective=None,
-    n_trials=10,
-    direction="maximize",
-    backend="optuna",
-    hp_name=my_hp_name,
-)
+    print("  Params: ")
+    for key, value in trial.params.items():
+        print("    {}: {}".format(key, value))
 
+    # Retrain model with best hyperparameters
+    best_params = study.best_params
 
-# print out the best hyperparameters
-print("Best trial hyperparameters:", best_trial.hyperparameters)
+    # Create a new training_args and use the hyperparameters
+    re_training_args = TrainingArguments(
+        output_dir="./results",
+        do_train=True,
+        do_eval=True,
+        evaluation_strategy="epoch",
+        logging_dir="./logs",
+        logging_strategy="epoch",
+        save_strategy="epoch",
+        deepspeed=deepspeed,
+        load_best_model_at_end=True,
+        metric_for_best_model="eval_q3_accuracy",
+        greater_is_better=True,
+        logging_steps=500,
+        save_steps=500,
+        seed=42,
+        run_name="SS-Generation",
+        report_to="wandb",
+        learning_rate=best_params['learning_rate'],
+        num_train_epochs=best_params['num_train_epochs'],
+        weight_decay=best_params['weight_decay'],
+        adam_epsilon=best_params['adam_epsilon'],
+        warmup_steps=best_params['warmup_steps'],
+    )
+
+    trainer = Trainer(
+        model_init=model_init,
+        args=re_training_args,
+        train_dataset=train_dataset,
+        eval_dataset=valid_dataset,
+        compute_metrics=compute_metrics,
+        tokenizer=tokenizer,
+    )
+
+    # Train the model
+    trainer.train()
+
+    # Evaluate the model on test datasets
+    metrics_test1 = trainer.evaluate(test_dataset=test_dataset1)
+    metrics_test2 = trainer.evaluate(test_dataset=test_dataset2)
+
+    print("Evaluation results on test set CASP12: ", metrics_test1)
+    print("Evaluation results on test set CASP14: ", metrics_test2)
