@@ -222,10 +222,6 @@ deepspeed = {
 def objective(trial):
     # Suggest hyperparameters
     learning_rate = trial.suggest_float("learning_rate", 1e-6, 1e-2, log=True)
-    num_train_epochs = trial.suggest_int("num_train_epochs", 3, 20)
-    weight_decay = trial.suggest_float("weight_decay", 1e-6, 1e-3, log=True)
-    adam_epsilon = trial.suggest_float("adam_epsilon", 1e-9, 1e-7, log=True)
-    warmup_steps = trial.suggest_int("warmup_steps", 0, 500)
 
     # Create a new training_args and use the hyperparameters
     training_args = TrainingArguments(
@@ -246,10 +242,7 @@ def objective(trial):
         run_name="SS-Generation",
         report_to="wandb",
         learning_rate=learning_rate,
-        num_train_epochs=num_train_epochs,
-        weight_decay=weight_decay,
-        adam_epsilon=adam_epsilon,
-        warmup_steps=warmup_steps,
+        num_train_epochs=20,
     )
 
     # Create a new Trainer instance
@@ -314,10 +307,7 @@ if __name__ == "__main__":
         run_name="SS-Generation",
         report_to="wandb",
         learning_rate=best_params['learning_rate'],
-        num_train_epochs=best_params['num_train_epochs'],
-        weight_decay=best_params['weight_decay'],
-        adam_epsilon=best_params['adam_epsilon'],
-        warmup_steps=best_params['warmup_steps'],
+        num_train_epochs=20,
     )
 
     trainer = Trainer(
