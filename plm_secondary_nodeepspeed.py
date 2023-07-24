@@ -30,8 +30,6 @@ wandb_config = {
 
 wandb.login(key=api_key)
 
-logger = logging.getLogger(__name__)
-
 # Setup logging
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -213,9 +211,7 @@ def objective(trial):
         logging_dir="./logs",
         logging_strategy="epoch",
         save_strategy="epoch",
-        # Remove DeepSpeed from here
-        # deepspeed=deepspeed,
-        load_best_model_at_end=True,
+        load_best_model_at_end=False,
         metric_for_best_model="eval_q3_accuracy",
         greater_is_better=True,
         logging_steps=500,
@@ -223,6 +219,7 @@ def objective(trial):
         seed=42,
         run_name="SS-Generation",
         report_to="wandb",
+        remove_unused_columns=False,
         learning_rate=learning_rate,
         num_train_epochs=num_train_epochs,
         weight_decay=weight_decay,
@@ -304,6 +301,7 @@ if __name__ == "__main__":
         seed=42,
         run_name="SS-Generation",
         report_to="wandb",
+        remove_unused_columns=False,
         learning_rate=best_params['learning_rate'],
         num_train_epochs=best_params['num_train_epochs'],
         weight_decay=best_params['weight_decay'],
