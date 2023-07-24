@@ -1,6 +1,9 @@
 import torch
 from optuna.integration.wandb import WeightsAndBiasesCallback
+
 import optuna
+from optuna.samplers import RandomSampler
+
 from transformers import (
     T5ForConditionalGeneration,
     AutoTokenizer,
@@ -265,13 +268,6 @@ def objective(trial):
     # Evaluate the model
     metrics = trainer.evaluate()
 
-    trial.report(metrics["eval_q3_accuracy"],
-                 step=training_args.num_train_epochs)
-
-    # Handle pruning based on the intermediate value.
-    if trial.should_prune():
-        raise optuna.exceptions.TrialPruned()
-
     # Return the evaluation metric for the trial
     return metrics["eval_q3_accuracy"]
 
@@ -282,8 +278,7 @@ if __name__ == "__main__":
     wandbc = WeightsAndBiasesCallback(
         metric_name="eval_q3_accuracy", wandb_kwargs=wandb_config)
 
-    pruner = optuna.pruners.MedianPruner()
-    study = optuna.create_study(direction="maximize", pruner=pruner)
+    study = optuna.create_study(direction="maximize", sampler=RandomSampler())
     study.optimize(objective, n_trials=n_trials, callbacks=[wandbc])
 
     print("Number of finished trials: ", len(study.trials))
