@@ -274,8 +274,8 @@ if __name__ == "__main__":
         metric_name="eval_q3_accuracy", wandb_kwargs=wandb_config)
 
     study = optuna.create_study(
-        direction="maximize", sampler=RandomSampler(), gc_after_trial=True)
-    study.optimize(objective, n_trials=n_trials, callbacks=[
+        direction="maximize", sampler=RandomSampler())
+    study.optimize(objective, n_trials=n_trials, gc_after_trial=True, callbacks=[
                    wandbc, clear_cuda_cache])
 
     print("Number of finished trials: ", len(study.trials))
