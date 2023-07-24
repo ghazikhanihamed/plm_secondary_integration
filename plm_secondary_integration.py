@@ -1,3 +1,4 @@
+import gc
 import torch
 from optuna.integration.wandb import WeightsAndBiasesCallback
 
@@ -239,7 +240,7 @@ def objective(trial):
         run_name="SS-Generation",
         report_to="wandb",
         learning_rate=learning_rate,
-        num_train_epochs=20,
+        num_train_epochs=1,
     )
 
     # Create a new Trainer instance
@@ -262,14 +263,20 @@ def objective(trial):
     return metrics["eval_q3_accuracy"]
 
 
+def clear_cuda_cache(study, trial):
+    torch.cuda.empty_cache()
+
+
 if __name__ == "__main__":
-    n_trials = 20
+    n_trials = 10
 
     wandbc = WeightsAndBiasesCallback(
         metric_name="eval_q3_accuracy", wandb_kwargs=wandb_config)
 
-    study = optuna.create_study(direction="maximize", sampler=RandomSampler())
-    study.optimize(objective, n_trials=n_trials, callbacks=[wandbc])
+    study = optuna.create_study(
+        direction="maximize", sampler=RandomSampler(), gc_after_trial=True)
+    study.optimize(objective, n_trials=n_trials, callbacks=[
+                   wandbc, clear_cuda_cache])
 
     print("Number of finished trials: ", len(study.trials))
 
