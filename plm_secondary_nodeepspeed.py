@@ -186,12 +186,13 @@ def compute_metrics(eval_pred):
 
 
 # Prepare the model
-def model_init(trial):
+def model_init():
     model = T5ForConditionalGeneration.from_pretrained(
         "ElnaggarLab/ankh-large")
-    if torch.cuda.device_count() > 1:
-        model = torch.nn.DataParallel(model)
     return model
+
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def objective(trial):
@@ -228,10 +229,11 @@ def objective(trial):
     )
 
     # Prepare the model
-    model = model_init(trial)
-    # Wrap the model for multi-GPU training
-    # You can use torch.nn.DataParallel or torch.nn.parallel.DistributedDataParallel depending on your setup
-    model = torch.nn.DataParallel(model)
+    model = model_init()
+    model.to(device)  # Ensure model is on correct device
+    if torch.cuda.device_count() > 1:
+        # Wrap the model for multi-GPU training only once
+        model = torch.nn.DataParallel(model)
 
     # Create a new Trainer instance
     trainer = Trainer(
@@ -310,10 +312,11 @@ if __name__ == "__main__":
     )
 
     # Prepare the model
-    model = model_init(trial)
-    # Wrap the model for multi-GPU training
-    # You can use torch.nn.DataParallel or torch.nn.parallel.DistributedDataParallel depending on your setup
-    model = torch.nn.DataParallel(model)
+    model = model_init()
+    model.to(device)  # Ensure model is on correct device
+    if torch.cuda.device_count() > 1:
+        # Wrap the model for multi-GPU training only once
+        model = torch.nn.DataParallel(model)
 
     # Create a new Trainer instance
     trainer = Trainer(
