@@ -3,18 +3,17 @@
         "type": "AdamW",
         "params": {
             "lr": "auto",
-            "weight_decay": "auto",
-            "torch_adam": true,
-            "adam_w_mode": true
+            "betas": "auto",
+            "eps": "auto",
+            "weight_decay": "auto"
         }
     },
     "scheduler": {
-        "type": "LRRangeTest",
+        "type": "WarmupLR",
         "params": {
-            "lr_range_test_min_lr": 0.001,
-            "lr_range_test_step_size": 200,
-            "lr_range_test_step_rate": 5,
-            "lr_range_test_staircase": false
+            "warmup_min_lr": "auto",
+            "warmup_max_lr": "auto",
+            "warmup_num_steps": "auto"
         }
     },
     "zero_optimization": {

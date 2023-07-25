@@ -212,8 +212,6 @@ training_args = TrainingArguments(
     report_to="wandb",
 )
 
-wandb_run = wandb.init(project=wandb_config['project'], config=training_args)
-
 # Initialize Trainer
 trainer = Trainer(
     model_init=model_init,
@@ -225,8 +223,6 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
-
-wandb_run.finish()
 
 # Evaluate the model on test datasets
 metrics_test1 = trainer.evaluate(test_dataset=test_dataset1)
