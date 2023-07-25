@@ -1,7 +1,4 @@
 {
-    "fp16": {
-        "enabled": "auto"
-    },
     "optimizer": {
         "type": "AdamW",
         "params": {
@@ -12,21 +9,21 @@
         }
     },
     "scheduler": {
-        "type": "WarmupDecayLR",
+        "type": "LRRangeTest",
         "params": {
-            "warmup_min_lr": "auto",
-            "warmup_max_lr": "auto",
-            "warmup_num_steps": "auto",
-            "total_num_steps": "auto"
+            "lr_range_test_min_lr": 0.001,
+            "lr_range_test_step_size": 200,
+            "lr_range_test_step_rate": 5,
+            "lr_range_test_staircase": false
         }
     },
     "zero_optimization": {
         "stage": 2,
         "allgather_partitions": true,
-        "allgather_bucket_size": 2e8,
+        "allgather_bucket_size": 5e8,
         "overlap_comm": true,
         "reduce_scatter": true,
-        "reduce_bucket_size": 2e8,
+        "reduce_bucket_size": 5e8,
         "contiguous_gradients": true
     },
     "gradient_accumulation_steps": "auto",
