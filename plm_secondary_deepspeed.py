@@ -27,7 +27,7 @@ wandb_config = {
 
 wandb.login(key=api_key)
 
-logger = logging.getLogger(__name__)
+wandb.init(config=wandb_config)
 
 # Setup logging
 logging.basicConfig(
@@ -196,7 +196,7 @@ training_args = TrainingArguments(
     do_eval=True,
     evaluation_strategy="epoch",
     per_device_train_batch_size=4,
-    per_device_eval_batch_size=16,
+    per_device_eval_batch_size=4,
     logging_dir="./logs",
     logging_strategy="epoch",
     save_strategy="epoch",
