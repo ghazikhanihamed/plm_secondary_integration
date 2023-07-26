@@ -191,13 +191,9 @@ train_dataset, valid_dataset, test_dataset1, test_dataset2 = accelerator.prepare
     train_dataset, valid_dataset, test_dataset1, test_dataset2
 )
 
-# Prepare the model
-
-
-def model_init():
-    model = T5ForConditionalGeneration.from_pretrained(
-        "ElnaggarLab/ankh-large")
-    return accelerator.prepare(model)
+# Create the model and prepare it
+model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
+model = accelerator.prepare(model)
 
 
 # Prepare training args
@@ -225,7 +221,7 @@ training_args = TrainingArguments(
 
 # Initialize Trainer
 trainer = Trainer(
-    model_init=model_init,
+    model=model,
     args=training_args,
     compute_metrics=compute_metrics,
     train_dataset=train_dataset,
