@@ -212,7 +212,6 @@ training_args = TrainingArguments(
     metric_for_best_model="q3_accuracy",
     greater_is_better=True,
     num_train_epochs=10,
-    fp16=False,
     save_total_limit=1,
     seed=42,
     run_name="SS-Generation",
