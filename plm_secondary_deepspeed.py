@@ -187,17 +187,17 @@ def compute_metrics(eval_pred):
     return {"q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
 
 
-# Prepare the model
-def model_init():
-    return T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
-
-
 train_dataset, valid_dataset, test_dataset1, test_dataset2 = accelerator.prepare(
     train_dataset, valid_dataset, test_dataset1, test_dataset2
 )
 
-model = accelerator.prepare(
-    T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large"))
+# Prepare the model
+
+
+def model_init():
+    model = T5ForConditionalGeneration.from_pretrained(
+        "ElnaggarLab/ankh-large")
+    return accelerator.prepare(model)
 
 
 # Prepare training args
@@ -230,7 +230,6 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
-    accelerator=accelerator,
 )
 
 # Train the model
