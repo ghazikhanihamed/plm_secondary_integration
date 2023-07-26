@@ -222,6 +222,7 @@ training_args = TrainingArguments(
     adam_beta1=0.9,
     adam_beta2=0.98,
     fp16=True,
+    weight_decay=0.01,
 )
 
 # Initialize Trainer
