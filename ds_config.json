@@ -2,19 +2,29 @@
     "optimizer": {
         "type": "AdamW",
         "params": {
-            "lr": "auto",
-            "betas": "auto",
-            "eps": "auto",
-            "weight_decay": "auto"
+            "lr": 0.001,
+            "betas": [
+                0.9,
+                0.98
+            ],
+            "eps": 1e-8,
+            "weight_decay": 0.01
         }
     },
     "scheduler": {
-        "type": "WarmupDecayLR",
+        "type": "OneCycle",
         "params": {
-            "warmup_min_lr": "auto",
-            "warmup_max_lr": "auto",
-            "warmup_num_steps": "auto",
-            "total_num_steps": "auto"
+            "cycle_first_step_size": 5000,
+            "cycle_first_stair_count": 1000,
+            "cycle_second_step_size": 5000,
+            "cycle_second_stair_count": 1000,
+            "post_cycle_decay_step_size": 1000,
+            "cycle_min_lr": 0.001,
+            "cycle_max_lr": 0.01,
+            "decay_lr_rate": 0.01,
+            "cycle_min_mom": 0.85,
+            "cycle_max_mom": 0.95,
+            "decay_mom_rate": 0.02
         }
     },
     "zero_optimization": {
@@ -26,10 +36,15 @@
         "reduce_bucket_size": 5e8,
         "contiguous_gradients": true
     },
-    "gradient_accumulation_steps": "auto",
-    "gradient_clipping": "auto",
-    "steps_per_print": 2000,
-    "train_batch_size": "auto",
-    "train_micro_batch_size_per_gpu": "auto",
-    "wall_clock_breakdown": false
+    "activation_checkpointing": {
+        "partition_activations": true,
+        "cpu_checkpointing": true,
+        "number_checkpoints": 4,
+        "synchronize_checkpoint_boundary": false,
+        "contiguous_memory_optimization": false
+    },
+    "fp16": {
+        "enabled": true
+    },
+    "gradient_clipping": 0.1
 }

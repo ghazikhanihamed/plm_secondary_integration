@@ -5,6 +5,7 @@ from transformers import (
     Trainer,
     set_seed,
 )
+from accelerate import Accelerator
 from datasets import load_dataset, concatenate_datasets
 from transformers.trainer_utils import set_seed
 import logging
@@ -28,6 +29,8 @@ wandb_config = {
 wandb.login(key=api_key)
 
 wandb.init(config=wandb_config)
+
+accelerator = Accelerator()
 
 # Setup logging
 logging.basicConfig(
@@ -189,18 +192,26 @@ def model_init():
     return T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
 
 
+train_dataset, valid_dataset, test_dataset1, test_dataset2 = accelerator.prepare(
+    train_dataset, valid_dataset, test_dataset1, test_dataset2
+)
+
+model = accelerator.prepare(
+    T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large"))
+
+
 # Prepare training args
 training_args = TrainingArguments(
     output_dir="./results",
     do_train=True,
     do_eval=True,
+    deepspeed="./ds_config.json",
     evaluation_strategy="epoch",
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
     logging_dir="./logs",
     logging_strategy="epoch",
     save_strategy="epoch",
-    deepspeed="./ds_config.json",
     load_best_model_at_end=True,
     metric_for_best_model="q3_accuracy",
     greater_is_better=True,
@@ -219,14 +230,20 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
+    accelerator=accelerator,
 )
 
 # Train the model
 trainer.train()
 
 # Evaluate the model on test datasets
-metrics_test1 = trainer.evaluate(test_dataset=test_dataset1)
-metrics_test2 = trainer.evaluate(test_dataset=test_dataset2)
+# Set test dataset1 as evaluation dataset and evaluate
+trainer.eval_dataset = test_dataset1
+metrics_test1 = trainer.evaluate()
+
+# Set test dataset2 as evaluation dataset and evaluate
+trainer.eval_dataset = test_dataset2
+metrics_test2 = trainer.evaluate()
 
 print("Evaluation results on test set CASP12: ", metrics_test1)
 print("Evaluation results on test set CASP14: ", metrics_test2)
