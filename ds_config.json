@@ -14,17 +14,17 @@
     "scheduler": {
         "type": "OneCycle",
         "params": {
-            "cycle_first_step_size": 5000,
-            "cycle_first_stair_count": 1000,
-            "cycle_second_step_size": 5000,
-            "cycle_second_stair_count": 1000,
-            "post_cycle_decay_step_size": 1000,
-            "cycle_min_lr": 0.001,
-            "cycle_max_lr": 0.01,
-            "decay_lr_rate": 0.01,
+            "cycle_first_step_size": 1000,
+            "cycle_first_stair_count": 500,
+            "cycle_second_step_size": 1000,
+            "cycle_second_stair_count": 500,
+            "decay_step_size": 1000,
+            "cycle_min_lr": 0.00001,
+            "cycle_max_lr": 0.001,
+            "decay_lr_rate": 0.001,
             "cycle_min_mom": 0.85,
-            "cycle_max_mom": 0.95,
-            "decay_mom_rate": 0.02
+            "cycle_max_mom": 0.99,
+            "decay_mom_rate": 0.0
         }
     },
     "zero_optimization": {
@@ -35,13 +35,6 @@
         "reduce_scatter": true,
         "reduce_bucket_size": 5e8,
         "contiguous_gradients": true
-    },
-    "activation_checkpointing": {
-        "partition_activations": true,
-        "cpu_checkpointing": true,
-        "number_checkpoints": 4,
-        "synchronize_checkpoint_boundary": false,
-        "contiguous_memory_optimization": false
     },
     "fp16": {
         "enabled": true
