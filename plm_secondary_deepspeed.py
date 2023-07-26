@@ -217,6 +217,12 @@ training_args = TrainingArguments(
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
+    gradient_accumulation_steps=64,
+    max_grad_norm=1.0,
+    learning_rate=0.001,
+    adam_beta1=0.9,
+    adam_beta2=0.98,
+    fp16=True,
 )
 
 # Initialize Trainer
