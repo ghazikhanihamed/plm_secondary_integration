@@ -223,6 +223,7 @@ training_args = TrainingArguments(
     adam_beta2=0.98,
     fp16=True,
     weight_decay=0.01,
+    remove_unused_columns=False,
 )
 
 # Initialize Trainer
