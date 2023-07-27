@@ -217,7 +217,6 @@ training_args = TrainingArguments(
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=64,
-    max_grad_norm=1.0,
     learning_rate=3e-5,
     weight_decay=3e-7,
     adam_beta1=0.8,
