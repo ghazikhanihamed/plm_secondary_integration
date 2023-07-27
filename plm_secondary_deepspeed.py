@@ -223,7 +223,6 @@ training_args = TrainingArguments(
     adam_beta2=0.999,
     adam_epsilon=1e-8,
     warmup_steps=500,
-    max_grad_norm=2.0,
     fp16=True,
     remove_unused_columns=False,
 )
