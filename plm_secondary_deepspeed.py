@@ -69,11 +69,16 @@ validation_dataset = dataset5["TS115"]
 test_dataset1 = dataset2["CASP12"]
 test_dataset2 = dataset3["CASP14"]
 
-# Print the number of samples
-print(f"Number of training samples: {len(train_dataset)}")
-print(f"Number of validation samples: {len(validation_dataset)}")
-print(f"Number of test samples on CASP12: {len(test_dataset1)}")
-print(f"Number of test samples on CASP14: {len(test_dataset2)}")
+if accelerator.is_main_process:
+    # Print the number of samples
+    accelerator.print(f"Number of training samples: {len(train_dataset)}")
+    accelerator.print(
+        f"Number of validation samples: {len(validation_dataset)}")
+    accelerator.print(
+        f"Number of test samples on CASP12: {len(test_dataset1)}")
+    accelerator.print(
+        f"Number of test samples on CASP14: {len(test_dataset2)}")
+accelerator.wait_for_everyone()
 
 input_column_name = "input"
 labels_column_name = "dssp3"
@@ -134,33 +139,34 @@ def preprocess_data(examples):
     }
 
 
-train_dataset = train_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=train_dataset.column_names,
-    desc="Running tokenizer on dataset for training",
-)
+with accelerator.main_process_first():
+    train_dataset = train_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=train_dataset.column_names,
+        desc="Running tokenizer on dataset for training",
+    )
 
-valid_dataset = validation_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=validation_dataset.column_names,
-    desc="Running tokenizer on dataset for validation",
-)
+    valid_dataset = validation_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=validation_dataset.column_names,
+        desc="Running tokenizer on dataset for validation",
+    )
 
-test_dataset1 = test_dataset1.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=test_dataset1.column_names,
-    desc="Running tokenizer on dataset for test",
-)
+    test_dataset1 = test_dataset1.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=test_dataset1.column_names,
+        desc="Running tokenizer on dataset for test",
+    )
 
-test_dataset2 = test_dataset2.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=test_dataset2.column_names,
-    desc="Running tokenizer on dataset for test",
-)
+    test_dataset2 = test_dataset2.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=test_dataset2.column_names,
+        desc="Running tokenizer on dataset for test",
+    )
 
 
 def q3_accuracy(y_true, y_pred):
@@ -202,12 +208,12 @@ training_args = TrainingArguments(
     do_train=True,
     do_eval=True,
     deepspeed="./ds_config.json",
-    evaluation_strategy="steps",
+    evaluation_strategy="epoch",
     per_device_train_batch_size=8,
-    per_device_eval_batch_size=32,
+    per_device_eval_batch_size=8,
     logging_dir="./logs",
-    logging_strategy="steps",
-    save_strategy="steps",
+    logging_strategy="epoch",
+    save_strategy="epoch",
     load_best_model_at_end=True,
     metric_for_best_model="q3_accuracy",
     greater_is_better=True,
@@ -216,7 +222,7 @@ training_args = TrainingArguments(
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
-    gradient_accumulation_steps=64,
+    gradient_accumulation_steps=1,
     learning_rate=3e-5,
     weight_decay=3e-7,
     adam_beta1=0.8,
@@ -238,6 +244,9 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
+
+# Save the model
+trainer.save_model("./results")
 
 # Evaluate the model on test datasets
 # Set test dataset1 as evaluation dataset and evaluate
