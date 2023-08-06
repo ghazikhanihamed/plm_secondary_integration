@@ -185,7 +185,7 @@ def compute_metrics(eval_pred):
     # convert numpy ndarray to Tensor
     predictions = torch.tensor(predictions)
     predictions = torch.argmax(predictions, dim=-1)
-    return {"eval_q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
+    return {"q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
 
 
 train_dataset, valid_dataset, test_dataset1, test_dataset2 = accelerator.prepare(
@@ -210,7 +210,7 @@ training_args = TrainingArguments(
     logging_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
-    metric_for_best_model="eval_q3_accuracy",
+    metric_for_best_model="q3_accuracy",
     greater_is_better=True,
     num_train_epochs=20,
     save_total_limit=1,
