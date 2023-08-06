@@ -5,7 +5,7 @@
 
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=10gb:2
+#SBATCH --gpus=10gb:3
 
 # SBATCH -n 1 --ntasks-per-core=1
 
@@ -19,7 +19,7 @@ source /usr/local/pkg/anaconda/v3.2023.03/root/etc/profile.d/conda.sh
 conda activate /home/h_ghazik/.conda/envs/venv_secondary_conda
 
 export PATH="$PATH:/home/h_ghazik/.local/bin"
-export ACCELERATE_CONFIG=/home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml
+export ACCELERATE_CONFIG=/home/h_ghazik/accelerate_config/default_config.yaml
 
 accelerate launch --multi_gpu plm_secondary_deepspeed.py
 
