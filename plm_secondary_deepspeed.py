@@ -7,7 +7,6 @@ from transformers import (
 )
 from accelerate import Accelerator
 from datasets import load_dataset, concatenate_datasets
-from transformers.trainer_utils import set_seed
 import logging
 import torch
 import numpy as np
@@ -20,7 +19,7 @@ import json
 with open("wandb_config.json") as f:
     data = json.load(f)
 
-api_key = data["wandb"]["api_key"]
+api_key = data["api_key"]
 
 wandb_config = {
     "project": "plm_secondary_integration",
@@ -38,9 +37,6 @@ logging.basicConfig(
     datefmt="%m/%d/%Y %H:%M:%S",
     handlers=[logging.StreamHandler(sys.stdout)],
 )
-
-# Set seed before initializing model.
-set_seed(42)
 
 tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
 

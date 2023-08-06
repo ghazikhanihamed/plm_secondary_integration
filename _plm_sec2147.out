@@ -1,9 +1,0 @@
-Interactive jobs timeout is 24hrs
-==========================================
-SLURM_JOB_ID = 2147
-SLURM_NODELIST = virya[3-4]
-==========================================
-/home/h_ghazik/.bash_profile: line 1: /media/Data/default/common/settings.sh: No such file or directory
-[2023-08-06 12:08:16,620] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-08-06 12:08:49,215] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-08-06 12:08:49,406] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
