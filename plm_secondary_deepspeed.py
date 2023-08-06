@@ -210,20 +210,15 @@ training_args = TrainingArguments(
     logging_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
-    metric_for_best_model="q3_accuracy",
+    metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=20,
+    num_train_epochs=5,
     save_total_limit=1,
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=1,
-    learning_rate=3e-5,
-    weight_decay=3e-7,
-    adam_beta1=0.8,
-    adam_beta2=0.999,
-    adam_epsilon=1e-8,
-    warmup_steps=500,
+    learning_rate=3e-4,
     fp16=True,
     remove_unused_columns=False,
 )
@@ -235,6 +230,7 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
+    tokenizer=tokenizer,
 )
 
 # Train the model
