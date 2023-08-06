@@ -36,6 +36,12 @@
         "reduce_bucket_size": 5e8,
         "contiguous_gradients": true
     },
+    "wandb": {
+        "enabled": true,
+        "team": "bioinformatics-group",
+        "group": "my_group",
+        "project": "plm_secondary_integration"
+    },
     "gradient_accumulation_steps": "auto",
     "gradient_clipping": "auto",
     "train_batch_size": "auto",

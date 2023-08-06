@@ -17,13 +17,13 @@ import wandb
 import json
 
 # Load Weights & Biases Configuration
-with open('wandb_config.json') as f:
+with open("wandb_config.json") as f:
     data = json.load(f)
 
-api_key = data['wandb']['api_key']
+api_key = data["wandb"]["api_key"]
 
 wandb_config = {
-    "project": "Protein-Structure-Prediction",
+    "project": "plm_secondary_integration",
 }
 
 wandb.login(key=api_key)
@@ -50,17 +50,20 @@ dataset1 = load_dataset(
     data_files={"train": ["training_hhblits.csv"]},
 )
 dataset2 = load_dataset(
-    "proteinea/secondary_structure_prediction", data_files={'CASP12': ['CASP12.csv']})
+    "proteinea/secondary_structure_prediction", data_files={"CASP12": ["CASP12.csv"]}
+)
 dataset3 = load_dataset(
-    "proteinea/secondary_structure_prediction", data_files={'CASP14': ['CASP14.csv']})
+    "proteinea/secondary_structure_prediction", data_files={"CASP14": ["CASP14.csv"]}
+)
 dataset4 = load_dataset(
-    "proteinea/secondary_structure_prediction", data_files={'CB513': ['CB513.csv']})
+    "proteinea/secondary_structure_prediction", data_files={"CB513": ["CB513.csv"]}
+)
 dataset5 = load_dataset(
-    "proteinea/secondary_structure_prediction", data_files={'TS115': ['TS115.csv']})
+    "proteinea/secondary_structure_prediction", data_files={"TS115": ["TS115.csv"]}
+)
 
 # concatenate dataset1 and dataset4
-train_dataset = concatenate_datasets(
-    [dataset1["train"], dataset4["CB513"]])
+train_dataset = concatenate_datasets([dataset1["train"], dataset4["CB513"]])
 
 # The validation set will be dataset5
 validation_dataset = dataset5["TS115"]
@@ -72,12 +75,9 @@ test_dataset2 = dataset3["CASP14"]
 if accelerator.is_main_process:
     # Print the number of samples
     accelerator.print(f"Number of training samples: {len(train_dataset)}")
-    accelerator.print(
-        f"Number of validation samples: {len(validation_dataset)}")
-    accelerator.print(
-        f"Number of test samples on CASP12: {len(test_dataset1)}")
-    accelerator.print(
-        f"Number of test samples on CASP14: {len(test_dataset2)}")
+    accelerator.print(f"Number of validation samples: {len(validation_dataset)}")
+    accelerator.print(f"Number of test samples on CASP12: {len(test_dataset1)}")
+    accelerator.print(f"Number of test samples on CASP14: {len(test_dataset2)}")
 accelerator.wait_for_everyone()
 
 input_column_name = "input"
@@ -91,9 +91,7 @@ sequence_lengths = [len(seq.split()) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
 
 # Consider each label as a tag for each token
-unique_tags = set(
-    tag for doc in train_dataset[labels_column_name] for tag in doc
-)
+unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
 
 # add padding tag
 unique_tags.add("<pad>")
@@ -175,18 +173,15 @@ def q3_accuracy(y_true, y_pred):
     y_true: List of actual values
     y_pred: List of predicted values
     """
-    y_true_flat = [
-        tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
-    y_pred_flat = [
-        tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
+    y_true_flat = [tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
+    y_pred_flat = [tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
     correct = sum(t == p for t, p in zip(y_true_flat, y_pred_flat))
     return correct / len(y_true_flat)
 
 
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
-    predictions = predictions[0] if isinstance(
-        predictions, tuple) else predictions
+    predictions = predictions[0] if isinstance(predictions, tuple) else predictions
     # convert numpy ndarray to Tensor
     predictions = torch.tensor(predictions)
     predictions = torch.argmax(predictions, dim=-1)

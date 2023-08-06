@@ -8,14 +8,15 @@
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
 
+module load python/3.9.6/default
+module load anaconda/3.2022.10/default
 module load gcc/10.1.0/default
 module load cuda/11.4/default
 
-source ~/venv_secondary/bin/activate
+source /usr/local/pkg/Anaconda/Anaconda3.2022.10/root/etc/profile.d/conda.sh
+conda activate py3.9
 
 accelerate launch --multi_gpu plm_secondary_deepspeed.py
-# deepspeed --num_gpus=6 plm_secondary_deepspeed.py
-# python plm_secondary_nodeepspeed.py
 
-deactivate
-
+conda deactivate
+module purge
