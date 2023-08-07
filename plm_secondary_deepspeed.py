@@ -29,8 +29,6 @@ wandb.login(key=api_key)
 
 wandb.init(config=wandb_config)
 
-accelerator = Accelerator()
-
 # Setup logging
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -67,17 +65,6 @@ validation_dataset = dataset5["TS115"]
 # Two separate test datasets
 test_dataset1 = dataset2["CASP12"]
 test_dataset2 = dataset3["CASP14"]
-
-if accelerator.is_main_process:
-    # Print the number of samples
-    accelerator.print(f"Number of training samples: {len(train_dataset)}")
-    accelerator.print(
-        f"Number of validation samples: {len(validation_dataset)}")
-    accelerator.print(
-        f"Number of test samples on CASP12: {len(test_dataset1)}")
-    accelerator.print(
-        f"Number of test samples on CASP14: {len(test_dataset2)}")
-accelerator.wait_for_everyone()
 
 input_column_name = "input"
 labels_column_name = "dssp3"
@@ -137,34 +124,19 @@ def preprocess_data(examples):
     }
 
 
-with accelerator.main_process_first():
-    train_dataset = train_dataset.map(
-        preprocess_data,
-        batched=True,
-        remove_columns=train_dataset.column_names,
-        desc="Running tokenizer on dataset for training",
-    )
+train_dataset = train_dataset.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=train_dataset.column_names,
+    desc="Running tokenizer on dataset for training",
+)
 
-    valid_dataset = validation_dataset.map(
-        preprocess_data,
-        batched=True,
-        remove_columns=validation_dataset.column_names,
-        desc="Running tokenizer on dataset for validation",
-    )
-
-    test_dataset1 = test_dataset1.map(
-        preprocess_data,
-        batched=True,
-        remove_columns=test_dataset1.column_names,
-        desc="Running tokenizer on dataset for test",
-    )
-
-    test_dataset2 = test_dataset2.map(
-        preprocess_data,
-        batched=True,
-        remove_columns=test_dataset2.column_names,
-        desc="Running tokenizer on dataset for test",
-    )
+valid_dataset = validation_dataset.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=validation_dataset.column_names,
+    desc="Running tokenizer on dataset for validation",
+)
 
 
 def q3_accuracy(y_true, y_pred):
@@ -191,13 +163,8 @@ def compute_metrics(eval_pred):
     return {"q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
 
 
-train_dataset, valid_dataset, test_dataset1, test_dataset2 = accelerator.prepare(
-    train_dataset, valid_dataset, test_dataset1, test_dataset2
-)
-
 # Create the model and prepare it
 model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
-model = accelerator.prepare(model)
 
 
 # Prepare training args
@@ -243,6 +210,19 @@ trainer.train()
 trainer.save_model("./results")
 
 # Evaluate the model on test datasets
+test_dataset1 = test_dataset1.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=test_dataset1.column_names,
+    desc="Running tokenizer on dataset for test",
+)
+
+test_dataset2 = test_dataset2.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=test_dataset2.column_names,
+    desc="Running tokenizer on dataset for test",
+)
 # Set test dataset1 as evaluation dataset and evaluate
 trainer.eval_dataset = test_dataset1
 metrics_test1 = trainer.evaluate()

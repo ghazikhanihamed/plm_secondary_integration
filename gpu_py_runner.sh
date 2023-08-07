@@ -16,7 +16,9 @@ module load cuda/11.4/default
 source /usr/local/pkg/Anaconda/Anaconda3.2022.10/root/etc/profile.d/conda.sh
 conda activate py3.9
 
-accelerate launch --multi_gpu plm_secondary_deepspeed.py
+deepspeed --num_gpus=4 plm_secondary_deepspeed.py
+# accelerate launch --multi_gpu plm_secondary_deepspeed.py
+
 
 conda deactivate
 module purge
