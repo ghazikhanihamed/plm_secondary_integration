@@ -71,9 +71,12 @@ test_dataset2 = dataset3["CASP14"]
 if accelerator.is_main_process:
     # Print the number of samples
     accelerator.print(f"Number of training samples: {len(train_dataset)}")
-    accelerator.print(f"Number of validation samples: {len(validation_dataset)}")
-    accelerator.print(f"Number of test samples on CASP12: {len(test_dataset1)}")
-    accelerator.print(f"Number of test samples on CASP14: {len(test_dataset2)}")
+    accelerator.print(
+        f"Number of validation samples: {len(validation_dataset)}")
+    accelerator.print(
+        f"Number of test samples on CASP12: {len(test_dataset1)}")
+    accelerator.print(
+        f"Number of test samples on CASP14: {len(test_dataset2)}")
 accelerator.wait_for_everyone()
 
 input_column_name = "input"
@@ -87,7 +90,8 @@ sequence_lengths = [len(seq.split()) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
 
 # Consider each label as a tag for each token
-unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
+unique_tags = set(
+    tag for doc in train_dataset[labels_column_name] for tag in doc)
 
 # add padding tag
 unique_tags.add("<pad>")
@@ -169,19 +173,22 @@ def q3_accuracy(y_true, y_pred):
     y_true: List of actual values
     y_pred: List of predicted values
     """
-    y_true_flat = [tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
-    y_pred_flat = [tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
+    y_true_flat = [
+        tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
+    y_pred_flat = [
+        tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
     correct = sum(t == p for t, p in zip(y_true_flat, y_pred_flat))
     return correct / len(y_true_flat)
 
 
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
-    predictions = predictions[0] if isinstance(predictions, tuple) else predictions
+    predictions = predictions[0] if isinstance(
+        predictions, tuple) else predictions
     # convert numpy ndarray to Tensor
     predictions = torch.tensor(predictions)
     predictions = torch.argmax(predictions, dim=-1)
-    return {"eval_q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
+    return {"q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
 
 
 train_dataset, valid_dataset, test_dataset1, test_dataset2 = accelerator.prepare(
@@ -206,7 +213,7 @@ training_args = TrainingArguments(
     logging_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
-    metric_for_best_model="q3_accuracy",
+    metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
     num_train_epochs=5,
     save_total_limit=1,
