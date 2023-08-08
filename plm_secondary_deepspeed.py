@@ -185,6 +185,9 @@ training_args = TrainingArguments(
     learning_rate=3e-5,
     fp16=False,
     remove_unused_columns=False,
+    hub_token="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",
+    push_to_hub=True,
+    hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
 )
 
 # Initialize Trainer
