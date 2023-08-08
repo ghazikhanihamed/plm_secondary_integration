@@ -177,7 +177,6 @@ training_args = TrainingArguments(
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
     num_train_epochs=10,
-    save_total_limit=1,
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
@@ -202,9 +201,6 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
-
-# Save the model
-trainer.save_model("./results")
 
 # Evaluate the model on test datasets
 test_dataset1 = test_dataset1.map(
