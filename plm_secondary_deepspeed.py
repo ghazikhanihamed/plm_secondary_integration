@@ -182,7 +182,7 @@ training_args = TrainingArguments(
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=1,
-    learning_rate=1e-7,
+    learning_rate=3e-5,
     fp16=False,
     remove_unused_columns=False,
 )

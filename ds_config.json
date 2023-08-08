@@ -10,12 +10,19 @@
     }
   },
   "scheduler": {
-    "type": "LRRangeTest",
+    "type": "OneCycle",
     "params": {
-      "lr_range_test_min_lr": 1e-7,
-      "lr_range_test_step_size": 140,
-      "lr_range_test_step_rate": 1.0,
-      "lr_range_test_staircase": true
+      "cycle_first_step_size": 4750,
+      "cycle_first_stair_count": 0,
+      "cycle_second_stair_count": 0,
+      "cycle_momentum": true,
+      "cycle_min_mom": 0.85,
+      "decay_step_size": 0,
+      "cycle_min_lr": 3e-5,
+      "cycle_max_lr": 3e-4,
+      "decay_lr_rate": 0.0,
+      "cycle_max_mom": 0.95,
+      "decay_mom_rate": 0.0
     }
   },
   "zero_optimization": {
