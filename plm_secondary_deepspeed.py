@@ -3,9 +3,7 @@ from transformers import (
     AutoTokenizer,
     TrainingArguments,
     Trainer,
-    set_seed,
 )
-from accelerate import Accelerator
 from datasets import load_dataset, concatenate_datasets
 import logging
 import torch
@@ -182,7 +180,7 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=5,
+    num_train_epochs=50,
     save_total_limit=1,
     seed=42,
     run_name="SS-Generation",
@@ -205,6 +203,9 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
+
+# stop logging
+wandb.finish()
 
 # Save the model
 trainer.save_model("./results")
