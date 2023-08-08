@@ -75,8 +75,7 @@ sequence_lengths = [len(seq.split()) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
 
 # Consider each label as a tag for each token
-unique_tags = set(
-    tag for doc in train_dataset[labels_column_name] for tag in doc)
+unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
 
 # add padding tag
 unique_tags.add("<pad>")
@@ -143,18 +142,15 @@ def q3_accuracy(y_true, y_pred):
     y_true: List of actual values
     y_pred: List of predicted values
     """
-    y_true_flat = [
-        tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
-    y_pred_flat = [
-        tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
+    y_true_flat = [tag for seq in y_true for tag in seq if tag != tag2id["<pad>"]]
+    y_pred_flat = [tag for seq in y_pred for tag in seq if tag != tag2id["<pad>"]]
     correct = sum(t == p for t, p in zip(y_true_flat, y_pred_flat))
     return correct / len(y_true_flat)
 
 
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
-    predictions = predictions[0] if isinstance(
-        predictions, tuple) else predictions
+    predictions = predictions[0] if isinstance(predictions, tuple) else predictions
     # convert numpy ndarray to Tensor
     predictions = torch.tensor(predictions)
     predictions = torch.argmax(predictions, dim=-1)
@@ -180,13 +176,13 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=50,
+    num_train_epochs=10,
     save_total_limit=1,
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=1,
-    learning_rate=3e-4,
+    learning_rate=1e-7,
     fp16=False,
     remove_unused_columns=False,
 )
@@ -203,9 +199,6 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
-
-# stop logging
-wandb.finish()
 
 # Save the model
 trainer.save_model("./results")

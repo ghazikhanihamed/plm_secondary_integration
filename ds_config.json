@@ -10,11 +10,12 @@
     }
   },
   "scheduler": {
-    "type": "WarmupLR",
+    "type": "LRRangeTest",
     "params": {
-      "warmup_min_lr": "auto",
-      "warmup_max_lr": "auto",
-      "warmup_num_steps": "auto"
+      "lr_range_test_min_lr": 1e-7,
+      "lr_range_test_step_size": 140,
+      "lr_range_test_step_rate": 1.0,
+      "lr_range_test_staircase": true
     }
   },
   "zero_optimization": {
@@ -31,6 +32,11 @@
     "team": "bioinformatics-group",
     "group": "my_group",
     "project": "plm_secondary_integration"
+  },
+  "csv_monitor": {
+    "enabled": true,
+    "output_path": "output/ds_logs/",
+    "job_name": "TooT-PLM-P2T"
   },
   "gradient_accumulation_steps": "auto",
   "gradient_clipping": "auto",
