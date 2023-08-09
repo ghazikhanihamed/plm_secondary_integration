@@ -1,9 +1,9 @@
-from transformers import AutoModel, AutoTokenizer
 import pandas as pd
+from transformers import AutoModel, AutoTokenizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
-from accelerate import Accelerator
 import torch
+import deepspeed
 
 device = torch.device(
     "cuda") if torch.cuda.is_available() else torch.device("cpu")
@@ -14,6 +14,14 @@ ankh_large_model_name = "ElnaggarLab/ankh-large"
 toot_plm_p2s_model = AutoModel.from_pretrained(toot_plm_p2s_model_name)
 ankh_large_model = AutoModel.from_pretrained(ankh_large_model_name)
 
+# Initialize DeepSpeed-Inference for each model
+world_size = 4  # Adjust as needed
+toot_plm_p2s_model = deepspeed.init_inference(
+    toot_plm_p2s_model, mp_size=world_size, dtype=torch.float)
+ankh_large_model = deepspeed.init_inference(
+    ankh_large_model, mp_size=world_size, dtype=torch.float)
+
+# Move models to device
 toot_plm_p2s_model.to(device)
 ankh_large_model.to(device)
 
@@ -25,7 +33,7 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences, batch_size=2):
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
     # Placeholder list to store embeddings
     all_embeddings = []
 
