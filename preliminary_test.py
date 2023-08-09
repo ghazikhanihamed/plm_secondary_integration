@@ -25,7 +25,7 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=2):
     # Placeholder list to store embeddings
     all_embeddings = []
 
@@ -50,15 +50,13 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
 
         with torch.no_grad():
             model_outputs = model(**outputs)
-            if isinstance(model_outputs, tuple):
-                embeddings = model_outputs[0]
-            else:
-                embeddings = model_outputs
+            embeddings = model_outputs.last_hidden_state
 
             # Max pooling
             mask_expanded = outputs['attention_mask'].unsqueeze(
                 -1).expand(embeddings.size()).float()
             embeddings_max = torch.max(embeddings * mask_expanded, 1).values
+
             all_embeddings.append(embeddings_max.cpu())
 
     # Concatenate all the embeddings
