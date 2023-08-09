@@ -20,9 +20,9 @@ ankh_large_model.to(device)
 tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
 
 train_dataset = pd.read_csv(
-    "./dataset/ionchannels_membraneproteins_train.csv")
+    "./dataset/ionchannels_membraneproteins_imbalanced_train.csv")
 test_dataset = pd.read_csv(
-    "./dataset/ionchannels_membraneproteins_test.csv")
+    "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
 def get_embeddings(model, tokenizer, protein_sequences):
