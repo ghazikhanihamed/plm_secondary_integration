@@ -25,27 +25,41 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences):
-    protein_sequences = [list(seq) for seq in protein_sequences]
-    outputs = tokenizer.batch_encode_plus(protein_sequences,
-                                          add_special_tokens=True,
-                                          padding=True,
-                                          is_split_into_words=True,
-                                          return_tensors="pt")
-    outputs = {key: value.to(device) for key, value in outputs.items()}
-    with torch.no_grad():
-        outputs = model(**outputs)
-        if isinstance(outputs, tuple):
-            embeddings = outputs[0]
-        else:
-            embeddings = outputs
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=32):
+    # Placeholder list to store embeddings
+    all_embeddings = []
 
-        # Max pooling
-        mask_expanded = outputs['attention_mask'].unsqueeze(
-            -1).expand(embeddings.size()).float()
-        embeddings_max = torch.max(embeddings * mask_expanded, 1).values
+    # Create batches
+    num_batches = len(protein_sequences) // batch_size + \
+        (len(protein_sequences) % batch_size != 0)
+    for batch_num in range(num_batches):
+        start_idx = batch_num * batch_size
+        end_idx = start_idx + batch_size
 
-    return embeddings_max.cpu()
+        batch_sequences = [list(seq)
+                           for seq in protein_sequences[start_idx:end_idx]]
+        outputs = tokenizer.batch_encode_plus(batch_sequences,
+                                              add_special_tokens=True,
+                                              padding=True,
+                                              is_split_into_words=True,
+                                              return_tensors="pt")
+        outputs = {key: value.to(device) for key, value in outputs.items()}
+        with torch.no_grad():
+            model_outputs = model(**outputs)
+            if isinstance(model_outputs, tuple):
+                embeddings = model_outputs[0]
+            else:
+                embeddings = model_outputs
+
+            # Max pooling
+            mask_expanded = outputs['attention_mask'].unsqueeze(
+                -1).expand(embeddings.size()).float()
+            embeddings_max = torch.max(embeddings * mask_expanded, 1).values
+            all_embeddings.append(embeddings_max.cpu())
+
+    # Concatenate all the embeddings
+    all_embeddings = torch.cat(all_embeddings, dim=0)
+    return all_embeddings
 
 
 # Getting the embeddings
