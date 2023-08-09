@@ -46,14 +46,24 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences):
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=4):
+    # Placeholder list to store embeddings
     all_embeddings = []
 
-    for seq in protein_sequences:
-        batch_sequence = [list(seq)]
-        outputs = tokenizer.batch_encode_plus(batch_sequence,
-                                              add_special_tokens=True,
+    # Create batches
+    num_batches = len(protein_sequences) // batch_size + \
+        (len(protein_sequences) % batch_size != 0)
+    for batch_num in range(num_batches):
+        start_idx = batch_num * batch_size
+        end_idx = start_idx + batch_size
+
+        batch_sequences = [list(seq)
+                           for seq in protein_sequences[start_idx:end_idx]]
+        outputs = tokenizer.batch_encode_plus(batch_sequences,
+                                              add_special_tokens=False,
                                               padding=True,
+                                              truncation=True,
+                                              max_length=1024,
                                               is_split_into_words=True,
                                               return_tensors="pt")
 
@@ -67,15 +77,20 @@ def get_embeddings(model, tokenizer, protein_sequences):
             model_outputs = model(**outputs)
             embeddings = model_outputs.last_hidden_state
 
+            # Max pooling
             mask_expanded = outputs['attention_mask'].unsqueeze(
                 -1).expand(embeddings.size()).float()
             embeddings_max = torch.max(embeddings * mask_expanded, 1).values
 
-            all_embeddings.append(embeddings_max.clone().cpu().detach())
+            all_embeddings.append(
+                embeddings_max.clone().cpu().detach())  # deep copy
 
-        # Delete variables to release memory
-        del outputs, model_outputs, embeddings, embeddings_max
-        torch.cuda.empty_cache()
+        # Logging progress to wandb
+        wandb.log({
+            "Current Batch": batch_num + 1,
+            "Total Batches": num_batches,
+            "Percentage Completed": (batch_num + 1) / num_batches * 100
+        })
 
     # Concatenate all the embeddings
     all_embeddings = torch.cat(all_embeddings, dim=0)
