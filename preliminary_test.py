@@ -27,7 +27,7 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=4):
     # Placeholder list to store embeddings
     all_embeddings = []
 
