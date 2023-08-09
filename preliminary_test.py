@@ -45,6 +45,10 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
                                               is_split_into_words=True,
                                               return_tensors="pt")
 
+        device = model.device  # get the device where the model is
+        for key in outputs:
+            outputs[key] = outputs[key].to(device)
+
         # For T5, use the same input_ids as decoder_input_ids.
         outputs["decoder_input_ids"] = outputs["input_ids"]
 
