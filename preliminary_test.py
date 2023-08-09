@@ -31,9 +31,9 @@ ankh_large_model = AutoModel.from_pretrained(ankh_large_model_name)
 # Initialize DeepSpeed-Inference for each model
 world_size = torch.cuda.device_count()  # Adjust as needed
 toot_plm_p2s_model = deepspeed.init_inference(
-    toot_plm_p2s_model, mp_size=world_size, dtype=torch.float)
+    toot_plm_p2s_model, mp_size=world_size, dtype=torch.half)
 ankh_large_model = deepspeed.init_inference(
-    ankh_large_model, mp_size=world_size, dtype=torch.float)
+    ankh_large_model, mp_size=world_size, dtype=torch.half)
 
 tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
 
