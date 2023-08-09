@@ -29,11 +29,11 @@ toot_plm_p2s_model = AutoModel.from_pretrained(toot_plm_p2s_model_name)
 ankh_large_model = AutoModel.from_pretrained(ankh_large_model_name)
 
 # Initialize DeepSpeed-Inference for each model
-world_size = torch.cuda.device_count()  # Adjust as needed
+
 toot_plm_p2s_model = deepspeed.init_inference(
-    toot_plm_p2s_model, mp_size=world_size, dtype=torch.half)
+    toot_plm_p2s_model, config="ds_config_inference.json")
 ankh_large_model = deepspeed.init_inference(
-    ankh_large_model, mp_size=world_size, dtype=torch.half)
+    ankh_large_model, config="ds_config_inference.json")
 
 tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
 
@@ -43,7 +43,7 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences, batch_size=2):
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
     # Placeholder list to store embeddings
     all_embeddings = []
 
