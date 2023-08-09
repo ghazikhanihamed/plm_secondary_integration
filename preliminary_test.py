@@ -4,6 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
 import torch
 import deepspeed
+from deepspeed.accelerator import get_accelerator
 
 toot_plm_p2s_model_name = "ghazikhanihamed/TooT-PLM-P2S"
 ankh_large_model_name = "ElnaggarLab/ankh-large"
@@ -45,9 +46,8 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
                                               is_split_into_words=True,
                                               return_tensors="pt")
 
-        device = model.device  # get the device where the model is
-        for key in outputs:
-            outputs[key] = outputs[key].to(device)
+        device = get_accelerator().current_device_name()
+        outputs = {k: v.to(device) for k, v in outputs.items()}
 
         # For T5, use the same input_ids as decoder_input_ids.
         outputs["decoder_input_ids"] = outputs["input_ids"]
