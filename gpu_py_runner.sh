@@ -3,7 +3,7 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=128G,g=4
+#$ -l m_mem_free=256G,g=1
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
@@ -16,7 +16,8 @@ module load cuda/11.4/default
 source /usr/local/pkg/Anaconda/Anaconda3.2022.10/root/etc/profile.d/conda.sh
 conda activate py3.9
 
-deepspeed --num_gpus=4 plm_secondary_deepspeed.py
+python preliminary_test.py
+# deepspeed --num_gpus=4 plm_secondary_deepspeed.py
 # accelerate launch --multi_gpu plm_secondary_deepspeed.py
 
 

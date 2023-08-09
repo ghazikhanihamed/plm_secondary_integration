@@ -25,7 +25,7 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences, batch_size=32):
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
     # Placeholder list to store embeddings
     all_embeddings = []
 
@@ -44,6 +44,10 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=32):
                                               is_split_into_words=True,
                                               return_tensors="pt")
         outputs = {key: value.to(device) for key, value in outputs.items()}
+
+        # For T5, use the same input_ids as decoder_input_ids.
+        outputs["decoder_input_ids"] = outputs["input_ids"]
+
         with torch.no_grad():
             model_outputs = model(**outputs)
             if isinstance(model_outputs, tuple):
