@@ -5,9 +5,6 @@ from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
 import torch
 import deepspeed
 
-device = torch.device(
-    "cuda") if torch.cuda.is_available() else torch.device("cpu")
-
 toot_plm_p2s_model_name = "ghazikhanihamed/TooT-PLM-P2S"
 ankh_large_model_name = "ElnaggarLab/ankh-large"
 
@@ -15,15 +12,11 @@ toot_plm_p2s_model = AutoModel.from_pretrained(toot_plm_p2s_model_name)
 ankh_large_model = AutoModel.from_pretrained(ankh_large_model_name)
 
 # Initialize DeepSpeed-Inference for each model
-world_size = 4  # Adjust as needed
+world_size = torch.cuda.device_count()  # Adjust as needed
 toot_plm_p2s_model = deepspeed.init_inference(
     toot_plm_p2s_model, mp_size=world_size, dtype=torch.float)
 ankh_large_model = deepspeed.init_inference(
     ankh_large_model, mp_size=world_size, dtype=torch.float)
-
-# Move models to device
-toot_plm_p2s_model.to(device)
-ankh_large_model.to(device)
 
 tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
 
@@ -51,7 +44,6 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
                                               padding=True,
                                               is_split_into_words=True,
                                               return_tensors="pt")
-        outputs = {key: value.to(device) for key, value in outputs.items()}
 
         # For T5, use the same input_ids as decoder_input_ids.
         outputs["decoder_input_ids"] = outputs["input_ids"]
