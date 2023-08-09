@@ -5,6 +5,22 @@ from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
 import torch
 import deepspeed
 from deepspeed.accelerator import get_accelerator
+import wandb
+import json
+
+# Load Weights & Biases Configuration
+with open("wandb_config.json") as f:
+    data = json.load(f)
+
+api_key = data["api_key"]
+
+wandb_config = {
+    "project": "plm_secondary_integration",
+}
+
+wandb.login(key=api_key)
+
+wandb.init(config=wandb_config)
 
 toot_plm_p2s_model_name = "ghazikhanihamed/TooT-PLM-P2S"
 ankh_large_model_name = "ElnaggarLab/ankh-large"
@@ -63,6 +79,13 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=4):
 
             all_embeddings.append(embeddings_max.cpu())
 
+        # Logging progress to wandb
+        wandb.log({
+            "Current Batch": batch_num + 1,
+            "Total Batches": num_batches,
+            "Percentage Completed": (batch_num + 1) / num_batches * 100
+        })
+
     # Concatenate all the embeddings
     all_embeddings = torch.cat(all_embeddings, dim=0)
     return all_embeddings
@@ -89,15 +112,52 @@ lr_ankh = LogisticRegression(max_iter=1000).fit(
 preds_toot = lr_toot.predict(test_embeddings_toot)
 preds_ankh = lr_ankh.predict(test_embeddings_ankh)
 
+# plot classifier
+wandb.sklearn.plot_classifier(lr_toot, train_embeddings_toot,
+                              train_dataset['label'], test_embeddings_toot, test_dataset['label'], [
+                                  "ion channel", "other membrane protein"], model_name="LogisticRegression",
+                              feature_names=None, target_names=None, title="Logistic Regression for TooT-PLM-P2S")
+
+wandb.sklearn.plot_classifier(lr_ankh, train_embeddings_ankh,
+                              train_dataset['label'], test_embeddings_ankh, test_dataset['label'], [
+                                  "ion channel", "other membrane protein"], model_name="LogisticRegression",
+                              feature_names=None, target_names=None, title="Logistic Regression for ankh-large")
+
+# plot roc curve
+wandb.sklearn.plot_roc(test_dataset['label'], [
+    preds_toot, preds_ankh], ["TooT-PLM-P2S", "ankh-large"], title="ROC Curve for TooT-PLM-P2S and ankh-large")
+
+
+# Plot confusion matrix
+wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_toot, [
+                                    "ion channel", "other membrane protein"], title="Confusion Matrix for TooT-PLM-P2S")
+wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_ankh, [
+                                    "ion channel", "other membrane protein"], title="Confusion Matrix for ankh-large")
+
+# plot summary metrics
+wandb.sklearn.plot_summary_metrics(lr_toot, train_embeddings_toot,
+                                   train_dataset['label'], test_embeddings_toot, test_dataset['label'])
+wandb.sklearn.plot_summary_metrics(lr_ankh, train_embeddings_ankh,
+                                   train_dataset['label'], test_embeddings_ankh, test_dataset['label'])
+
 # Evaluation
 accuracy_toot = accuracy_score(test_dataset['label'], preds_toot)
 accuracy_ankh = accuracy_score(test_dataset['label'], preds_ankh)
 
+wandb.log({"accuracy_toot": accuracy_toot})
+wandb.log({"accuracy_ankh": accuracy_ankh})
+
 f1_toot = f1_score(test_dataset['label'], preds_toot, average='macro')
 f1_ankh = f1_score(test_dataset['label'], preds_ankh, average='macro')
 
+wandb.log({"f1_toot": f1_toot})
+wandb.log({"f1_ankh": f1_ankh})
+
 mcc_toot = matthews_corrcoef(test_dataset['label'], preds_toot)
 mcc_ankh = matthews_corrcoef(test_dataset['label'], preds_ankh)
+
+wandb.log({"mcc_toot": mcc_toot})
+wandb.log({"mcc_ankh": mcc_ankh})
 
 print(f"Accuracy for toot_plm_p2s: {accuracy_toot}")
 print(f"Accuracy for ankh_large: {accuracy_ankh}")
@@ -105,3 +165,5 @@ print(f"F1 score for toot_plm_p2s: {f1_toot}")
 print(f"F1 score for ankh_large: {f1_ankh}")
 print(f"MCC for toot_plm_p2s: {mcc_toot}")
 print(f"MCC for ankh_large: {mcc_ankh}")
+
+wandb.finish()
