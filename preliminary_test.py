@@ -28,6 +28,9 @@ ankh_large_model_name = "ElnaggarLab/ankh-large"
 toot_plm_p2s_model = AutoModel.from_pretrained(toot_plm_p2s_model_name)
 ankh_large_model = AutoModel.from_pretrained(ankh_large_model_name)
 
+toot_plm_p2s_model.eval()
+ankh_large_model.eval()
+
 # Initialize DeepSpeed-Inference for each model
 
 toot_plm_p2s_model = deepspeed.init_inference(
@@ -43,20 +46,12 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences, batch_size=1):
-    # Placeholder list to store embeddings
+def get_embeddings(model, tokenizer, protein_sequences):
     all_embeddings = []
 
-    # Create batches
-    num_batches = len(protein_sequences) // batch_size + \
-        (len(protein_sequences) % batch_size != 0)
-    for batch_num in range(num_batches):
-        start_idx = batch_num * batch_size
-        end_idx = start_idx + batch_size
-
-        batch_sequences = [list(seq)
-                           for seq in protein_sequences[start_idx:end_idx]]
-        outputs = tokenizer.batch_encode_plus(batch_sequences,
+    for seq in protein_sequences:
+        batch_sequence = [list(seq)]
+        outputs = tokenizer.batch_encode_plus(batch_sequence,
                                               add_special_tokens=True,
                                               padding=True,
                                               is_split_into_words=True,
@@ -72,19 +67,15 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=1):
             model_outputs = model(**outputs)
             embeddings = model_outputs.last_hidden_state
 
-            # Max pooling
             mask_expanded = outputs['attention_mask'].unsqueeze(
                 -1).expand(embeddings.size()).float()
             embeddings_max = torch.max(embeddings * mask_expanded, 1).values
 
-            all_embeddings.append(embeddings_max.cpu())
+            all_embeddings.append(embeddings_max.clone().cpu().detach())
 
-        # Logging progress to wandb
-        wandb.log({
-            "Current Batch": batch_num + 1,
-            "Total Batches": num_batches,
-            "Percentage Completed": (batch_num + 1) / num_batches * 100
-        })
+        # Delete variables to release memory
+        del outputs, model_outputs, embeddings, embeddings_max
+        torch.cuda.empty_cache()
 
     # Concatenate all the embeddings
     all_embeddings = torch.cat(all_embeddings, dim=0)
@@ -144,20 +135,24 @@ wandb.sklearn.plot_summary_metrics(lr_ankh, train_embeddings_ankh,
 accuracy_toot = accuracy_score(test_dataset['label'], preds_toot)
 accuracy_ankh = accuracy_score(test_dataset['label'], preds_ankh)
 
-wandb.log({"accuracy_toot": accuracy_toot})
-wandb.log({"accuracy_ankh": accuracy_ankh})
 
 f1_toot = f1_score(test_dataset['label'], preds_toot, average='macro')
 f1_ankh = f1_score(test_dataset['label'], preds_ankh, average='macro')
 
-wandb.log({"f1_toot": f1_toot})
-wandb.log({"f1_ankh": f1_ankh})
 
 mcc_toot = matthews_corrcoef(test_dataset['label'], preds_toot)
 mcc_ankh = matthews_corrcoef(test_dataset['label'], preds_ankh)
 
-wandb.log({"mcc_toot": mcc_toot})
-wandb.log({"mcc_ankh": mcc_ankh})
+
+wandb.log({
+    "accuracy_toot": accuracy_toot,
+    "accuracy_ankh": accuracy_ankh,
+    "f1_toot": f1_toot,
+    "f1_ankh": f1_ankh,
+    "mcc_toot": mcc_toot,
+    "mcc_ankh": mcc_ankh
+})
+
 
 print(f"Accuracy for toot_plm_p2s: {accuracy_toot}")
 print(f"Accuracy for ankh_large: {accuracy_ankh}")
