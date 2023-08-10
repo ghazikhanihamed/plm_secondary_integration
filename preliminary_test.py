@@ -46,7 +46,7 @@ test_dataset = pd.read_csv(
     "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
-def get_embeddings(model, tokenizer, protein_sequences, batch_size=4):
+def get_embeddings(model, tokenizer, protein_sequences, batch_size=8):
     # Placeholder list to store embeddings
     all_embeddings = []
 
@@ -63,7 +63,7 @@ def get_embeddings(model, tokenizer, protein_sequences, batch_size=4):
                                               add_special_tokens=False,
                                               padding=True,
                                               truncation=True,
-                                              max_length=1024,
+                                              max_length=2048,
                                               is_split_into_words=True,
                                               return_tensors="pt")
 
@@ -107,6 +107,12 @@ test_embeddings_toot = get_embeddings(
     toot_plm_p2s_model, tokenizer, test_dataset['sequence'].values)
 test_embeddings_ankh = get_embeddings(
     ankh_large_model, tokenizer, test_dataset['sequence'].values)
+
+# Saving embeddings
+torch.save(train_embeddings_toot, 'train_embeddings_toot.pt')
+torch.save(train_embeddings_ankh, 'train_embeddings_ankh.pt')
+torch.save(test_embeddings_toot, 'test_embeddings_toot.pt')
+torch.save(test_embeddings_ankh, 'test_embeddings_ankh.pt')
 
 # Train logistic regressions
 lr_toot = LogisticRegression(max_iter=1000).fit(
