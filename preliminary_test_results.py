@@ -33,42 +33,42 @@ test_embeddings_ankh = torch.load('test_embeddings_ankh.pt')
 
 
 # Train logistic regressions
-lr_toot = LogisticRegression(max_iter=1000).fit(
+lr_toot = LogisticRegression(random_state=1).fit(
     train_embeddings_toot, train_dataset['label'])
-lr_ankh = LogisticRegression(max_iter=1000).fit(
+lr_ankh = LogisticRegression(random_state=1).fit(
     train_embeddings_ankh, train_dataset['label'])
 
 # Predictions
 preds_toot = lr_toot.predict(test_embeddings_toot)
 preds_ankh = lr_ankh.predict(test_embeddings_ankh)
 
-# plot classifier
-wandb.sklearn.plot_classifier(lr_toot, train_embeddings_toot,
-                              train_dataset['label'], test_embeddings_toot, test_dataset['label'], [
-                                  "ion channel", "other membrane protein"], model_name="LogisticRegression",
-                              feature_names=None)
+# # plot classifier
+# wandb.sklearn.plot_classifier(lr_toot, train_embeddings_toot,
+#                               train_dataset['label'], test_embeddings_toot, test_dataset['label'], [
+#                                   "ion channel", "other membrane protein"], model_name="LogisticRegression",
+#                               feature_names=None)
 
-wandb.sklearn.plot_classifier(lr_ankh, train_embeddings_ankh,
-                              train_dataset['label'], test_embeddings_ankh, test_dataset['label'], [
-                                  "ion channel", "other membrane protein"], model_name="LogisticRegression",
-                              feature_names=None)
+# wandb.sklearn.plot_classifier(lr_ankh, train_embeddings_ankh,
+#                               train_dataset['label'], test_embeddings_ankh, test_dataset['label'], [
+#                                   "ion channel", "other membrane protein"], model_name="LogisticRegression",
+#                               feature_names=None)
 
-# plot roc curve
-wandb.sklearn.plot_roc(test_dataset['label'], [
-    preds_toot, preds_ankh], ["TooT-PLM-P2S", "ankh-large"])
+# # plot roc curve
+# wandb.sklearn.plot_roc(test_dataset['label'], [
+#     preds_toot, preds_ankh], ["TooT-PLM-P2S", "ankh-large"])
 
 
-# Plot confusion matrix
-wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_toot, [
-                                    "ion channel", "other membrane protein"])
-wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_ankh, [
-                                    "ion channel", "other membrane protein"])
+# # Plot confusion matrix
+# wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_toot, [
+#                                     "ion channel", "other membrane protein"])
+# wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_ankh, [
+#                                     "ion channel", "other membrane protein"])
 
-# plot summary metrics
-wandb.sklearn.plot_summary_metrics(lr_toot, train_embeddings_toot,
-                                   train_dataset['label'], test_embeddings_toot, test_dataset['label'])
-wandb.sklearn.plot_summary_metrics(lr_ankh, train_embeddings_ankh,
-                                   train_dataset['label'], test_embeddings_ankh, test_dataset['label'])
+# # plot summary metrics
+# wandb.sklearn.plot_summary_metrics(lr_toot, train_embeddings_toot,
+#                                    train_dataset['label'], test_embeddings_toot, test_dataset['label'])
+# wandb.sklearn.plot_summary_metrics(lr_ankh, train_embeddings_ankh,
+#                                    train_dataset['label'], test_embeddings_ankh, test_dataset['label'])
 
 # Evaluation
 accuracy_toot = accuracy_score(test_dataset['label'], preds_toot)
