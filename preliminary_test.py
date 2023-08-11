@@ -128,23 +128,23 @@ preds_ankh = lr_ankh.predict(test_embeddings_ankh)
 wandb.sklearn.plot_classifier(lr_toot, train_embeddings_toot,
                               train_dataset['label'], test_embeddings_toot, test_dataset['label'], [
                                   "ion channel", "other membrane protein"], model_name="LogisticRegression",
-                              feature_names=None, target_names=None, title="Logistic Regression for TooT-PLM-P2S")
+                              feature_names=None)
 
 wandb.sklearn.plot_classifier(lr_ankh, train_embeddings_ankh,
                               train_dataset['label'], test_embeddings_ankh, test_dataset['label'], [
                                   "ion channel", "other membrane protein"], model_name="LogisticRegression",
-                              feature_names=None, target_names=None, title="Logistic Regression for ankh-large")
+                              feature_names=None)
 
 # plot roc curve
 wandb.sklearn.plot_roc(test_dataset['label'], [
-    preds_toot, preds_ankh], ["TooT-PLM-P2S", "ankh-large"], title="ROC Curve for TooT-PLM-P2S and ankh-large")
+    preds_toot, preds_ankh], ["TooT-PLM-P2S", "ankh-large"])
 
 
 # Plot confusion matrix
 wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_toot, [
-                                    "ion channel", "other membrane protein"], title="Confusion Matrix for TooT-PLM-P2S")
+                                    "ion channel", "other membrane protein"])
 wandb.sklearn.plot_confusion_matrix(test_dataset['label'], preds_ankh, [
-                                    "ion channel", "other membrane protein"], title="Confusion Matrix for ankh-large")
+                                    "ion channel", "other membrane protein"])
 
 # plot summary metrics
 wandb.sklearn.plot_summary_metrics(lr_toot, train_embeddings_toot,
