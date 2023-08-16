@@ -3,7 +3,7 @@ import torch
 from transformers import (
     T5EncoderModel,
     AutoTokenizer,
-    FeatureExtractionPipeline,
+    pipeline,
     set_seed,
 )
 from sklearn.linear_model import LogisticRegression
@@ -47,12 +47,18 @@ tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
 toot_plm_p2s_model, tokenizer_toot = accelerator.prepare(toot_plm_p2s_model, tokenizer)
 ankh_large_model, tokenizer_ankh = accelerator.prepare(ankh_large_model, tokenizer)
 
-feature_extraction_toot = FeatureExtractionPipeline(
-    model=toot_plm_p2s_model, tokenizer=tokenizer_toot, device=0
+feature_extraction_toot = pipeline(
+    task="feature-extraction",
+    model=toot_plm_p2s_model,
+    tokenizer=tokenizer_toot,
+    device_map="auto",
 )
 
-feature_extraction_ankh = FeatureExtractionPipeline(
-    model=ankh_large_model, tokenizer=tokenizer_ankh, device=0
+feature_extraction_ankh = pipeline(
+    task="feature-extraction",
+    model=ankh_large_model,
+    tokenizer=tokenizer_ankh,
+    device_map="auto",
 )
 
 
