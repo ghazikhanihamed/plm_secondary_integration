@@ -94,40 +94,40 @@ def main():
     toot_plm_p2s_model, toot_tokenizer = get_model_and_tokenizer(
         TOOT_PLM_P2S_MODEL_NAME, accelerator
     )
-    ankh_large_model, ankh_tokenizer = get_model_and_tokenizer(
-        ANKH_LARGE_MODEL_NAME, accelerator
-    )
+    # ankh_large_model, ankh_tokenizer = get_model_and_tokenizer(
+    #     ANKH_LARGE_MODEL_NAME, accelerator
+    # )
 
     # Get embeddings
     train_embeddings_toot = get_embeddings(
         toot_plm_p2s_model, toot_tokenizer, train_dataset["sequence"].values, device
     )
-    train_embeddings_ankh = get_embeddings(
-        ankh_large_model, ankh_tokenizer, train_dataset["sequence"].values, device
-    )
+    # train_embeddings_ankh = get_embeddings(
+    #     ankh_large_model, ankh_tokenizer, train_dataset["sequence"].values, device
+    # )
     test_embeddings_toot = get_embeddings(
         toot_plm_p2s_model, toot_tokenizer, test_dataset["sequence"].values, device
     )
-    test_embeddings_ankh = get_embeddings(
-        ankh_large_model, ankh_tokenizer, test_dataset["sequence"].values, device
-    )
+    # test_embeddings_ankh = get_embeddings(
+    #     ankh_large_model, ankh_tokenizer, test_dataset["sequence"].values, device
+    # )
 
     # Save embeddings
     torch.save(train_embeddings_toot, "train_embeddings_toot.pt")
-    torch.save(train_embeddings_ankh, "train_embeddings_ankh.pt")
+    # torch.save(train_embeddings_ankh, "train_embeddings_ankh.pt")
     torch.save(test_embeddings_toot, "test_embeddings_toot.pt")
-    torch.save(test_embeddings_ankh, "test_embeddings_ankh.pt")
+    # torch.save(test_embeddings_ankh, "test_embeddings_ankh.pt")
 
     # Train, predict and evaluate
     for embeddings, model_name in [
         (train_embeddings_toot, "toot_plm_p2s"),
-        (train_embeddings_ankh, "ankh_large"),
+        # (train_embeddings_ankh, "ankh_large"),
     ]:
         lr = LogisticRegression(random_state=1).fit(embeddings, train_dataset["label"])
         preds = lr.predict(
             test_embeddings_toot
-            if model_name == "toot_plm_p2s"
-            else test_embeddings_ankh
+            # if model_name == "toot_plm_p2s"
+            # else test_embeddings_ankh
         )
 
         accuracy = accuracy_score(test_dataset["label"], preds)
