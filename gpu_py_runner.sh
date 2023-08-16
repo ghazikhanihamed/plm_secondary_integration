@@ -16,9 +16,9 @@ module load cuda/11.4/default
 source /usr/local/pkg/Anaconda/Anaconda3.2022.10/root/etc/profile.d/conda.sh
 conda activate py3.9
 
-# python preliminary_test.py
+python feature_extraction_test_pipeline.py
 # deepspeed --num_gpus=4 preliminary_test.py
-accelerate launch --multi_gpu preliminary_test.py
+# accelerate launch --multi_gpu preliminary_test.py
 
 
 conda deactivate
