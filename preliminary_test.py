@@ -7,166 +7,144 @@ import wandb
 import json
 import accelerate
 
+# Constants
+SEED = 42
+WANDB_CONFIG_PATH = "wandb_config.json"
+TRAIN_DATASET_PATH = "./dataset/ionchannels_membraneproteins_imbalanced_train.csv"
+TEST_DATASET_PATH = "./dataset/ionchannels_membraneproteins_imbalanced_test.csv"
+TOOT_PLM_P2S_MODEL_NAME = "ghazikhanihamed/TooT-PLM-P2S"
+ANKH_LARGE_MODEL_NAME = "ElnaggarLab/ankh-large"
+
+
+def load_wandb_config(path):
+    """Loads the Weights & Biases configuration from a JSON file."""
+    with open(path) as f:
+        data = json.load(f)
+    return data["api_key"]
+
+
+def get_model_and_tokenizer(model_name, accelerator):
+    """Loads the model, puts it on the device and in eval mode, and retrieves the tokenizer."""
+    model = (
+        T5EncoderModel.from_pretrained(model_name).half().to(accelerator.device).eval()
+    )
+    model = accelerator.prepare(model)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    return model, tokenizer
+
+
+def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
+    """Extracts embeddings from a model given protein sequences."""
+    all_embeddings = []
+
+    num_batches = len(sequences) // batch_size + (len(sequences) % batch_size != 0)
+    for batch_num, idx in enumerate(range(0, len(sequences), batch_size)):
+        batch_sequences = [list(seq) for seq in sequences[idx : idx + batch_size]]
+        outputs = tokenizer.batch_encode_plus(
+            batch_sequences,
+            add_special_tokens=False,
+            is_split_into_words=True,
+            return_tensors="pt",
+        )
+        outputs = {k: v.to(device) for k, v in outputs.items()}
+
+        with torch.no_grad():
+            model_outputs = model(**outputs)
+            embeddings = model_outputs.last_hidden_state
+
+            mask_expanded = (
+                outputs["attention_mask"]
+                .unsqueeze(-1)
+                .expand(embeddings.size())
+                .float()
+            )
+            embeddings_max = torch.max(embeddings * mask_expanded, 1).values
+
+            all_embeddings.append(embeddings_max.clone().cpu().detach())
+
+        wandb.log(
+            {
+                "Current Batch": batch_num + 1,
+                "Total Batches": num_batches,
+                "Percentage Completed": (batch_num + 1) / num_batches * 100,
+            }
+        )
+
+    return torch.cat(all_embeddings, dim=0)
+
 
 def main():
     # Set seed
-    set_seed(42)
-    # Load Weights & Biases Configuration
-    with open("wandb_config.json") as f:
-        data = json.load(f)
+    set_seed(SEED)
 
-    api_key = data["api_key"]
-
-    wandb_config = {
-        "project": "plm_secondary_integration",
-    }
-
+    # Load Weights & Biases Configuration and initialize
+    api_key = load_wandb_config(WANDB_CONFIG_PATH)
     wandb.login(key=api_key)
+    wandb.init(config={"project": "plm_secondary_integration"})
 
-    wandb.init(config=wandb_config)
+    # Load datasets
+    train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
+    test_dataset = pd.read_csv(TEST_DATASET_PATH)
 
-    train_dataset = pd.read_csv(
-        "./dataset/ionchannels_membraneproteins_imbalanced_train.csv"
-    )
-    test_dataset = pd.read_csv(
-        "./dataset/ionchannels_membraneproteins_imbalanced_test.csv"
-    )
-
+    # Setup Accelerate
     accelerator = accelerate.Accelerator(log_with="wandb", mixed_precision="fp16")
-
-    toot_plm_p2s_model_name = "ghazikhanihamed/TooT-PLM-P2S"
-    ankh_large_model_name = "ElnaggarLab/ankh-large"
-
-    toot_plm_p2s_model = T5EncoderModel.from_pretrained(toot_plm_p2s_model_name)
-    ankh_large_model = T5EncoderModel.from_pretrained(ankh_large_model_name)
-
-    toot_plm_p2s_model.half()
-    ankh_large_model.half()
-
     device = accelerator.device
 
-    toot_plm_p2s_model = toot_plm_p2s_model.to(device)
-    ankh_large_model = ankh_large_model.to(device)
+    # Load models and tokenizers
+    toot_plm_p2s_model, toot_tokenizer = get_model_and_tokenizer(
+        TOOT_PLM_P2S_MODEL_NAME, accelerator
+    )
+    ankh_large_model, ankh_tokenizer = get_model_and_tokenizer(
+        ANKH_LARGE_MODEL_NAME, accelerator
+    )
 
-    toot_plm_p2s_model = toot_plm_p2s_model.eval()
-    ankh_large_model = ankh_large_model.eval()
-
-    tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
-
-    def get_embeddings(model, tokenizer, protein_sequences, batch_size=1):
-        # Placeholder list to store embeddings
-        all_embeddings = []
-
-        # Create batches
-        num_batches = len(protein_sequences) // batch_size + (
-            len(protein_sequences) % batch_size != 0
-        )
-        for batch_num in range(num_batches):
-            start_idx = batch_num * batch_size
-            end_idx = start_idx + batch_size
-
-            batch_sequences = [
-                list(seq) for seq in protein_sequences[start_idx:end_idx]
-            ]
-            outputs = tokenizer.batch_encode_plus(
-                batch_sequences,
-                add_special_tokens=False,
-                is_split_into_words=True,
-                return_tensors="pt",
-            )
-
-            outputs = {k: v.to(device) for k, v in outputs.items()}
-
-            with torch.no_grad():
-                model_outputs = model(**outputs)
-                embeddings = model_outputs.last_hidden_state
-
-                # Max pooling
-                mask_expanded = (
-                    outputs["attention_mask"]
-                    .unsqueeze(-1)
-                    .expand(embeddings.size())
-                    .float()
-                )
-                embeddings_max = torch.max(embeddings * mask_expanded, 1).values
-
-                all_embeddings.append(
-                    embeddings_max.clone().cpu().detach()
-                )  # deep copy
-
-            # Logging progress to wandb
-            wandb.log(
-                {
-                    "Current Batch": batch_num + 1,
-                    "Total Batches": num_batches,
-                    "Percentage Completed": (batch_num + 1) / num_batches * 100,
-                }
-            )
-
-        # Concatenate all the embeddings
-        all_embeddings = torch.cat(all_embeddings, dim=0)
-        return all_embeddings
-
-    # Getting the embeddings
+    # Get embeddings
     train_embeddings_toot = get_embeddings(
-        toot_plm_p2s_model, tokenizer, train_dataset["sequence"].values
+        toot_plm_p2s_model, toot_tokenizer, train_dataset["sequence"].values, device
     )
     train_embeddings_ankh = get_embeddings(
-        ankh_large_model, tokenizer, train_dataset["sequence"].values
+        ankh_large_model, ankh_tokenizer, train_dataset["sequence"].values, device
     )
-
     test_embeddings_toot = get_embeddings(
-        toot_plm_p2s_model, tokenizer, test_dataset["sequence"].values
+        toot_plm_p2s_model, toot_tokenizer, test_dataset["sequence"].values, device
     )
     test_embeddings_ankh = get_embeddings(
-        ankh_large_model, tokenizer, test_dataset["sequence"].values
+        ankh_large_model, ankh_tokenizer, test_dataset["sequence"].values, device
     )
 
-    # Saving embeddings
+    # Save embeddings
     torch.save(train_embeddings_toot, "train_embeddings_toot.pt")
     torch.save(train_embeddings_ankh, "train_embeddings_ankh.pt")
     torch.save(test_embeddings_toot, "test_embeddings_toot.pt")
     torch.save(test_embeddings_ankh, "test_embeddings_ankh.pt")
 
-    # Train logistic regressions
-    lr_toot = LogisticRegression(random_state=1).fit(
-        train_embeddings_toot, train_dataset["label"]
-    )
-    lr_ankh = LogisticRegression(random_state=1).fit(
-        train_embeddings_ankh, train_dataset["label"]
-    )
+    # Train, predict and evaluate
+    for embeddings, model_name in [
+        (train_embeddings_toot, "toot_plm_p2s"),
+        (train_embeddings_ankh, "ankh_large"),
+    ]:
+        lr = LogisticRegression(random_state=1).fit(embeddings, train_dataset["label"])
+        preds = lr.predict(
+            test_embeddings_toot
+            if model_name == "toot_plm_p2s"
+            else test_embeddings_ankh
+        )
 
-    # Predictions
-    preds_toot = lr_toot.predict(test_embeddings_toot)
-    preds_ankh = lr_ankh.predict(test_embeddings_ankh)
+        accuracy = accuracy_score(test_dataset["label"], preds)
+        f1 = f1_score(test_dataset["label"], preds, average="macro")
+        mcc = matthews_corrcoef(test_dataset["label"], preds)
 
-    # Evaluation
-    accuracy_toot = accuracy_score(test_dataset["label"], preds_toot)
-    accuracy_ankh = accuracy_score(test_dataset["label"], preds_ankh)
+        wandb.log(
+            {
+                f"accuracy_{model_name}": accuracy,
+                f"f1_{model_name}": f1,
+                f"mcc_{model_name}": mcc,
+            }
+        )
 
-    f1_toot = f1_score(test_dataset["label"], preds_toot, average="macro")
-    f1_ankh = f1_score(test_dataset["label"], preds_ankh, average="macro")
-
-    mcc_toot = matthews_corrcoef(test_dataset["label"], preds_toot)
-    mcc_ankh = matthews_corrcoef(test_dataset["label"], preds_ankh)
-
-    wandb.log(
-        {
-            "accuracy_toot": accuracy_toot,
-            "accuracy_ankh": accuracy_ankh,
-            "f1_toot": f1_toot,
-            "f1_ankh": f1_ankh,
-            "mcc_toot": mcc_toot,
-            "mcc_ankh": mcc_ankh,
-        }
-    )
-
-    print(f"Accuracy for toot_plm_p2s: {accuracy_toot}")
-    print(f"Accuracy for ankh_large: {accuracy_ankh}")
-    print(f"F1 score for toot_plm_p2s: {f1_toot}")
-    print(f"F1 score for ankh_large: {f1_ankh}")
-    print(f"MCC for toot_plm_p2s: {mcc_toot}")
-    print(f"MCC for ankh_large: {mcc_ankh}")
+        accelerate.print(f"Accuracy for {model_name}: {accuracy}")
+        accelerate.print(f"F1 score for {model_name}: {f1}")
+        accelerate.print(f"MCC for {model_name}: {mcc}")
 
     wandb.finish()
 
