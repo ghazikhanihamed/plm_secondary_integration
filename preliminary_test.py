@@ -52,17 +52,11 @@ def main():
 
     # prepare the data and model with accelerate
     (
-        train_dataset,
-        test_dataset,
         toot_plm_p2s_model,
         ankh_large_model,
-        tokenizer,
     ) = accelerator.prepare(
-        train_dataset,
-        test_dataset,
         toot_plm_p2s_model,
         ankh_large_model,
-        tokenizer,
     )
 
     def get_embeddings(model, tokenizer, protein_sequences, batch_size=1):
