@@ -45,27 +45,42 @@ tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
 
 # Convert the models and tokenizer to accelerate's format
 toot_plm_p2s_model, tokenizer_toot = accelerator.prepare(toot_plm_p2s_model, tokenizer)
-ankh_large_model, tokenizer_ankh = accelerator.prepare(
-    ankh_large_model, tokenizer
-)  # assuming both models use the same tokenizer, but renamed for clarity
+ankh_large_model, tokenizer_ankh = accelerator.prepare(ankh_large_model, tokenizer)
 
 feature_extraction_toot = FeatureExtractionPipeline(
-    model=toot_plm_p2s_model, tokenizer=tokenizer_toot, device_map="auto"
+    model=toot_plm_p2s_model, tokenizer=tokenizer_toot, device=0
 )
 
 feature_extraction_ankh = FeatureExtractionPipeline(
-    model=ankh_large_model, tokenizer=tokenizer_ankh, device_map="auto"
+    model=ankh_large_model, tokenizer=tokenizer_ankh, device=0
 )
 
 
 def get_embeddings(pipeline, protein_sequences, batch_size=1):
     all_embeddings = []
-    for i in range(0, len(protein_sequences), batch_size):
-        batch_sequences = protein_sequences[i : i + batch_size].tolist()
-        embeddings = pipeline(batch_sequences).to(accelerator.device)
-        all_embeddings.extend(embeddings)
+    num_sequences = len(protein_sequences)
+    log_interval = max(
+        1, num_sequences // (10 * batch_size)
+    )  # Let's log progress every 10% of the dataset
 
-    return torch.tensor(all_embeddings)
+    for i in range(0, num_sequences, batch_size):
+        batch_sequences = protein_sequences[i : i + batch_size].tolist()
+        embeddings = pipeline(
+            batch_sequences
+        )  # Output shape: [batch_size, seq_len, embedding_dim]
+        max_pooled = embeddings.max(dim=1)[
+            0
+        ]  # Max pooling over sequence length. Shape: [batch_size, embedding_dim]
+
+        # Move max_pooled tensor to the correct device before appending
+        all_embeddings.append(max_pooled.to(accelerator.device))
+
+        # Log to wandb
+        if (i // batch_size) % log_interval == 0:
+            percentage_done = (i / num_sequences) * 100
+            wandb.log({"percentage_processed": percentage_done})
+
+    return torch.cat(all_embeddings, dim=0)
 
 
 print(toot_plm_p2s_model.device)
