@@ -65,9 +65,12 @@ def get_embeddings(pipeline, protein_sequences, batch_size=1):
 
     for i in range(0, num_sequences, batch_size):
         batch_sequences = protein_sequences[i : i + batch_size].tolist()
-        embeddings = pipeline(
-            batch_sequences
-        )  # Output shape: [batch_size, seq_len, embedding_dim]
+        embeddings = pipeline(batch_sequences)  # Might return a list
+
+        # Convert embeddings to tensor if it's a list
+        if isinstance(embeddings, list):
+            embeddings = torch.tensor(embeddings).to(accelerator.device)
+
         max_pooled = embeddings.max(dim=1)[
             0
         ]  # Max pooling over sequence length. Shape: [batch_size, embedding_dim]
