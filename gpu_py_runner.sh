@@ -17,8 +17,8 @@ source /usr/local/pkg/Anaconda/Anaconda3.2022.10/root/etc/profile.d/conda.sh
 conda activate py3.9
 
 # python preliminary_test.py
-deepspeed --num_gpus=4 preliminary_test.py
-# accelerate launch --multi_gpu plm_secondary_deepspeed.py
+# deepspeed --num_gpus=4 preliminary_test.py
+accelerate launch --multi_gpu preliminary_test.py
 
 
 conda deactivate

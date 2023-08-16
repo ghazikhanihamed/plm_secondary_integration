@@ -40,24 +40,18 @@ def main():
     toot_plm_p2s_model = T5EncoderModel.from_pretrained(toot_plm_p2s_model_name)
     ankh_large_model = T5EncoderModel.from_pretrained(ankh_large_model_name)
 
+    toot_plm_p2s_model.half()
+    ankh_large_model.half()
+
     device = accelerator.device
 
     toot_plm_p2s_model = toot_plm_p2s_model.to(device)
     ankh_large_model = ankh_large_model.to(device)
 
-    toot_plm_p2s_model.eval()
-    ankh_large_model.eval()
+    toot_plm_p2s_model = toot_plm_p2s_model.eval()
+    ankh_large_model = ankh_large_model.eval()
 
     tokenizer = AutoTokenizer.from_pretrained(ankh_large_model_name)
-
-    # prepare the data and model with accelerate
-    (
-        toot_plm_p2s_model,
-        ankh_large_model,
-    ) = accelerator.prepare(
-        toot_plm_p2s_model,
-        ankh_large_model,
-    )
 
     def get_embeddings(model, tokenizer, protein_sequences, batch_size=1):
         # Placeholder list to store embeddings
