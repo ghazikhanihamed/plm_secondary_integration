@@ -1,5 +1,5 @@
 {
-  "dtype": "torch.float32",
+  "dtype": "torch.half",
   "replace_with_kernel_inject": true,
   "tensor_parallel": {
     "tp_size": 4
