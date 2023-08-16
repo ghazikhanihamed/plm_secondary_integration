@@ -45,6 +45,8 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
             add_special_tokens=False,
             is_split_into_words=True,
             return_tensors="pt",
+            truncation=True,
+            max_length=4096,
         )
         outputs = {k: v.to(device) for k, v in outputs.items()}
 
@@ -94,53 +96,54 @@ def main():
     toot_plm_p2s_model, toot_tokenizer = get_model_and_tokenizer(
         TOOT_PLM_P2S_MODEL_NAME, accelerator
     )
-    # ankh_large_model, ankh_tokenizer = get_model_and_tokenizer(
-    #     ANKH_LARGE_MODEL_NAME, accelerator
-    # )
+    ankh_large_model, ankh_tokenizer = get_model_and_tokenizer(
+        ANKH_LARGE_MODEL_NAME, accelerator
+    )
 
     # Get embeddings
     train_embeddings_toot = get_embeddings(
         toot_plm_p2s_model, toot_tokenizer, train_dataset["sequence"].values, device
     )
-    # train_embeddings_ankh = get_embeddings(
-    #     ankh_large_model, ankh_tokenizer, train_dataset["sequence"].values, device
-    # )
+    train_embeddings_ankh = get_embeddings(
+        ankh_large_model, ankh_tokenizer, train_dataset["sequence"].values, device
+    )
     test_embeddings_toot = get_embeddings(
         toot_plm_p2s_model, toot_tokenizer, test_dataset["sequence"].values, device
     )
-    # test_embeddings_ankh = get_embeddings(
-    #     ankh_large_model, ankh_tokenizer, test_dataset["sequence"].values, device
-    # )
+    test_embeddings_ankh = get_embeddings(
+        ankh_large_model, ankh_tokenizer, test_dataset["sequence"].values, device
+    )
 
     # Save embeddings
     torch.save(train_embeddings_toot, "train_embeddings_toot.pt")
-    # torch.save(train_embeddings_ankh, "train_embeddings_ankh.pt")
+    torch.save(train_embeddings_ankh, "train_embeddings_ankh.pt")
     torch.save(test_embeddings_toot, "test_embeddings_toot.pt")
-    # torch.save(test_embeddings_ankh, "test_embeddings_ankh.pt")
+    torch.save(test_embeddings_ankh, "test_embeddings_ankh.pt")
 
     # Train, predict and evaluate
     for embeddings, model_name in [
         (train_embeddings_toot, "toot_plm_p2s"),
-        # (train_embeddings_ankh, "ankh_large"),
+        (train_embeddings_ankh, "ankh_large"),
     ]:
         lr = LogisticRegression(random_state=1).fit(embeddings, train_dataset["label"])
         preds = lr.predict(
             test_embeddings_toot
-            # if model_name == "toot_plm_p2s"
-            # else test_embeddings_ankh
+            if model_name == "toot_plm_p2s"
+            else test_embeddings_ankh
         )
 
         accuracy = accuracy_score(test_dataset["label"], preds)
         f1 = f1_score(test_dataset["label"], preds, average="macro")
         mcc = matthews_corrcoef(test_dataset["label"], preds)
 
-        wandb.log(
-            {
-                f"accuracy_{model_name}": accuracy,
-                f"f1_{model_name}": f1,
-                f"mcc_{model_name}": mcc,
-            }
-        )
+        if accelerate.is_main_process():
+            wandb.log(
+                {
+                    f"accuracy_{model_name}": accuracy,
+                    f"f1_{model_name}": f1,
+                    f"mcc_{model_name}": mcc,
+                }
+            )
 
         accelerate.print(f"Accuracy for {model_name}: {accuracy}")
         accelerate.print(f"F1 score for {model_name}: {f1}")
