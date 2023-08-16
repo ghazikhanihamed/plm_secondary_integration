@@ -61,7 +61,7 @@ feature_extraction_ankh = FeatureExtractionPipeline(
 def get_embeddings(pipeline, protein_sequences, batch_size=1):
     all_embeddings = []
     for i in range(0, len(protein_sequences), batch_size):
-        batch_sequences = protein_sequences[i : i + batch_size]
+        batch_sequences = protein_sequences[i : i + batch_size].tolist()
         embeddings = pipeline(batch_sequences)
         all_embeddings.extend(embeddings)
 
