@@ -62,11 +62,14 @@ def get_embeddings(pipeline, protein_sequences, batch_size=1):
     all_embeddings = []
     for i in range(0, len(protein_sequences), batch_size):
         batch_sequences = protein_sequences[i : i + batch_size].tolist()
-        embeddings = pipeline(batch_sequences)
+        embeddings = pipeline(batch_sequences).to(accelerator.device)
         all_embeddings.extend(embeddings)
 
     return torch.tensor(all_embeddings)
 
+
+print(toot_plm_p2s_model.device)
+print(ankh_large_model.device)
 
 train_embeddings_toot = get_embeddings(
     feature_extraction_toot, train_dataset["sequence"].values
@@ -88,11 +91,12 @@ torch.save(train_embeddings_ankh, "train_embeddings_ankh.pt")
 torch.save(test_embeddings_toot, "test_embeddings_toot.pt")
 torch.save(test_embeddings_ankh, "test_embeddings_ankh.pt")
 
-train_embeddings_toot_np = train_embeddings_toot.numpy()
-train_embeddings_ankh_np = train_embeddings_ankh.numpy()
+train_embeddings_toot_np = train_embeddings_toot.cpu().numpy()
+train_embeddings_ankh_np = train_embeddings_ankh.cpu().numpy()
 
-test_embeddings_toot_np = test_embeddings_toot.numpy()
-test_embeddings_ankh_np = test_embeddings_ankh.numpy()
+test_embeddings_toot_np = test_embeddings_toot.cpu().numpy()
+test_embeddings_ankh_np = test_embeddings_ankh.cpu().numpy()
+
 
 # Train logistic regressions
 lr_toot = LogisticRegression(random_state=1).fit(
