@@ -37,9 +37,9 @@ train_texts, val_texts, train_labels, val_labels = train_test_split(
 train_texts = ["classify: " + text for text in train_texts]
 test_texts = ["classify: " + text for text in test_texts]
 
-from transformers import T5Tokenizer
+from transformers import AutoTokenizer
 
-tokenizer = T5Tokenizer.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
+tokenizer = AutoTokenizer.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
 train_encodings = tokenizer(train_texts, truncation=True, padding=True)
 test_encodings = tokenizer(test_texts, truncation=True, padding=True)
 
