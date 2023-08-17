@@ -1,0 +1,47 @@
+{
+  "fp16": {
+    "enabled": "auto"
+  },
+  "optimizer": {
+    "type": "AdamW",
+    "params": {
+      "lr": "auto",
+      "weight_decay": "auto"
+    }
+  },
+  "scheduler": {
+    "type": "LRRangeTest",
+    "params": {
+      "lr_range_test_min_lr": 1e-6,
+      "lr_range_test_step_size": 200,
+      "lr_range_test_step_rate": 5,
+      "lr_range_test_staircase": false
+    }
+  },
+  "zero_optimization": {
+    "stage": 2,
+    "allgather_partitions": true,
+    "allgather_bucket_size": 5e8,
+    "overlap_comm": true,
+    "reduce_scatter": true,
+    "reduce_bucket_size": 5e8,
+    "contiguous_gradients": true
+  },
+  "wandb": {
+    "enabled": true,
+    "team": "bioinformatics-group",
+    "group": "my_group",
+    "project": "plm_secondary_integration"
+  },
+  "csv_monitor": {
+    "enabled": true,
+    "output_path": "output/ds_logs/",
+    "job_name": "TooT-PLM-P2T"
+  },
+  "gradient_accumulation_steps": "auto",
+  "gradient_clipping": "auto",
+  "train_batch_size": "auto",
+  "train_micro_batch_size_per_gpu": "auto",
+  "steps_per_print": 2000,
+  "wall_clock_breakdown": false
+}

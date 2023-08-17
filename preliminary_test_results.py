@@ -1,46 +1,55 @@
 import torch
 from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
 import wandb
 import json
 import pandas as pd
 
-# Load Weights & Biases Configuration
-with open("wandb_config.json") as f:
-    data = json.load(f)
+# # Load Weights & Biases Configuration
+# with open("wandb_config.json") as f:
+#     data = json.load(f)
 
-api_key = data["api_key"]
+# api_key = data["api_key"]
 
-wandb_config = {
-    "project": "plm_secondary_integration",
-}
+# wandb_config = {
+#     "project": "plm_secondary_integration",
+# }
 
-wandb.login(key=api_key)
+# wandb.login(key=api_key)
 
-wandb.init(config=wandb_config)
+# wandb.init(config=wandb_config)
 
 train_dataset = pd.read_csv(
-    "./dataset/ionchannels_membraneproteins_imbalanced_train.csv")
-test_dataset = pd.read_csv(
-    "./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
+    "./dataset/ionchannels_membraneproteins_imbalanced_train.csv"
+)
+test_dataset = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
 
 # Load the saved embeddings
-train_embeddings_toot = torch.load('train_embeddings_toot.pt')
-train_embeddings_ankh = torch.load('train_embeddings_ankh.pt')
-test_embeddings_toot = torch.load('test_embeddings_toot.pt')
-test_embeddings_ankh = torch.load('test_embeddings_ankh.pt')
+train_embeddings_toot = torch.load("train_embeddings_toot.pt")
+train_embeddings_ankh = torch.load("train_embeddings_ankh.pt")
+test_embeddings_toot = torch.load("test_embeddings_toot.pt")
+test_embeddings_ankh = torch.load("test_embeddings_ankh.pt")
 
 
-# Train logistic regressions
-lr_toot = LogisticRegression(random_state=1).fit(
-    train_embeddings_toot, train_dataset['label'])
-lr_ankh = LogisticRegression(random_state=1).fit(
-    train_embeddings_ankh, train_dataset['label'])
+# Train SVM
+svm_toot = SVC().fit(train_embeddings_toot, train_dataset["label"])
+svm_ankh = SVC().fit(train_embeddings_ankh, train_dataset["label"])
 
 # Predictions
-preds_toot = lr_toot.predict(test_embeddings_toot)
-preds_ankh = lr_ankh.predict(test_embeddings_ankh)
+preds_toot = svm_toot.predict(test_embeddings_toot)
+preds_ankh = svm_ankh.predict(test_embeddings_ankh)
+
+# # Train logistic regressions
+# lr_toot = LogisticRegression(random_state=1).fit(
+#     train_embeddings_toot, train_dataset['label'])
+# lr_ankh = LogisticRegression(random_state=1).fit(
+#     train_embeddings_ankh, train_dataset['label'])
+
+# Predictions
+# preds_toot = lr_toot.predict(test_embeddings_toot)
+# preds_ankh = lr_ankh.predict(test_embeddings_ankh)
 
 # # plot classifier
 # wandb.sklearn.plot_classifier(lr_toot, train_embeddings_toot,
@@ -71,26 +80,26 @@ preds_ankh = lr_ankh.predict(test_embeddings_ankh)
 #                                    train_dataset['label'], test_embeddings_ankh, test_dataset['label'])
 
 # Evaluation
-accuracy_toot = accuracy_score(test_dataset['label'], preds_toot)
-accuracy_ankh = accuracy_score(test_dataset['label'], preds_ankh)
+accuracy_toot = accuracy_score(test_dataset["label"], preds_toot)
+accuracy_ankh = accuracy_score(test_dataset["label"], preds_ankh)
 
 
-f1_toot = f1_score(test_dataset['label'], preds_toot, average='macro')
-f1_ankh = f1_score(test_dataset['label'], preds_ankh, average='macro')
+f1_toot = f1_score(test_dataset["label"], preds_toot, average="macro")
+f1_ankh = f1_score(test_dataset["label"], preds_ankh, average="macro")
 
 
-mcc_toot = matthews_corrcoef(test_dataset['label'], preds_toot)
-mcc_ankh = matthews_corrcoef(test_dataset['label'], preds_ankh)
+mcc_toot = matthews_corrcoef(test_dataset["label"], preds_toot)
+mcc_ankh = matthews_corrcoef(test_dataset["label"], preds_ankh)
 
 
-wandb.log({
-    "accuracy_toot": accuracy_toot,
-    "accuracy_ankh": accuracy_ankh,
-    "f1_toot": f1_toot,
-    "f1_ankh": f1_ankh,
-    "mcc_toot": mcc_toot,
-    "mcc_ankh": mcc_ankh
-})
+# wandb.log({
+#     "accuracy_toot": accuracy_toot,
+#     "accuracy_ankh": accuracy_ankh,
+#     "f1_toot": f1_toot,
+#     "f1_ankh": f1_ankh,
+#     "mcc_toot": mcc_toot,
+#     "mcc_ankh": mcc_ankh
+# })
 
 
 print(f"Accuracy for toot_plm_p2s: {accuracy_toot}")
@@ -100,4 +109,11 @@ print(f"F1 score for ankh_large: {f1_ankh}")
 print(f"MCC for toot_plm_p2s: {mcc_toot}")
 print(f"MCC for ankh_large: {mcc_ankh}")
 
-wandb.finish()
+# wandb.finish()
+
+# Accuracy for toot_plm_p2s: 0.9736263736263736
+# Accuracy for ankh_large: 0.9725274725274725
+# F1 score for toot_plm_p2s: 0.8680394431554523
+# F1 score for ankh_large: 0.8611746758199847
+# MCC for toot_plm_p2s: 0.7638874442350485
+# MCC for ankh_large: 0.752772652709081
