@@ -25,9 +25,7 @@ def load_wandb_config(path):
 
 def get_model_and_tokenizer(model_name, accelerator):
     """Loads the model, puts it on the device and in eval mode, and retrieves the tokenizer."""
-    model = (
-        T5EncoderModel.from_pretrained(model_name).half().to(accelerator.device).eval()
-    )
+    model = T5EncoderModel.from_pretrained(model_name).to(accelerator.device).eval()
     model = accelerator.prepare(model)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     return model, tokenizer
@@ -89,7 +87,7 @@ def main():
     test_dataset = pd.read_csv(TEST_DATASET_PATH)
 
     # Setup Accelerate
-    accelerator = accelerate.Accelerator(log_with="wandb", mixed_precision="fp16")
+    accelerator = accelerate.Accelerator(log_with="wandb")
     device = accelerator.device
 
     # Load models and tokenizers
