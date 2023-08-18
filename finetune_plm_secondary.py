@@ -1,55 +1,57 @@
 import pandas as pd
-
 import wandb
 import json
+import torch
+from sklearn.model_selection import train_test_split
+from transformers import (
+    AutoTokenizer,
+    T5ForConditionalGeneration,
+    Trainer,
+    TrainingArguments,
+)
+from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score
+from sklearn.svm import SVC
 
 # Load Weights & Biases Configuration
 with open("wandb_config.json") as f:
     data = json.load(f)
-
 api_key = data["api_key"]
 
-wandb_config = {
-    "project": "plm_secondary_integration",
-}
-
+# Weights & Biases Configuration
+wandb_config = {"project": "plm_secondary_integration"}
 wandb.login(key=api_key)
-
 wandb.init(config=wandb_config)
 
+# Load dataset
 train_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_train.csv")
 test_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
 
+# Process dataset
 train_texts = train_df["sequence"].tolist()
 train_labels = (
     train_df["label"].apply(lambda x: 0 if x == "ionchannels" else 1).tolist()
 )
-
 test_texts = test_df["sequence"].tolist()
 test_labels = test_df["label"].apply(lambda x: 0 if x == "ionchannels" else 1).tolist()
 
-from sklearn.model_selection import train_test_split
-
+# Split dataset
 train_texts, val_texts, train_labels, val_labels = train_test_split(
     train_texts, train_labels, test_size=0.1, stratify=train_labels
 )
 
+# Preprocess text
 train_texts = ["classify: " + text for text in train_texts]
 test_texts = ["classify: " + text for text in test_texts]
-
-from transformers import AutoTokenizer
-
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
-train_encodings = tokenizer(train_texts, truncation=True, padding=True)
-test_encodings = tokenizer(test_texts, truncation=True, padding=True)
-
-
 val_texts = ["classify: " + text for text in val_texts]
-val_encodings = tokenizer(val_texts, truncation=True, padding=True)
 
-import torch
+# Tokenization
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
+train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=4096)
+test_encodings = tokenizer(test_texts, truncation=True, padding=True, max_length=4096)
+val_encodings = tokenizer(val_texts, truncation=True, padding=True, max_length=4096)
 
 
+# Dataset class
 class IonDataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
         self.encodings = encodings
@@ -64,23 +66,23 @@ class IonDataset(torch.utils.data.Dataset):
         return len(self.labels)
 
 
+# Create datasets
 train_dataset = IonDataset(train_encodings, train_labels)
 test_dataset = IonDataset(test_encodings, test_labels)
 val_dataset = IonDataset(val_encodings, val_labels)
 
-from transformers import T5ForConditionalGeneration, Trainer, TrainingArguments
-
+# Load pre-trained model
 model = T5ForConditionalGeneration.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
 
-from sklearn.metrics import matthews_corrcoef
 
-
+# Metrics function
 def compute_metrics(eval_pred):
     predictions, labels = eval_pred
     preds = predictions.argmax(axis=1)
     return {"mcc": matthews_corrcoef(labels, preds)}
 
 
+# Training arguments
 training_args = TrainingArguments(
     output_dir="./results",
     do_train=True,
@@ -107,7 +109,7 @@ training_args = TrainingArguments(
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
 )
 
-
+# Create Trainer instance
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -116,41 +118,40 @@ trainer = Trainer(
     eval_dataset=val_dataset,
 )
 
+# Train the model
 trainer.train()
 
-# Switch to test dataset for evaluation
+# Evaluate on the test dataset
 trainer.eval_dataset = test_dataset
 trainer.evaluate()
 
 
+# Function to extract encoder representations
 def extract_encoder_representations(model, encodings):
     with torch.no_grad():
-        # Forward pass to get encoder's final hidden states
         encoder_output = model.get_encoder()(
             input_ids=encodings["input_ids"], attention_mask=encodings["attention_mask"]
         )
-        # Max pooling across the sequence length dimension
         pooled_output, _ = encoder_output.last_hidden_state.max(dim=1)
         return pooled_output.numpy()
 
 
+# Extract encoder representations for train and test data
 train_representations = extract_encoder_representations(trainer.model, train_encodings)
 test_representations = extract_encoder_representations(trainer.model, test_encodings)
 
-from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
-
+# Train an SVM classifier
 clf = SVC()
 clf.fit(train_representations, train_labels)
 
+# Predictions
 train_preds = clf.predict(train_representations)
 test_preds = clf.predict(test_representations)
 
+# Calculate and print evaluation metrics
 print("Train Accuracy:", accuracy_score(train_labels, train_preds))
 print("Test Accuracy:", accuracy_score(test_labels, test_preds))
-
 print("Train F1:", f1_score(train_labels, train_preds))
 print("Test F1:", f1_score(test_labels, test_preds))
-
 print("Train MCC:", matthews_corrcoef(train_labels, train_preds))
 print("Test MCC:", matthews_corrcoef(test_labels, test_preds))
