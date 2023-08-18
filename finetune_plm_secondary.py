@@ -39,7 +39,7 @@ test_texts = ["classify: " + text for text in test_texts]
 
 from transformers import AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
 train_encodings = tokenizer(train_texts, truncation=True, padding=True)
 test_encodings = tokenizer(test_texts, truncation=True, padding=True)
 
@@ -102,7 +102,6 @@ training_args = TrainingArguments(
     gradient_accumulation_steps=1,
     learning_rate=1e-6,
     fp16=False,
-    remove_unused_columns=False,
     hub_token="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",
     push_to_hub=True,
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
