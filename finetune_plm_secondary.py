@@ -30,10 +30,10 @@ test_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_test.cs
 # Process dataset
 train_texts = train_df["sequence"].tolist()
 train_labels = (
-    train_df["label"].apply(lambda x: 0 if x == "ionchannels" else 1).tolist()
+    train_df["label"].apply(lambda x: 1 if x == "ionchannels" else 0).tolist()
 )
 test_texts = test_df["sequence"].tolist()
-test_labels = test_df["label"].apply(lambda x: 0 if x == "ionchannels" else 1).tolist()
+test_labels = test_df["label"].apply(lambda x: 1 if x == "ionchannels" else 0).tolist()
 
 # Split dataset
 train_texts, val_texts, train_labels, val_labels = train_test_split(
@@ -50,7 +50,7 @@ tag2id = {0: 0, 1: 1}
 id2tag = {0: 0, 1: 1}
 
 all_sequences = train_texts
-sequence_lengths = [len(seq.split()) for seq in all_sequences]
+sequence_lengths = [len(seq.replace("classify: ", "")) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
 
 tokenizer = AutoTokenizer.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
