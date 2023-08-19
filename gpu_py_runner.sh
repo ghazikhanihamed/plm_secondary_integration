@@ -3,7 +3,8 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=256G,g=4
+#$ -l m_mem_free=320G,g=4
+#$ -l hostname=Virya
 
 
 module load python/3.9.6/default
