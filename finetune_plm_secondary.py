@@ -120,7 +120,7 @@ print(test_processed["input_ids"].shape)
 model = T5ForConditionalGeneration.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
 
 sample_input = train_processed["input_ids"][:2]  # Take a small batch for testing
-sample_output = model(input_ids=sample_input)
+sample_output = model(input_ids=sample_input, decoder_input_ids=sample_input)
 
 
 # Metrics function
