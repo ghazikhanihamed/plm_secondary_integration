@@ -11,6 +11,7 @@ from transformers import (
 )
 from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score
 from sklearn.svm import SVC
+import numpy as np
 
 # Load Weights & Biases Configuration
 with open("wandb_config.json") as f:
@@ -44,32 +45,71 @@ train_texts = ["classify: " + text for text in train_texts]
 test_texts = ["classify: " + text for text in test_texts]
 val_texts = ["classify: " + text for text in val_texts]
 
-# Tokenization
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
-train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=1024)
-test_encodings = tokenizer(test_texts, truncation=True, padding=True, max_length=1024)
-val_encodings = tokenizer(val_texts, truncation=True, padding=True, max_length=1024)
+# For the second code, labels are binary. Therefore, we use only two 'tags': 0 and 1.
+tag2id = {0: 0, 1: 1}
+id2tag = {0: 0, 1: 1}
+
+all_sequences = train_texts
+sequence_lengths = [len(seq.split()) for seq in all_sequences]
+max_length = int(np.percentile(sequence_lengths, 95))
+
+tokenizer = AutoTokenizer.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
 
 
-# Dataset class
+def preprocess_data(examples):
+    sequences, labels = examples["sequence"], examples["label"]
+
+    sequences = [list(seq) for seq in sequences]  # Convert to list of characters
+
+    # encode sequences
+    inputs = tokenizer.batch_encode_plus(
+        sequences,
+        add_special_tokens=True,
+        padding="max_length",
+        max_length=max_length,
+        truncation=True,
+        is_split_into_words=True,
+        return_tensors="pt",
+    )
+
+    assert len(inputs["input_ids"]) == len(labels)
+
+    return {
+        "input_ids": inputs["input_ids"],
+        "attention_mask": inputs["attention_mask"],
+        "labels": torch.tensor(labels, dtype=torch.long),
+    }
+
+
+train_data = {"sequence": train_texts, "label": train_labels}
+val_data = {"sequence": val_texts, "label": val_labels}
+test_data = {"sequence": test_texts, "label": test_labels}
+
+train_processed = preprocess_data(train_data)
+val_processed = preprocess_data(val_data)
+test_processed = preprocess_data(test_data)
+
+
 class IonDataset(torch.utils.data.Dataset):
-    def __init__(self, encodings, labels):
-        self.encodings = encodings
-        self.labels = labels
+    def __init__(self, data):
+        self.data = data
 
     def __getitem__(self, idx):
-        item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
-        item["labels"] = torch.tensor(self.labels[idx])
+        item = {
+            "input_ids": self.data["input_ids"][idx],
+            "attention_mask": self.data["attention_mask"][idx],
+            "labels": self.data["labels"][idx],
+        }
         return item
 
     def __len__(self):
-        return len(self.labels)
+        return len(self.data["labels"])
 
 
-# Create datasets
-train_dataset = IonDataset(train_encodings, train_labels)
-test_dataset = IonDataset(test_encodings, test_labels)
-val_dataset = IonDataset(val_encodings, val_labels)
+train_dataset = IonDataset(train_processed)
+test_dataset = IonDataset(test_processed)
+val_dataset = IonDataset(val_processed)
+
 
 # Load pre-trained model
 model = T5ForConditionalGeneration.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
@@ -89,8 +129,8 @@ training_args = TrainingArguments(
     do_eval=True,
     deepspeed="./ds_config_finetune.json",
     evaluation_strategy="epoch",
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=4,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
     logging_dir="./logs",
     logging_strategy="epoch",
     save_strategy="epoch",
@@ -104,7 +144,7 @@ training_args = TrainingArguments(
     gradient_accumulation_steps=32,
     learning_rate=1e-6,
     max_grad_norm=1.0,
-    fp16=True,
+    fp16=False,
     hub_token="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",
     push_to_hub=True,
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
@@ -117,6 +157,7 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
+    tokenizer=tokenizer,  # Pass the tokenizer
 )
 
 # Train the model
@@ -134,12 +175,13 @@ def extract_encoder_representations(model, encodings):
             input_ids=encodings["input_ids"], attention_mask=encodings["attention_mask"]
         )
         pooled_output, _ = encoder_output.last_hidden_state.max(dim=1)
-        return pooled_output.numpy()
+        return pooled_output.cpu().numpy()  # Convert tensor to numpy array
 
 
 # Extract encoder representations for train and test data
-train_representations = extract_encoder_representations(trainer.model, train_encodings)
-test_representations = extract_encoder_representations(trainer.model, test_encodings)
+train_representations = extract_encoder_representations(trainer.model, train_processed)
+test_representations = extract_encoder_representations(trainer.model, test_processed)
+
 
 # Train an SVM classifier
 clf = SVC()
