@@ -3,7 +3,7 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=360G,g=8([0-7])
+#$ -l m_mem_free=360G,g=4
 
 
 module load python/3.9.6/default
@@ -20,7 +20,7 @@ export TRANSFORMERS_CACHE=~/tmp
 nvidia-smi
 
 # python feature_extraction_test_pipeline.py
-deepspeed --num_gpus 8 finetune_plm_secondary.py
+deepspeed --num_gpus 4 finetune_plm_secondary.py
 # accelerate launch --multi_gpu preliminary_test.py
 
 

@@ -111,8 +111,16 @@ test_dataset = IonDataset(test_processed)
 val_dataset = IonDataset(val_processed)
 
 
+print(train_processed["input_ids"].shape)
+print(val_processed["input_ids"].shape)
+print(test_processed["input_ids"].shape)
+
+
 # Load pre-trained model
 model = T5ForConditionalGeneration.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
+
+sample_input = train_processed["input_ids"][:2]  # Take a small batch for testing
+sample_output = model(input_ids=sample_input)
 
 
 # Metrics function
