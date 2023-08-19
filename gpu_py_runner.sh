@@ -3,7 +3,7 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=350G,g=4([0-3])
+#$ -l m_mem_free=350G,g=4([8-11])
 
 
 module load python/3.9.6/default
