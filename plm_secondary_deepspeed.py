@@ -69,9 +69,7 @@ labels_column_name = "dssp3"
 
 # concatenate all sequences
 all_sequences = list(train_dataset[input_column_name])
-
-
-sequence_lengths = [len(seq.split()) for seq in all_sequences]
+sequence_lengths = [len(seq) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
 
 # Consider each label as a tag for each token
@@ -166,7 +164,7 @@ training_args = TrainingArguments(
     output_dir="./results",
     do_train=True,
     do_eval=True,
-    deepspeed="./ds_config.json",
+    deepspeed="./ds_config_p2s.json",
     evaluation_strategy="epoch",
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
@@ -176,12 +174,12 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=10,
+    num_train_epochs=20,
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=1,
-    learning_rate=3e-5,
+    learning_rate=5e-6,
     fp16=False,
     remove_unused_columns=False,
     hub_token="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",

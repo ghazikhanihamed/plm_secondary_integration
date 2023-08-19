@@ -3,7 +3,7 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=360G,g=4
+#$ -l m_mem_free=350G,g=4
 
 
 module load python/3.9.6/default
@@ -17,10 +17,8 @@ conda activate py3.9
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
 
-nvidia-smi
-
 # python feature_extraction_test_pipeline.py
-deepspeed --num_gpus 4 finetune_plm_secondary.py
+deepspeed --num_gpus 4 plm_secondary_deepspeed.py
 # accelerate launch --multi_gpu preliminary_test.py
 
 

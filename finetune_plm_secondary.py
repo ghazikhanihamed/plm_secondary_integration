@@ -23,6 +23,8 @@ wandb_config = {"project": "plm_secondary_integration"}
 wandb.login(key=api_key)
 wandb.init(config=wandb_config)
 
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
+
 # Load dataset
 train_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_train.csv")
 test_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
@@ -52,8 +54,6 @@ id2tag = {0: 0, 1: 1}
 all_sequences = train_texts
 sequence_lengths = [len(seq.replace("classify: ", "")) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
-
-tokenizer = AutoTokenizer.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
 
 
 def preprocess_data(examples):
@@ -149,7 +149,7 @@ training_args = TrainingArguments(
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
-    gradient_accumulation_steps=32,
+    gradient_accumulation_steps=1,
     learning_rate=1e-6,
     max_grad_norm=1.0,
     fp16=False,
