@@ -46,9 +46,9 @@ val_texts = ["classify: " + text for text in val_texts]
 
 # Tokenization
 tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
-train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=4096)
-test_encodings = tokenizer(test_texts, truncation=True, padding=True, max_length=4096)
-val_encodings = tokenizer(val_texts, truncation=True, padding=True, max_length=4096)
+train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=2046)
+test_encodings = tokenizer(test_texts, truncation=True, padding=True, max_length=2046)
+val_encodings = tokenizer(val_texts, truncation=True, padding=True, max_length=2046)
 
 
 # Dataset class
@@ -89,8 +89,8 @@ training_args = TrainingArguments(
     do_eval=True,
     deepspeed="./ds_config_finetune.json",
     evaluation_strategy="epoch",
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     logging_dir="./logs",
     logging_strategy="epoch",
     save_strategy="epoch",
@@ -103,6 +103,7 @@ training_args = TrainingArguments(
     report_to="wandb",
     gradient_accumulation_steps=1,
     learning_rate=1e-6,
+    max_grad_norm=1.0,
     fp16=False,
     hub_token="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",
     push_to_hub=True,
