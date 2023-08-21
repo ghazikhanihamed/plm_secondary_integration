@@ -1,28 +1,21 @@
 {
   "fp16": {
-    "enabled": "auto"
+    "enabled": false
   },
   "optimizer": {
     "type": "AdamW",
     "params": {
-      "lr": "auto",
+      "lr": 1e-5,
       "weight_decay": "auto"
     }
   },
   "scheduler": {
-    "type": "OneCycle",
+    "type": "WarmupDecayLR",
     "params": {
-      "cycle_first_step_size": 2375,
-      "cycle_first_stair_count": 0,
-      "cycle_second_stair_count": 0,
-      "cycle_momentum": true,
-      "cycle_min_mom": 0.85,
-      "decay_step_size": 0,
-      "cycle_min_lr": 5e-6,
-      "cycle_max_lr": 5e-3,
-      "decay_lr_rate": 0.0,
-      "cycle_max_mom": 0.95,
-      "decay_mom_rate": 0.0
+      "total_num_steps": "auto",
+      "warmup_min_lr": 1e-5,
+      "warmup_max_lr": 1e-3,
+      "warmup_num_steps": 1000
     }
   },
   "zero_optimization": {

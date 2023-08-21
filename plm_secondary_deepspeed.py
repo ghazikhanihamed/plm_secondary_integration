@@ -179,12 +179,13 @@ training_args = TrainingArguments(
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=1,
-    learning_rate=5e-6,
+    learning_rate=1e-5,
     fp16=False,
     remove_unused_columns=False,
     hub_token="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",
     push_to_hub=True,
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
+    max_grad_norm=1.0,
 )
 
 # Initialize Trainer
