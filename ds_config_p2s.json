@@ -5,7 +5,7 @@
   "optimizer": {
     "type": "AdamW",
     "params": {
-      "lr": 1e-5,
+      "lr": 1e-3,
       "weight_decay": "auto"
     }
   },
