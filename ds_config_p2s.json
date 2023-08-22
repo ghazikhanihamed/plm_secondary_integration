@@ -1,21 +1,20 @@
 {
   "fp16": {
-    "enabled": false
+    "enabled": "auto",
   },
   "optimizer": {
     "type": "AdamW",
     "params": {
-      "lr": 1e-3,
+      "lr": "auto",
       "weight_decay": "auto"
     }
   },
   "scheduler": {
-    "type": "WarmupDecayLR",
+    "type": "WarmupLR",
     "params": {
-      "total_num_steps": "auto",
-      "warmup_min_lr": 1e-5,
-      "warmup_max_lr": 1e-3,
-      "warmup_num_steps": 1000
+      "warmup_min_lr": 1e-6,
+      "warmup_max_lr": "auto",
+      "warmup_num_steps": "auto"
     }
   },
   "zero_optimization": {

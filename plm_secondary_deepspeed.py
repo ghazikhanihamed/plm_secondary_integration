@@ -72,6 +72,8 @@ all_sequences = list(train_dataset[input_column_name])
 sequence_lengths = [len(seq) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 95))
 
+print("Max length: ", max_length)
+
 # Consider each label as a tag for each token
 unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
 
@@ -166,27 +168,28 @@ training_args = TrainingArguments(
     do_eval=True,
     deepspeed="./ds_config_p2s.json",
     evaluation_strategy="epoch",
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
     logging_dir="./logs",
     logging_strategy="epoch",
     save_strategy="epoch",
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=20,
+    num_train_epochs=10,
     seed=42,
     run_name="SS-Generation",
     report_to="wandb",
-    gradient_accumulation_steps=1,
-    learning_rate=1e-3,
-    warmup_steps=1000,
-    fp16=False,
+    gradient_accumulation_steps=64,
+    learning_rate=1e-4,
+    fp16=True,
     remove_unused_columns=False,
     hub_token="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",
     push_to_hub=True,
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
     max_grad_norm=1.0,
+    hub_strategy="end",
+    save_total_limit=1,
 )
 
 # Initialize Trainer
