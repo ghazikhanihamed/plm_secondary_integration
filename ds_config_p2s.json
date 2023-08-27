@@ -2,16 +2,15 @@
   "optimizer": {
     "type": "AdamW",
     "params": {
-      "lr": 1e-4,
-      "weight_decay": "auto"
+      "lr": 1e-3
     }
   },
   "scheduler": {
     "type": "WarmupLR",
     "params": {
-      "warmup_min_lr": 1e-6,
-      "warmup_max_lr": 1e-4,
-      "warmup_num_steps": "auto"
+      "warmup_min_lr": 1e-5,
+      "warmup_max_lr": 1e-3,
+      "warmup_num_steps": 1000
     }
   },
   "zero_optimization": {

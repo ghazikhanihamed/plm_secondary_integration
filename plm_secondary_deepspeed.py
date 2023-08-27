@@ -3,6 +3,7 @@ from transformers import (
     AutoTokenizer,
     TrainingArguments,
     Trainer,
+    HfApi,
 )
 from datasets import load_dataset, concatenate_datasets
 import logging
@@ -24,8 +25,6 @@ wandb_config = {
 }
 
 wandb.login(key=api_key)
-
-wandb.init(config=wandb_config)
 
 # Setup logging
 logging.basicConfig(
@@ -167,29 +166,26 @@ training_args = TrainingArguments(
     do_train=True,
     do_eval=True,
     deepspeed="./ds_config_p2s.json",
-    evaluation_strategy="epoch",
+    evaluation_strategy="steps",
     per_device_train_batch_size=2,
-    per_device_eval_batch_size=2,
+    per_device_eval_batch_size=8,
     logging_dir="./logs",
-    logging_strategy="epoch",
-    save_strategy="epoch",
+    logging_strategy="steps",
+    save_strategy="steps",
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=10,
-    seed=42,
+    num_train_epochs=1,
+    seed=7,
     run_name="SS-Generation",
     report_to="wandb",
-    gradient_accumulation_steps=8,
-    learning_rate=1e-4,
+    gradient_accumulation_steps=1,
+    learning_rate=1e-3,
     fp16=False,
     remove_unused_columns=False,
-    hub_token="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",
-    push_to_hub=True,
-    hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
     max_grad_norm=1.0,
-    hub_strategy="end",
     save_total_limit=1,
+    warmup_steps=1000,
 )
 
 # Initialize Trainer
@@ -204,6 +200,21 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
+
+# We save the best model in the folder "best_model"
+trainer.save_model("best_model")
+
+hub_model_id = "ghazikhanihamed/TooT-PLM-P2S"
+hub_token = "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"
+
+# Login to Hugging Face
+HfApi().login(token=hub_token)
+
+# Push model to hub
+trainer.push_to_hub(
+    repo_name=hub_model_id, use_temp_dir=True, commit_message="best model"
+)
+
 
 # Evaluate the model on test datasets
 test_dataset1 = test_dataset1.map(
