@@ -134,7 +134,7 @@ def main():
         f1 = f1_score(test_dataset["label"], preds, average="macro")
         mcc = matthews_corrcoef(test_dataset["label"], preds)
 
-        if accelerate.is_main_process:
+        if accelerator.is_main_process:
             wandb.log(
                 {
                     f"accuracy_{model_name}": accuracy,
@@ -143,9 +143,9 @@ def main():
                 }
             )
 
-        accelerate.print(f"Accuracy for {model_name}: {accuracy}")
-        accelerate.print(f"F1 score for {model_name}: {f1}")
-        accelerate.print(f"MCC for {model_name}: {mcc}")
+        accelerator.print(f"Accuracy for {model_name}: {accuracy}")
+        accelerator.print(f"F1 score for {model_name}: {f1}")
+        accelerator.print(f"MCC for {model_name}: {mcc}")
 
     wandb.finish()
 

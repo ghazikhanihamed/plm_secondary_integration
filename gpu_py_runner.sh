@@ -19,8 +19,8 @@ export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
 
 # python feature_extraction_test_pipeline.py
-# deepspeed --num_gpus 4 plm_secondary_deepspeed.py
-accelerate launch --multi_gpu preliminary_test.py
+deepspeed --num_gpus 4 plm_secondary_deepspeed.py
+# accelerate launch --multi_gpu preliminary_test.py
 
 
 conda deactivate
