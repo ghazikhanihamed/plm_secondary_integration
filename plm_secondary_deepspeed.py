@@ -3,8 +3,8 @@ from transformers import (
     AutoTokenizer,
     TrainingArguments,
     Trainer,
-    HfApi,
 )
+from huggingface_hub import HfApi
 from datasets import load_dataset, concatenate_datasets
 import logging
 import torch
