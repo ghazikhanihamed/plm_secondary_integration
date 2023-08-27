@@ -34,7 +34,7 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)],
 )
 
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-base")
 
 # load the dataset
 dataset1 = load_dataset(
@@ -158,7 +158,7 @@ def compute_metrics(eval_pred):
 
 
 # Create the model and prepare it
-model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
+model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
 
 # Prepare training args
@@ -168,8 +168,8 @@ training_args = TrainingArguments(
     do_eval=True,
     deepspeed="./ds_config_p2s.json",
     evaluation_strategy="epoch",
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=8,
     logging_dir="./logs",
     logging_strategy="epoch",
     save_strategy="epoch",
@@ -182,7 +182,7 @@ training_args = TrainingArguments(
     report_to="wandb",
     gradient_accumulation_steps=1,
     learning_rate=1e-4,
-    fp16=False,
+    fp16=True,
     remove_unused_columns=False,
     hub_token="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",
     push_to_hub=True,

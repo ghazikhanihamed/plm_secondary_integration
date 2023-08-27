@@ -5,7 +5,7 @@
   "optimizer": {
     "type": "AdamW",
     "params": {
-      "lr": "auto",
+      "lr": 1e-4,
       "weight_decay": "auto"
     }
   },
@@ -13,7 +13,7 @@
     "type": "WarmupLR",
     "params": {
       "warmup_min_lr": 1e-6,
-      "warmup_max_lr": "auto",
+      "warmup_max_lr": 1e-4,
       "warmup_num_steps": "auto"
     }
   },
@@ -29,7 +29,7 @@
   "wandb": {
     "enabled": true,
     "team": "bioinformatics-group",
-    "group": "my_group",
+    "group": "p2s_runs",
     "project": "plm_secondary_integration"
   },
   "csv_monitor": {

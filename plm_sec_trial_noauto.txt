@@ -1,248 +1,0 @@
-[2023-07-26 22:16:30,810] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-The following values were not passed to `accelerate launch` and had defaults used instead:
-	`--num_processes` was set to a value of `4`
-	`--num_machines` was set to a value of `1`
-	`--mixed_precision` was set to a value of `'no'`
-	`--dynamo_backend` was set to a value of `'no'`
-To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
-[2023-07-26 22:16:36,986] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-26 22:16:37,102] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-26 22:16:37,197] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-[2023-07-26 22:16:37,214] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
-wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
-wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
-wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
-wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
-wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
-wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
-wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
-wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
-wandb: wandb version 0.15.7 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.15.5
-wandb: Run data is saved locally in /home/h_ghazik/plm_secondary_integration/wandb/run-20230726_221640-1kebphgi
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run lilac-gorge-57
-wandb: ⭐️ View project at https://wandb.ai/bioinformatics-group/plm_secondary_integration
-wandb: 🚀 View run at https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/1kebphgi
-wandb: wandb version 0.15.7 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.15.5
-wandb: Run data is saved locally in /home/h_ghazik/plm_secondary_integration/wandb/run-20230726_221640-j1fa1a9b
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run unique-shadow-57
-wandb: ⭐️ View project at https://wandb.ai/bioinformatics-group/plm_secondary_integration
-wandb: 🚀 View run at https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/j1fa1a9b
-wandb: wandb version 0.15.7 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.15.5
-wandb: Run data is saved locally in /home/h_ghazik/plm_secondary_integration/wandb/run-20230726_221640-addc3ew2
-wandb: Run `wandb offline` to turn off syncing.
-wandb: wandb version 0.15.7 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.15.5
-wandb: Run data is saved locally in /home/h_ghazik/plm_secondary_integration/wandb/run-20230726_221640-onylo2ax
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run blooming-valley-60
-wandb: ⭐️ View project at https://wandb.ai/bioinformatics-group/plm_secondary_integration
-wandb: 🚀 View run at https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/addc3ew2
-wandb: Syncing run sleek-gorge-57
-wandb: ⭐️ View project at https://wandb.ai/bioinformatics-group/plm_secondary_integration
-wandb: 🚀 View run at https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/onylo2ax
-07/26/2023 22:16:41 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]07/26/2023 22:16:41 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 302.25it/s]
-100%|██████████| 1/1 [00:00<00:00, 376.20it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 421.92it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 413.23it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-14c43f9b23cd5d32/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 490.91it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-14c43f9b23cd5d32/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 818.08it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-14c43f9b23cd5d32/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 772.57it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-14c43f9b23cd5d32/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 747.51it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 490.50it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 694.42it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 715.63it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 563.52it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-b75765236fba31c3/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 469.63it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-b75765236fba31c3/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 816.81it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-b75765236fba31c3/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 840.04it/s]
-07/26/2023 22:16:42 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-b75765236fba31c3/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 738.56it/s]
-07/26/2023 22:16:43 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-9a7d0cd1b28c8e3d/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 319.44it/s]
-Number of training samples: 11303
-Number of validation samples: 115
-Number of test samples on CASP12: 20
-Number of test samples on CASP14: 18
-07/26/2023 22:16:43 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-9a7d0cd1b28c8e3d/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 757.23it/s]
-Number of training samples: 11303
-Number of validation samples: 115
-Number of test samples on CASP12: 20
-Number of test samples on CASP14: 18
-07/26/2023 22:16:43 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-9a7d0cd1b28c8e3d/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 787.07it/s]
-Number of training samples: 11303
-Number of validation samples: 115
-Number of test samples on CASP12: 20
-Number of test samples on CASP14: 18
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-5e382ae574c3419e.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-5844d10e4308e699.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-9a7d0cd1b28c8e3d/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-2a2feb02833e82c0.arrow
-Running tokenizer on dataset for validation:   0%|          | 0/115 [00:00<?, ? examples/s]07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-14c43f9b23cd5d32/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-d94d795c12414a0c.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-31c8b577a49003b5.arrow
-                                                                                           07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-14c43f9b23cd5d32/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-ef354cad752b50c5.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-b538f4164d2e9b1b.arrow
-07/26/2023 22:16:43 - WARNING - datasets.builder - Found cached dataset csv (/home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-9a7d0cd1b28c8e3d/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d)
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 582.62it/s]
-Number of training samples: 11303
-Number of validation samples: 115
-Number of test samples on CASP12: 20
-Number of test samples on CASP14: 18
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-5844d10e4308e699.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-9a7d0cd1b28c8e3d/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-42c7886b93cf9d46.arrow
-Running tokenizer on dataset for test:   0%|          | 0/20 [00:00<?, ? examples/s]                                                                                    07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-b538f4164d2e9b1b.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-767e4bc930ca6727/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-92db67fe7e82df79.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-9a7d0cd1b28c8e3d/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-700f1824b566e00f.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-14c43f9b23cd5d32/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-e82b36f16883a187.arrow
-07/26/2023 22:16:43 - WARNING - datasets.arrow_dataset - Loading cached processed dataset at /home/h_ghazik/.cache/huggingface/datasets/proteinea___csv/proteinea--secondary_structure_prediction-36c93b9e2e72190c/0.0.0/eea64c71ca8b46dd3f537ed218fc9bf495d5707789152eb2764f5c78fa66d59d/cache-8b993614d34d0f69.arrow
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-Installed CUDA version 11.4 does not match the version torch was compiled with 11.7 but since the APIs are compatible, accepting this combination
-Using /home/h_ghazik/.cache/torch_extensions/py39_cu117 as PyTorch extensions root...
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-Installed CUDA version 11.4 does not match the version torch was compiled with 11.7 but since the APIs are compatible, accepting this combination
-Using /home/h_ghazik/.cache/torch_extensions/py39_cu117 as PyTorch extensions root...
-Installed CUDA version 11.4 does not match the version torch was compiled with 11.7 but since the APIs are compatible, accepting this combination
-Using /home/h_ghazik/.cache/torch_extensions/py39_cu117 as PyTorch extensions root...
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-Installed CUDA version 11.4 does not match the version torch was compiled with 11.7 but since the APIs are compatible, accepting this combination
-Using /home/h_ghazik/.cache/torch_extensions/py39_cu117 as PyTorch extensions root...
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-Detected CUDA files, patching ldflags
-Emitting ninja build file /home/h_ghazik/.cache/torch_extensions/py39_cu117/fused_adam/build.ninja...
-Building extension module fused_adam...
-Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
-huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
-To disable this warning, you can either:
-	- Avoid using `tokenizers` before the fork if possible
-	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
-ninja: no work to do.
-Loading extension module fused_adam...
-Time to load fused_adam op: 0.3938169479370117 seconds
-Loading extension module fused_adam...
-Time to load fused_adam op: 0.20329022407531738 seconds
-Loading extension module fused_adam...
-Time to load fused_adam op: 0.303969144821167 seconds
-Loading extension module fused_adam...
-Time to load fused_adam op: 0.3061497211456299 seconds
-Rank: 2 partition count [4] and sizes[(469676288, False)] 
-Rank: 1 partition count [4] and sizes[(469676288, False)] 
-Rank: 0 partition count [4] and sizes[(469676288, False)] 
-Rank: 3 partition count [4] and sizes[(469676288, False)] 
-  0%|          | 0/50 [00:00<?, ?it/s]  2%|▏         | 1/50 [00:46<38:21, 46.98s/it]  4%|▍         | 2/50 [01:27<34:43, 43.40s/it]  6%|▌         | 3/50 [02:09<33:16, 42.47s/it]  8%|▊         | 4/50 [02:51<32:28, 42.36s/it] 10%|█         | 5/50 [03:34<31:59, 42.67s/it] 12%|█▏        | 6/50 [04:16<31:05, 42.40s/it] 14%|█▍        | 7/50 [04:57<30:03, 41.95s/it] 16%|█▌        | 8/50 [05:41<29:48, 42.58s/it] 18%|█▊        | 9/50 [06:32<30:54, 45.23s/it] 20%|██        | 10/50 [07:24<31:33, 47.34s/it] 22%|██▏       | 11/50 [08:15<31:30, 48.48s/it] 24%|██▍       | 12/50 [08:57<29:23, 46.40s/it] 26%|██▌       | 13/50 [09:39<27:48, 45.09s/it] 28%|██▊       | 14/50 [10:20<26:24, 44.01s/it] 30%|███       | 15/50 [11:03<25:27, 43.63s/it] 32%|███▏      | 16/50 [11:44<24:19, 42.93s/it] 34%|███▍      | 17/50 [12:28<23:41, 43.06s/it] 36%|███▌      | 18/50 [13:08<22:32, 42.25s/it] 38%|███▊      | 19/50 [13:49<21:33, 41.72s/it] 40%|████      | 20/50 [14:31<20:56, 41.90s/it] 42%|████▏     | 21/50 [15:12<20:08, 41.68s/it] 44%|████▍     | 22/50 [15:55<19:38, 42.07s/it] 46%|████▌     | 23/50 [16:35<18:38, 41.44s/it] 48%|████▊     | 24/50 [17:18<18:07, 41.83s/it] 50%|█████     | 25/50 [17:58<17:11, 41.25s/it] 52%|█████▏    | 26/50 [18:38<16:21, 40.91s/it] 54%|█████▍    | 27/50 [19:18<15:36, 40.70s/it] 56%|█████▌    | 28/50 [20:05<15:36, 42.57s/it] 58%|█████▊    | 29/50 [20:53<15:29, 44.24s/it] 60%|██████    | 30/50 [21:34<14:25, 43.26s/it] 62%|██████▏   | 31/50 [22:16<13:36, 42.98s/it] 64%|██████▍   | 32/50 [22:58<12:43, 42.44s/it] 66%|██████▌   | 33/50 [23:41<12:05, 42.68s/it] 68%|██████▊   | 34/50 [24:21<11:11, 41.98s/it] 70%|███████   | 35/50 [25:04<10:31, 42.10s/it] 72%|███████▏  | 36/50 [25:47<09:54, 42.43s/it] 74%|███████▍  | 37/50 [26:28<09:04, 41.92s/it] 76%|███████▌  | 38/50 [27:17<08:51, 44.25s/it] 78%|███████▊  | 39/50 [28:08<08:27, 46.16s/it] 80%|████████  | 40/50 [28:58<07:52, 47.28s/it] 82%|████████▏ | 41/50 [29:48<07:13, 48.19s/it] 84%|████████▍ | 42/50 [30:30<06:10, 46.26s/it] 86%|████████▌ | 43/50 [31:10<05:11, 44.46s/it] 88%|████████▊ | 44/50 [31:53<04:23, 43.88s/it] 90%|█████████ | 45/50 [32:35<03:37, 43.55s/it] 92%|█████████▏| 46/50 [33:16<02:50, 42.55s/it] 94%|█████████▍| 47/50 [33:58<02:07, 42.43s/it] 96%|█████████▌| 48/50 [34:39<01:23, 41.94s/it] 98%|█████████▊| 49/50 [35:18<00:41, 41.28s/it]100%|██████████| 50/50 [35:58<00:00, 40.87s/it]                                               {'train_runtime': 2158.7215, 'train_samples_per_second': 52.36, 'train_steps_per_second': 0.023, 'train_loss': 0.0, 'epoch': 9.04}
-100%|██████████| 50/50 [35:58<00:00, 40.87s/it]100%|██████████| 50/50 [35:58<00:00, 43.17s/it]
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 275.92it/s]
-  0%|          | 0/1 [00:00<?, ?it/s]Evaluation results on test set CASP12: Evaluation results on test set CASP12: Evaluation results on test set CASP12:  {'eval_runtime': 0.1663, 'eval_samples_per_second': 120.258, 'eval_steps_per_second': 6.013, 'epoch': 9.04}
-Evaluation results on test set CASP14:   {'eval_runtime': 0.1669, 'eval_samples_per_second': 119.85, 'eval_steps_per_second': 5.993, 'epoch': 9.04}{'eval_runtime': 0.1547, 'eval_samples_per_second': 116.359, 'eval_steps_per_second': 6.464, 'epoch': 9.04}
-
- Evaluation results on test set CASP14:  {'eval_runtime': 0.1678, 'eval_samples_per_second': 119.215, 'eval_steps_per_second': 5.961, 'epoch': 9.04}{'eval_runtime': 0.154, 'eval_samples_per_second': 116.867, 'eval_steps_per_second': 6.493, 'epoch': 9.04}
-
-Evaluation results on test set CASP14: 100%|██████████| 1/1 [00:00<00:00, 298.76it/s] {'eval_runtime': 0.1531, 'eval_samples_per_second': 117.564, 'eval_steps_per_second': 6.531, 'epoch': 9.04}
-
-Evaluation results on test set CASP12:  {'eval_runtime': 0.1668, 'eval_samples_per_second': 119.924, 'eval_steps_per_second': 5.996, 'epoch': 9.04}
-Evaluation results on test set CASP14:  {'eval_runtime': 0.153, 'eval_samples_per_second': 117.644, 'eval_steps_per_second': 6.536, 'epoch': 9.04}
-wandb: Waiting for W&B process to finish... (success).
-wandb: Waiting for W&B process to finish... (success).
-wandb: Waiting for W&B process to finish... (success).
-wandb: Waiting for W&B process to finish... (success).
-wandb: ERROR Error while calling W&B API: An internal error occurred. Please contact support. (<Response [500]>)
-wandb: 🚀 View run blooming-valley-60 at: https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/addc3ew2
-wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
-wandb: Find logs at: ./wandb/run-20230726_221640-addc3ew2/logs
-wandb: 🚀 View run lilac-gorge-57 at: https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/1kebphgi
-wandb: Synced 5 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
-wandb: Find logs at: ./wandb/run-20230726_221640-1kebphgi/logs
-wandb: 
-wandb: Run history:
-wandb:                   eval/runtime █▁
-wandb:        eval/samples_per_second █▁
-wandb:          eval/steps_per_second ▁█
-wandb:                    train/epoch ▁▁▁
-wandb:              train/global_step ▁▁▁
-wandb:               train/total_flos ▁
-wandb:               train/train_loss ▁
-wandb:            train/train_runtime ▁
-wandb: train/train_samples_per_second ▁
-wandb:   train/train_steps_per_second ▁
-wandb: 
-wandb: Run summary:
-wandb:                   eval/runtime 0.153
-wandb:        eval/samples_per_second 117.644
-wandb:          eval/steps_per_second 6.536
-wandb:                    train/epoch 9.04
-wandb:              train/global_step 50
-wandb:               train/total_flos 0.0
-wandb:               train/train_loss 0.0
-wandb:            train/train_runtime 2158.7215
-wandb: train/train_samples_per_second 52.36
-wandb:   train/train_steps_per_second 0.023
-wandb: 
-wandb: 🚀 View run unique-shadow-57 at: https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/j1fa1a9b
-wandb: Synced 5 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
-wandb: Find logs at: ./wandb/run-20230726_221640-j1fa1a9b/logs
-wandb: 🚀 View run sleek-gorge-57 at: https://wandb.ai/bioinformatics-group/plm_secondary_integration/runs/onylo2ax
-wandb: Synced 5 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
-wandb: Find logs at: ./wandb/run-20230726_221640-onylo2ax/logs

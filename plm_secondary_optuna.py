@@ -44,7 +44,7 @@ logging.basicConfig(
 # Set seed before initializing model.
 set_seed(42)
 
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-base")
 
 # load the dataset
 dataset1 = load_dataset(
@@ -191,7 +191,7 @@ def compute_metrics(eval_pred):
 
 # Prepare the model
 def model_init(trial):
-    return T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-large")
+    return T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
 
 deepspeed = {

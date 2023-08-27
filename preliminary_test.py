@@ -13,7 +13,7 @@ WANDB_CONFIG_PATH = "wandb_config.json"
 TRAIN_DATASET_PATH = "./dataset/ionchannels_membraneproteins_imbalanced_train.csv"
 TEST_DATASET_PATH = "./dataset/ionchannels_membraneproteins_imbalanced_test.csv"
 TOOT_PLM_P2S_MODEL_NAME = "ghazikhanihamed/TooT-PLM-P2S"
-ANKH_LARGE_MODEL_NAME = "ElnaggarLab/ankh-large"
+ANKH_LARGE_MODEL_NAME = "ElnaggarLab/ankh-base"
 
 
 def load_wandb_config(path):

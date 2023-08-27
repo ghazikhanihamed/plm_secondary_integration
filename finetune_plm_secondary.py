@@ -23,7 +23,7 @@ wandb_config = {"project": "plm_secondary_integration"}
 wandb.login(key=api_key)
 wandb.init(config=wandb_config)
 
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-large")
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-base")
 
 # Load dataset
 train_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_train.csv")

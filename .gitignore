@@ -166,3 +166,5 @@ wandb/
 results/
 
 .DS_Store
+
+.vscode

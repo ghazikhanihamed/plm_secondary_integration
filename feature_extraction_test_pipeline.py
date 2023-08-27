@@ -36,7 +36,7 @@ test_dataset = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_te
 accelerator = accelerate.Accelerator(log_with="wandb", mixed_precision="fp16")
 
 toot_plm_p2s_model_name = "ghazikhanihamed/TooT-PLM-P2S"
-ankh_large_model_name = "ElnaggarLab/ankh-large"
+ankh_large_model_name = "ElnaggarLab/ankh-base"
 
 toot_plm_p2s_model = T5EncoderModel.from_pretrained(toot_plm_p2s_model_name)
 ankh_large_model = T5EncoderModel.from_pretrained(ankh_large_model_name)
