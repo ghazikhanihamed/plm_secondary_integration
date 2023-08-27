@@ -92,7 +92,7 @@ def preprocess_data(examples):
     labels = [list("".join(label.split())) for label in labels]
 
     # encode sequences
-    inputs = tokenizer.batch_encode_plus(
+    inputs = tokenizer(
         sequences,
         add_special_tokens=True,
         padding="max_length",
@@ -168,7 +168,7 @@ training_args = TrainingArguments(
     deepspeed="./ds_config_p2s.json",
     evaluation_strategy="steps",
     per_device_train_batch_size=2,
-    per_device_eval_batch_size=8,
+    per_device_eval_batch_size=16,
     logging_dir="./logs",
     logging_strategy="steps",
     save_strategy="steps",
