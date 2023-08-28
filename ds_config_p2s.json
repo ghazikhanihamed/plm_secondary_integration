@@ -1,4 +1,7 @@
 {
+  "fp16": {
+    "enabled": "false"
+  },
   "optimizer": {
     "type": "AdamW",
     "params": {
@@ -8,9 +11,9 @@
   "scheduler": {
     "type": "WarmupLR",
     "params": {
-      "warmup_min_lr": 1e-5,
+      "warmup_min_lr": 1e-7,
       "warmup_max_lr": 1e-3,
-      "warmup_num_steps": 1000
+      "warmup_num_steps": 500
     }
   },
   "zero_optimization": {
