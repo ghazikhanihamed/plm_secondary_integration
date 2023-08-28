@@ -165,6 +165,8 @@ training_args = TrainingArguments(
     output_dir="./results",
     do_train=True,
     do_eval=True,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     deepspeed="./ds_config_p2s.json",
     evaluation_strategy="steps",
     logging_dir="./logs",
@@ -184,7 +186,6 @@ training_args = TrainingArguments(
     max_grad_norm=1.0,
     save_total_limit=1,
     warmup_steps=500,
-    auto_find_batch_size=True,
     hub_token="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",
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
 )
