@@ -1,6 +1,6 @@
 {
   "fp16": {
-    "enabled": "false"
+    "enabled": "auto"
   },
   "optimizer": {
     "type": "AdamW",
