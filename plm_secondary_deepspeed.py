@@ -173,6 +173,7 @@ training_args = TrainingArguments(
     logging_strategy="steps",
     logging_steps=200,
     save_strategy="steps",
+    save_steps=200,
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
