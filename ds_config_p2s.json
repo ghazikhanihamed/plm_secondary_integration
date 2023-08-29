@@ -11,7 +11,7 @@
   "scheduler": {
     "type": "WarmupLR",
     "params": {
-      "warmup_min_lr": 1e-6,
+      "warmup_min_lr": 1e-5,
       "warmup_max_lr": "auto",
       "warmup_num_steps": "auto"
     }
