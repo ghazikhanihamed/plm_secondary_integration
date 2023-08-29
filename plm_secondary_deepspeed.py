@@ -177,7 +177,7 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=1,
+    num_train_epochs=5,
     seed=7,
     run_name="SS-Generation",
     report_to="wandb",
@@ -189,7 +189,7 @@ training_args = TrainingArguments(
     save_total_limit=1,
     hub_token="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",
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
-    warmup_ratio=0.3,
+    warmup_ratio=0.4,
 )
 
 # Initialize Trainer
