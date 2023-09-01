@@ -87,7 +87,7 @@ def main():
     # Load Weights & Biases Configuration and initialize
     api_key = load_wandb_config(WANDB_CONFIG_PATH)
     wandb.login(key=api_key)
-    # wandb.init(config={"project": "plm_secondary_integration"})
+    wandb.init(config={"project": "plm_secondary_integration"})
 
     # Load datasets
     train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
