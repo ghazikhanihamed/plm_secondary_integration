@@ -1,5 +1,5 @@
 import pandas as pd
-from transformers import T5EncoderModel, AutoTokenizer, set_seed
+from transformers import T5ForSequenceClassification, AutoTokenizer, set_seed
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
 import torch
@@ -25,7 +25,11 @@ def load_wandb_config(path):
 
 def get_model_and_tokenizer(model_name, accelerator):
     """Loads the model, puts it on the device and in eval mode, and retrieves the tokenizer."""
-    model = T5EncoderModel.from_pretrained(model_name).to(accelerator.device).eval()
+    model = (
+        T5ForSequenceClassification.from_pretrained(model_name)
+        .to(accelerator.device)
+        .eval()
+    )  # Use T5ForSequenceClassification
     model = accelerator.prepare(model)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     return model, tokenizer
@@ -40,7 +44,7 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
         batch_sequences = [list(seq) for seq in sequences[idx : idx + batch_size]]
         outputs = tokenizer.batch_encode_plus(
             batch_sequences,
-            add_special_tokens=False,
+            add_special_tokens=True,  # Ensure special tokens are added
             is_split_into_words=True,
             return_tensors="pt",
             truncation=True,
@@ -49,18 +53,14 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
         outputs = {k: v.to(device) for k, v in outputs.items()}
 
         with torch.no_grad():
-            model_outputs = model(**outputs)
+            # Get the hidden states (not the logits)
+            model_outputs = model.base_model(**outputs)
             embeddings = model_outputs.last_hidden_state
 
-            mask_expanded = (
-                outputs["attention_mask"]
-                .unsqueeze(-1)
-                .expand(embeddings.size())
-                .float()
-            )
-            embeddings_max = torch.max(embeddings * mask_expanded, 1).values
+            eos_mask = outputs["input_ids"].eq(tokenizer.eos_token_id).to(device)
+            sentence_representation = embeddings[eos_mask, :].squeeze()
 
-            all_embeddings.append(embeddings_max.clone().cpu().detach())
+            all_embeddings.append(sentence_representation.clone().cpu().detach())
 
         wandb.log(
             {
@@ -80,7 +80,7 @@ def main():
     # Load Weights & Biases Configuration and initialize
     api_key = load_wandb_config(WANDB_CONFIG_PATH)
     wandb.login(key=api_key)
-    wandb.init(config={"project": "plm_secondary_integration"})
+    # wandb.init(config={"project": "plm_secondary_integration"})
 
     # Load datasets
     train_dataset = pd.read_csv(TRAIN_DATASET_PATH)

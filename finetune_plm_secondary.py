@@ -5,12 +5,12 @@ import torch
 from sklearn.model_selection import train_test_split
 from transformers import (
     AutoTokenizer,
-    T5ForConditionalGeneration,
+    T5ForSequenceClassification,
     Trainer,
     TrainingArguments,
 )
 from sklearn.metrics import matthews_corrcoef, accuracy_score, f1_score
-from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
 import numpy as np
 
 # Load Weights & Biases Configuration
@@ -62,7 +62,7 @@ def preprocess_data(examples):
     sequences = [list(seq) for seq in sequences]  # Convert to list of characters
 
     # encode sequences
-    inputs = tokenizer.batch_encode_plus(
+    inputs = tokenizer(
         sequences,
         add_special_tokens=True,
         padding="max_length",
@@ -117,7 +117,7 @@ print(test_processed["input_ids"].shape)
 
 
 # Load pre-trained model
-model = T5ForConditionalGeneration.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
+model = T5ForSequenceClassification.from_pretrained("ghazikhanihamed/TooT-PLM-P2S")
 
 sample_input = train_processed["input_ids"][:2]  # Take a small batch for testing
 sample_output = model(input_ids=sample_input, decoder_input_ids=sample_input)
@@ -135,27 +135,29 @@ training_args = TrainingArguments(
     output_dir="./results",
     do_train=True,
     do_eval=True,
-    deepspeed="./ds_config_finetune.json",
-    evaluation_strategy="epoch",
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=16,
+    deepspeed="./ds_config_p2s.json",
+    evaluation_strategy="steps",
     logging_dir="./logs",
-    logging_strategy="epoch",
-    save_strategy="epoch",
+    logging_strategy="steps",
+    save_strategy="steps",
     load_best_model_at_end=True,
     metric_for_best_model="eval_mcc",
     greater_is_better=True,
-    num_train_epochs=20,
-    seed=42,
+    num_train_epochs=10,
+    seed=7,
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=1,
-    learning_rate=1e-6,
-    max_grad_norm=1.0,
+    learning_rate=9e-4,
     fp16=False,
+    remove_unused_columns=False,
+    max_grad_norm=1.0,
+    save_total_limit=1,
     hub_token="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",
-    push_to_hub=True,
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
+    warmup_ratio=0.3,
 )
 
 # Create Trainer instance
@@ -170,6 +172,12 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
+
+# We save the best model in the folder "best_model"
+trainer.save_model("./best_model")
+
+# Push model to hub
+trainer.push_to_hub(commit_message="TooT-PLM-P2S_ionchannels-membrane")
 
 # Evaluate on the test dataset
 trainer.eval_dataset = test_dataset
@@ -192,7 +200,7 @@ test_representations = extract_encoder_representations(trainer.model, test_proce
 
 
 # Train an SVM classifier
-clf = SVC()
+clf = LogisticRegression(random_state=1)
 clf.fit(train_representations, train_labels)
 
 # Predictions
