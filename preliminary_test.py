@@ -121,7 +121,7 @@ def main():
     # Train, predict and evaluate
     for embeddings, model_name in [
         (train_embeddings_toot, "toot_plm_p2s"),
-        (train_embeddings_ankh, "ankh_large"),
+        (train_embeddings_ankh, "ankh_base"),
     ]:
         lr = LogisticRegression(random_state=1).fit(embeddings, train_dataset["label"])
         preds = lr.predict(
