@@ -3,7 +3,7 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=128G,g=2([6-7])
+#$ -l m_mem_free=128G,g=4
 #$ -l hostname=virya
 
 
