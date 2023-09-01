@@ -3,8 +3,8 @@
 #$ -N plm_sec
 #$ -cwd
 #$ -m bea
-#$ -l m_mem_free=512G,g=4
-#$ -l hostname=Virya2
+#$ -l m_mem_free=128G,g=2([6-7])
+#$ -l hostname=virya
 
 
 module load python/3.9.6/default
@@ -19,7 +19,7 @@ export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
 
 # python feature_extraction_test_pipeline.py
-deepspeed --num_gpus 4 plm_secondary_deepspeed.py
+deepspeed --num_gpus 2 plm_secondary_deepspeed.py
 # accelerate launch --multi_gpu preliminary_test.py
 
 
