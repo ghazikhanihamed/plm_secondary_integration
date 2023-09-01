@@ -39,10 +39,13 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
     """Extracts embeddings from a model given protein sequences."""
     all_embeddings = []
 
+    # Check if the model is wrapped in DistributedDataParallel
+    inner_model = model.module if hasattr(model, "module") else model
+
     num_batches = len(sequences) // batch_size + (len(sequences) % batch_size != 0)
     for batch_num, idx in enumerate(range(0, len(sequences), batch_size)):
         batch_sequences = [list(seq) for seq in sequences[idx : idx + batch_size]]
-        outputs = tokenizer.batch_encode_plus(
+        outputs = tokenizer(
             batch_sequences,
             add_special_tokens=True,  # Ensure special tokens are added
             is_split_into_words=True,
@@ -54,7 +57,7 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
 
         with torch.no_grad():
             # Get the hidden states (not the logits)
-            model_outputs = model.base_model(**outputs)
+            model_outputs = inner_model.base_model(**outputs)  # Use inner_model here
             embeddings = model_outputs.last_hidden_state
 
             eos_mask = outputs["input_ids"].eq(tokenizer.eos_token_id).to(device)
