@@ -45,14 +45,18 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
     num_batches = len(sequences) // batch_size + (len(sequences) % batch_size != 0)
     for batch_num, idx in enumerate(range(0, len(sequences), batch_size)):
         batch_sequences = [list(seq) for seq in sequences[idx : idx + batch_size]]
-        outputs = tokenizer(
+        outputs = tokenizer.batch_encode_plus(
             batch_sequences,
             add_special_tokens=True,  # Ensure special tokens are added
             is_split_into_words=True,
             return_tensors="pt",
             truncation=True,
             max_length=4096,
+            padding="max_length",  # Add this line for padding, especially if using batches
         )
+
+        # Replicating encoder input_ids for the decoder
+        outputs["decoder_input_ids"] = outputs["input_ids"].clone()
         outputs = {k: v.to(device) for k, v in outputs.items()}
 
         with torch.no_grad():
