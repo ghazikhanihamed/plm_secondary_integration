@@ -1,11 +1,19 @@
 import pandas as pd
 from transformers import T5ForSequenceClassification, AutoTokenizer, set_seed
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef
 import torch
 import wandb
 import json
 import accelerate
+from accelerate.utils import LoggerType
+from accelerate.tracking import WandBTracker
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import matthews_corrcoef
+
 
 # Constants
 SEED = 42
@@ -64,10 +72,10 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
             model_outputs = inner_model.base_model(**outputs)  # Use inner_model here
             embeddings = model_outputs.last_hidden_state
 
-            eos_mask = outputs["input_ids"].eq(tokenizer.eos_token_id).to(device)
-            sentence_representation = embeddings[eos_mask, :].squeeze()
+            # Apply max pooling
+            pooled_embeddings = torch.max(embeddings, dim=1)[0]
 
-            all_embeddings.append(sentence_representation.clone().cpu().detach())
+            all_embeddings.append(pooled_embeddings.clone().cpu().detach())
 
         wandb.log(
             {
@@ -77,7 +85,65 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
             }
         )
 
-    return torch.cat(all_embeddings, dim=0)
+    return torch.cat(
+        all_embeddings, dim=0
+    )  # Now the output shape is (num_samples, embedding_dimension)
+
+
+def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test):
+    classifiers = {
+        "logistic_regression": LogisticRegression(random_state=1),
+        "svm": SVC(probability=True),
+        "random_forest": RandomForestClassifier(),
+        "knn": KNeighborsClassifier(),
+        "mlp": MLPClassifier(max_iter=1000),
+    }
+
+    for clf_name, clf in classifiers.items():
+        # Training the classifier
+        clf.fit(embeddings_train, y_train)
+
+        # Predicting and evaluating
+        y_pred = clf.predict(embeddings_test)
+        y_probas = (
+            clf.predict_proba(embeddings_test)
+            if hasattr(clf, "predict_proba")
+            else None
+        )
+
+        # Metrics
+        accuracy = accuracy_score(y_test, y_pred)
+        wandb.log({f"{clf_name}_accuracy": accuracy})
+
+        # Compute MCC
+        mcc = matthews_corrcoef(y_test, y_pred)
+        wandb.log({f"{clf_name}_mcc": mcc})
+
+        # Visualizations
+        if y_probas is not None:
+            wandb.sklearn.plot_roc(y_test, y_probas, [0, 1], model_name=clf_name)
+            wandb.sklearn.plot_precision_recall(
+                y_test, y_probas, [0, 1], model_name=clf_name
+            )
+
+        wandb.sklearn.plot_confusion_matrix(y_test, y_pred, [0, 1], model_name=clf_name)
+        wandb.sklearn.plot_classifier(
+            clf,
+            embeddings_train,
+            embeddings_test,
+            y_train,
+            y_test,
+            y_pred,
+            y_probas,
+            [0, 1],
+            model_name=clf_name,
+        )
+
+    # Reporting Summary Metrics
+    for clf_name, clf in classifiers.items():
+        wandb.sklearn.plot_summary_metrics(
+            clf, embeddings_train, y_train, embeddings_test, y_test
+        )
 
 
 def main():
@@ -87,14 +153,26 @@ def main():
     # Load Weights & Biases Configuration and initialize
     api_key = load_wandb_config(WANDB_CONFIG_PATH)
     wandb.login(key=api_key)
-    wandb.init(config={"project": "plm_secondary_integration"})
+
+    logger = LoggerType.WANDB
 
     # Load datasets
     train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
     test_dataset = pd.read_csv(TEST_DATASET_PATH)
 
+    # debug
+    train_dataset = pd.read_csv(TRAIN_DATASET_PATH).head(100)  # Only the first 100 rows
+    test_dataset = pd.read_csv(TEST_DATASET_PATH).head(
+        30
+    )  # Only the first 30 rows for testing
+
     # Setup Accelerate
-    accelerator = accelerate.Accelerator(log_with="wandb")
+    accelerator = accelerate.Accelerator(log_with=logger)
+
+    # Setup Weights & Biases
+    wandb_tracker = WandBTracker(run_name="plm_secondary_integration")
+    accelerator.trackers.append(wandb_tracker)
+
     device = accelerator.device
 
     # Load models and tokenizers
@@ -125,34 +203,21 @@ def main():
     torch.save(test_embeddings_toot, "test_embeddings_toot.pt")
     torch.save(test_embeddings_ankh, "test_embeddings_ankh.pt")
 
-    # Train, predict and evaluate
-    for embeddings, model_name in [
-        (train_embeddings_toot, "toot_plm_p2s"),
-        (train_embeddings_ankh, "ankh_base"),
+    # Train, predict, and evaluate
+    for embeddings_train, embeddings_test, model_name in [
+        (train_embeddings_toot, test_embeddings_toot, "toot_plm_p2s"),
+        (train_embeddings_ankh, test_embeddings_ankh, "ankh_base"),
     ]:
-        lr = LogisticRegression(random_state=1).fit(embeddings, train_dataset["label"])
-        preds = lr.predict(
-            test_embeddings_toot
-            if model_name == "toot_plm_p2s"
-            else test_embeddings_ankh
+        y_train = train_dataset["label"].values
+        y_test = test_dataset["label"].values
+
+        # Train and evaluate multiple classifiers
+        train_and_evaluate(
+            embeddings_train.cpu().numpy(),
+            embeddings_test.cpu().numpy(),
+            y_train,
+            y_test,
         )
-
-        accuracy = accuracy_score(test_dataset["label"], preds)
-        f1 = f1_score(test_dataset["label"], preds, average="macro")
-        mcc = matthews_corrcoef(test_dataset["label"], preds)
-
-        if accelerator.is_main_process:
-            wandb.log(
-                {
-                    f"accuracy_{model_name}": accuracy,
-                    f"f1_{model_name}": f1,
-                    f"mcc_{model_name}": mcc,
-                }
-            )
-
-        accelerator.print(f"Accuracy for {model_name}: {accuracy}")
-        accelerator.print(f"F1 score for {model_name}: {f1}")
-        accelerator.print(f"MCC for {model_name}: {mcc}")
 
     wandb.finish()
 
