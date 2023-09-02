@@ -121,7 +121,11 @@ def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test):
 
         # Visualizations
         if y_probas is not None:
-            wandb.sklearn.plot_roc(y_test, y_probas, [0, 1], model_name=clf_name)
+            wandb.sklearn.plot_roc(y_test, y_probas, [0, 1])
+            wandb.log(
+                {f"{clf_name}_roc": wandb.sklearn.plot_roc(y_test, y_probas, [0, 1])}
+            )
+
             wandb.sklearn.plot_precision_recall(
                 y_test, y_probas, [0, 1], model_name=clf_name
             )
