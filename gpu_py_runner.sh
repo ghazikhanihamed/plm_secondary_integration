@@ -20,7 +20,8 @@ export TRANSFORMERS_CACHE=~/tmp
 
 # python feature_extraction_test_pipeline.py
 # deepspeed --num_gpus 2 plm_secondary_deepspeed.py
-accelerate launch --multi_gpu preliminary_test.py
+# accelerate launch --multi_gpu preliminary_test.py
+accelerate launch --multi_gpu plm_secondary_accelerate.py
 
 
 conda deactivate

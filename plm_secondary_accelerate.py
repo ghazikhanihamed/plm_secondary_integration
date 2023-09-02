@@ -165,9 +165,8 @@ training_args = TrainingArguments(
     output_dir="./results",
     do_train=True,
     do_eval=True,
-    per_device_train_batch_size=2,
+    per_device_train_batch_size=4,
     per_device_eval_batch_size=16,
-    deepspeed="./ds_config_p2s.json",
     evaluation_strategy="steps",
     logging_dir="./logs",
     logging_strategy="steps",
@@ -180,14 +179,14 @@ training_args = TrainingArguments(
     run_name="SS-Generation",
     report_to="wandb",
     gradient_accumulation_steps=1,
-    learning_rate=9e-4,
+    learning_rate=1e-4,
     fp16=False,
     remove_unused_columns=False,
     max_grad_norm=1.0,
     save_total_limit=1,
-    hub_token="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",
-    hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
-    warmup_ratio=0.3,
+    # hub_token="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",
+    # hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
+    # warmup_ratio=0.3,
 )
 
 # Initialize Trainer
@@ -207,7 +206,7 @@ trainer.train()
 trainer.save_model("./best_model")
 
 # Push model to hub
-trainer.push_to_hub(commit_message="PLM-Secondary-Structure-Generation")
+# trainer.push_to_hub(commit_message="PLM-Secondary-Structure-Generation")
 
 
 # Evaluate the model on test datasets

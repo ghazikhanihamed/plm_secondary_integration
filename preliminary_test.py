@@ -40,7 +40,7 @@ def get_model_and_tokenizer(model_name, accelerator):
     return model, tokenizer
 
 
-def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
+def get_embeddings(model, tokenizer, sequences, accelerator, batch_size=1):
     """Extracts embeddings from a model given protein sequences."""
     all_embeddings = []
 
@@ -62,7 +62,7 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
 
         # Replicating encoder input_ids for the decoder
         outputs["decoder_input_ids"] = outputs["input_ids"].clone()
-        outputs = {k: v.to(device) for k, v in outputs.items()}
+        outputs = {k: v.to(accelerator.device) for k, v in outputs.items()}
 
         with torch.no_grad():
             # Get the hidden states (not the logits)
@@ -74,7 +74,7 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
 
             all_embeddings.append(pooled_embeddings.clone().cpu().detach())
 
-        wandb.log(
+        accelerator.log(
             {
                 "Current Batch": batch_num + 1,
                 "Total Batches": num_batches,
@@ -110,31 +110,36 @@ def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test, accel
 
         # Metrics
         accuracy = accuracy_score(y_test, y_pred)
-        wandb.log({f"{clf_name}_accuracy": accuracy})
         accelerator.print(f"{clf_name} accuracy: {accuracy}")
 
         # Compute MCC
         mcc = matthews_corrcoef(y_test, y_pred)
-        wandb.log({f"{clf_name}_mcc": mcc})
         accelerator.print(f"{clf_name} MCC: {mcc}")
 
         # Compute F1
         f1 = f1_score(y_test, y_pred)
-        wandb.log({f"{clf_name}_f1": f1})
         accelerator.print(f"{clf_name} F1: {f1}")
+
+        accelerator.log(
+            {
+                f"{clf_name}_accuracy": accuracy,
+                f"{clf_name}_mcc": mcc,
+                f"{clf_name}_f1": f1,
+            }
+        )
 
         # Visualizations
         if y_probas is not None:
             roc_plot = wandb.sklearn.plot_roc(y_test, y_probas, [0, 1])
-            wandb.log({f"{clf_name}_roc": roc_plot})
+            accelerator.log({f"{clf_name}_roc": roc_plot})
 
             pr_plot = wandb.sklearn.plot_precision_recall(y_test, y_probas, [0, 1])
-            wandb.log({f"{clf_name}_precision_recall": pr_plot})
+            accelerator.log({f"{clf_name}_precision_recall": pr_plot})
 
         confusion_matrix_plot = wandb.sklearn.plot_confusion_matrix(
             y_test, y_pred, [0, 1]
         )
-        wandb.log({f"{clf_name}_confusion_matrix": confusion_matrix_plot})
+        accelerator.log({f"{clf_name}_confusion_matrix": confusion_matrix_plot})
 
         classifier_plot = wandb.sklearn.plot_classifier(
             clf,
@@ -147,7 +152,7 @@ def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test, accel
             [0, 1],
             model_name=clf_name,
         )
-        wandb.log({f"{clf_name}_classifier": classifier_plot})
+        accelerator.log({f"{clf_name}_classifier": classifier_plot})
 
     # Reporting Summary Metrics
     for clf_name, clf in classifiers.items():
@@ -160,15 +165,23 @@ def main():
     # Set seed
     set_seed(SEED)
 
+    # Load Weights & Biases Configuration and initialize
+    api_key = load_wandb_config(WANDB_CONFIG_PATH)
+    wandb.login(key=api_key)
+
     # Setup Accelerate
     accelerator = accelerate.Accelerator(log_with=["wandb"])
-    device = accelerator.device
+
+    # Initialize wandb through accelerate
+    accelerator.init_trackers(
+        project_name="plm_secondary_integration",
+        config={
+            "project": "plm_secondary_integration",
+        },
+        init_kwargs={"wandb": {"entity": "your-wandb-entity-name"}},
+    )
 
     with accelerator.main_process_first():
-        # Load Weights & Biases Configuration and initialize
-        api_key = load_wandb_config(WANDB_CONFIG_PATH)
-        wandb.login(key=api_key)
-
         # Load datasets
         train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
         test_dataset = pd.read_csv(TEST_DATASET_PATH)
@@ -194,10 +207,6 @@ def main():
         #     random_state=SEED,
         # )
 
-        # Setup Weights & Biases
-        wandb_tracker = WandBTracker(run_name="plm_secondary_integration")
-        accelerator.trackers = [wandb_tracker]
-
     # Load models and tokenizers
     toot_plm_p2s_model, toot_tokenizer = get_model_and_tokenizer(
         TOOT_PLM_P2S_MODEL_NAME, accelerator
@@ -208,16 +217,19 @@ def main():
 
     # Get embeddings
     train_embeddings_toot = get_embeddings(
-        toot_plm_p2s_model, toot_tokenizer, train_dataset["sequence"].values, device
+        toot_plm_p2s_model,
+        toot_tokenizer,
+        train_dataset["sequence"].values,
+        accelerator,
     )
     train_embeddings_ankh = get_embeddings(
-        ankh_large_model, ankh_tokenizer, train_dataset["sequence"].values, device
+        ankh_large_model, ankh_tokenizer, train_dataset["sequence"].values, accelerator
     )
     test_embeddings_toot = get_embeddings(
-        toot_plm_p2s_model, toot_tokenizer, test_dataset["sequence"].values, device
+        toot_plm_p2s_model, toot_tokenizer, test_dataset["sequence"].values, accelerator
     )
     test_embeddings_ankh = get_embeddings(
-        ankh_large_model, ankh_tokenizer, test_dataset["sequence"].values, device
+        ankh_large_model, ankh_tokenizer, test_dataset["sequence"].values, accelerator
     )
 
     # Save embeddings
@@ -243,7 +255,7 @@ def main():
             accelerator,
         )
 
-    wandb.finish()
+    accelerator.end_training()
 
 
 if __name__ == "__main__":
