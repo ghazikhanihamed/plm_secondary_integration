@@ -177,29 +177,29 @@ def main():
         wandb.login(key=api_key)
 
         # Load datasets
-        # train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
-        # test_dataset = pd.read_csv(TEST_DATASET_PATH)
+        train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
+        test_dataset = pd.read_csv(TEST_DATASET_PATH)
 
-        # debug
-        # Assuming you have loaded the dataset as before
-        train_dataset_full = pd.read_csv(TRAIN_DATASET_PATH)
-        test_dataset_full = pd.read_csv(TEST_DATASET_PATH)
+        # # debug
+        # # Assuming you have loaded the dataset as before
+        # train_dataset_full = pd.read_csv(TRAIN_DATASET_PATH)
+        # test_dataset_full = pd.read_csv(TEST_DATASET_PATH)
 
-        # Get a stratified subset of the train dataset
-        train_dataset, _ = train_test_split(
-            train_dataset_full,
-            test_size=0.99,  # Assuming you want 10% of the data, adjust as needed
-            stratify=train_dataset_full["label"],  # Stratify according to the labels
-            random_state=SEED,
-        )
+        # # Get a stratified subset of the train dataset
+        # train_dataset, _ = train_test_split(
+        #     train_dataset_full,
+        #     test_size=0.99,  # Assuming you want 10% of the data, adjust as needed
+        #     stratify=train_dataset_full["label"],  # Stratify according to the labels
+        #     random_state=SEED,
+        # )
 
-        # Get a stratified subset of the test dataset
-        test_dataset, _ = train_test_split(
-            test_dataset_full,
-            test_size=0.99,  # Assuming you want 10% of the data, adjust as needed
-            stratify=test_dataset_full["label"],  # Stratify according to the labels
-            random_state=SEED,
-        )
+        # # Get a stratified subset of the test dataset
+        # test_dataset, _ = train_test_split(
+        #     test_dataset_full,
+        #     test_size=0.99,  # Assuming you want 10% of the data, adjust as needed
+        #     stratify=test_dataset_full["label"],  # Stratify according to the labels
+        #     random_state=SEED,
+        # )
 
         # Setup Weights & Biases
         wandb_tracker = WandBTracker(run_name="plm_secondary_integration")
