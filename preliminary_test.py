@@ -4,7 +4,6 @@ import torch
 import wandb
 import json
 import accelerate
-from accelerate.utils import LoggerType
 from accelerate.tracking import WandBTracker
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
@@ -150,30 +149,30 @@ def main():
     # Set seed
     set_seed(SEED)
 
-    # Load Weights & Biases Configuration and initialize
-    api_key = load_wandb_config(WANDB_CONFIG_PATH)
-    wandb.login(key=api_key)
-
-    logger = LoggerType.WANDB
-
-    # Load datasets
-    train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
-    test_dataset = pd.read_csv(TEST_DATASET_PATH)
-
-    # debug
-    train_dataset = pd.read_csv(TRAIN_DATASET_PATH).head(100)  # Only the first 100 rows
-    test_dataset = pd.read_csv(TEST_DATASET_PATH).head(
-        30
-    )  # Only the first 30 rows for testing
-
     # Setup Accelerate
-    accelerator = accelerate.Accelerator(log_with=logger)
-
-    # Setup Weights & Biases
-    wandb_tracker = WandBTracker(run_name="plm_secondary_integration")
-    accelerator.trackers.append(wandb_tracker)
-
+    accelerator = accelerate.Accelerator(log_with=["wandb"])
     device = accelerator.device
+
+    with accelerator.main_process_first():
+        # Load Weights & Biases Configuration and initialize
+        api_key = load_wandb_config(WANDB_CONFIG_PATH)
+        wandb.login(key=api_key)
+
+        # Load datasets
+        train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
+        test_dataset = pd.read_csv(TEST_DATASET_PATH)
+
+        # debug
+        train_dataset = pd.read_csv(TRAIN_DATASET_PATH).head(
+            100
+        )  # Only the first 100 rows
+        test_dataset = pd.read_csv(TEST_DATASET_PATH).head(
+            30
+        )  # Only the first 30 rows for testing
+
+        # Setup Weights & Biases
+        wandb_tracker = WandBTracker(run_name="plm_secondary_integration")
+        accelerator.trackers = [wandb_tracker]
 
     # Load models and tokenizers
     toot_plm_p2s_model, toot_tokenizer = get_model_and_tokenizer(
