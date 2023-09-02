@@ -135,7 +135,15 @@ def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test):
                 }
             )
 
-        wandb.sklearn.plot_confusion_matrix(y_test, y_pred, [0, 1], model_name=clf_name)
+        wandb.sklearn.plot_confusion_matrix(y_test, y_pred, [0, 1])
+        wandb.log(
+            {
+                f"{clf_name}_confusion_matrix": wandb.sklearn.plot_confusion_matrix(
+                    y_test, y_pred, [0, 1]
+                )
+            }
+        )
+
         wandb.sklearn.plot_classifier(
             clf,
             embeddings_train,
