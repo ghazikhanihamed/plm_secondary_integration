@@ -171,7 +171,7 @@ def main():
         # Get a stratified subset of the train dataset
         train_dataset, _ = train_test_split(
             train_dataset_full,
-            test_size=0.90,  # Assuming you want 10% of the data, adjust as needed
+            test_size=0.99,  # Assuming you want 10% of the data, adjust as needed
             stratify=train_dataset_full["label"],  # Stratify according to the labels
             random_state=SEED,
         )
@@ -179,7 +179,7 @@ def main():
         # Get a stratified subset of the test dataset
         test_dataset, _ = train_test_split(
             test_dataset_full,
-            test_size=0.90,  # Assuming you want 10% of the data, adjust as needed
+            test_size=0.99,  # Assuming you want 10% of the data, adjust as needed
             stratify=test_dataset_full["label"],  # Stratify according to the labels
             random_state=SEED,
         )
