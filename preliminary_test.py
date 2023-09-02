@@ -1,5 +1,5 @@
 import pandas as pd
-from transformers import T5ForSequenceClassification, AutoTokenizer, set_seed
+from transformers import T5Model, AutoTokenizer, set_seed
 import torch
 import wandb
 import json
@@ -12,6 +12,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import matthews_corrcoef
+from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 
 
@@ -33,11 +34,7 @@ def load_wandb_config(path):
 
 def get_model_and_tokenizer(model_name, accelerator):
     """Loads the model, puts it on the device and in eval mode, and retrieves the tokenizer."""
-    model = (
-        T5ForSequenceClassification.from_pretrained(model_name)
-        .to(accelerator.device)
-        .eval()
-    )  # Use T5ForSequenceClassification
+    model = T5Model.from_pretrained(model_name).to(accelerator.device).eval()
     model = accelerator.prepare(model)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     return model, tokenizer
@@ -90,7 +87,7 @@ def get_embeddings(model, tokenizer, sequences, device, batch_size=1):
     )  # Now the output shape is (num_samples, embedding_dimension)
 
 
-def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test):
+def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test, accelerator):
     classifiers = {
         "logistic_regression": LogisticRegression(random_state=1),
         "svm": SVC(probability=True),
@@ -114,37 +111,32 @@ def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test):
         # Metrics
         accuracy = accuracy_score(y_test, y_pred)
         wandb.log({f"{clf_name}_accuracy": accuracy})
+        accelerator.print(f"{clf_name} accuracy: {accuracy}")
 
         # Compute MCC
         mcc = matthews_corrcoef(y_test, y_pred)
         wandb.log({f"{clf_name}_mcc": mcc})
+        accelerator.print(f"{clf_name} MCC: {mcc}")
+
+        # Compute F1
+        f1 = f1_score(y_test, y_pred)
+        wandb.log({f"{clf_name}_f1": f1})
+        accelerator.print(f"{clf_name} F1: {f1}")
 
         # Visualizations
         if y_probas is not None:
-            wandb.sklearn.plot_roc(y_test, y_probas, [0, 1])
-            wandb.log(
-                {f"{clf_name}_roc": wandb.sklearn.plot_roc(y_test, y_probas, [0, 1])}
-            )
+            roc_plot = wandb.sklearn.plot_roc(y_test, y_probas, [0, 1])
+            wandb.log({f"{clf_name}_roc": roc_plot})
 
-            wandb.sklearn.plot_precision_recall(y_test, y_probas, [0, 1])
-            wandb.log(
-                {
-                    f"{clf_name}_precision_recall": wandb.sklearn.plot_precision_recall(
-                        y_test, y_probas, [0, 1]
-                    )
-                }
-            )
+            pr_plot = wandb.sklearn.plot_precision_recall(y_test, y_probas, [0, 1])
+            wandb.log({f"{clf_name}_precision_recall": pr_plot})
 
-        wandb.sklearn.plot_confusion_matrix(y_test, y_pred, [0, 1])
-        wandb.log(
-            {
-                f"{clf_name}_confusion_matrix": wandb.sklearn.plot_confusion_matrix(
-                    y_test, y_pred, [0, 1]
-                )
-            }
+        confusion_matrix_plot = wandb.sklearn.plot_confusion_matrix(
+            y_test, y_pred, [0, 1]
         )
+        wandb.log({f"{clf_name}_confusion_matrix": confusion_matrix_plot})
 
-        wandb.sklearn.plot_classifier(
+        classifier_plot = wandb.sklearn.plot_classifier(
             clf,
             embeddings_train,
             embeddings_test,
@@ -155,6 +147,7 @@ def train_and_evaluate(embeddings_train, embeddings_test, y_train, y_test):
             [0, 1],
             model_name=clf_name,
         )
+        wandb.log({f"{clf_name}_classifier": classifier_plot})
 
     # Reporting Summary Metrics
     for clf_name, clf in classifiers.items():
@@ -247,6 +240,7 @@ def main():
             embeddings_test.cpu().numpy(),
             y_train,
             y_test,
+            accelerator,
         )
 
     wandb.finish()
