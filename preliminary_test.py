@@ -12,6 +12,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import matthews_corrcoef
+from sklearn.model_selection import train_test_split
 
 
 # Constants
@@ -159,16 +160,29 @@ def main():
         wandb.login(key=api_key)
 
         # Load datasets
-        train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
-        test_dataset = pd.read_csv(TEST_DATASET_PATH)
+        # train_dataset = pd.read_csv(TRAIN_DATASET_PATH)
+        # test_dataset = pd.read_csv(TEST_DATASET_PATH)
 
         # debug
-        train_dataset = pd.read_csv(TRAIN_DATASET_PATH).head(
-            100
-        )  # Only the first 100 rows
-        test_dataset = pd.read_csv(TEST_DATASET_PATH).head(
-            30
-        )  # Only the first 30 rows for testing
+        # Assuming you have loaded the dataset as before
+        train_dataset_full = pd.read_csv(TRAIN_DATASET_PATH)
+        test_dataset_full = pd.read_csv(TEST_DATASET_PATH)
+
+        # Get a stratified subset of the train dataset
+        train_dataset, _ = train_test_split(
+            train_dataset_full,
+            test_size=0.90,  # Assuming you want 10% of the data, adjust as needed
+            stratify=train_dataset_full["label"],  # Stratify according to the labels
+            random_state=SEED,
+        )
+
+        # Get a stratified subset of the test dataset
+        test_dataset, _ = train_test_split(
+            test_dataset_full,
+            test_size=0.90,  # Assuming you want 10% of the data, adjust as needed
+            stratify=test_dataset_full["label"],  # Stratify according to the labels
+            random_state=SEED,
+        )
 
         # Setup Weights & Biases
         wandb_tracker = WandBTracker(run_name="plm_secondary_integration")
