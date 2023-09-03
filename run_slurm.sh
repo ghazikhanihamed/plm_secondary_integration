@@ -13,10 +13,15 @@ export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
 
 module load anaconda/3.2023.03
-module load cuda/12.0.0
-
+module load cuda/11.7.0
 source /usr/local/pkg/anaconda/v3.2023.03/root/etc/profile.d/conda.sh
-conda activate /home/h_ghazik/.conda/envs/venv_secondary_conda
+conda activate py310
+
+
+conda activate /home/h_ghazik/.conda/envs/py3.9
+
+# source /usr/local/pkg/anaconda/v3.2023.03/root/etc/profile.d/conda.sh
+# conda activate /home/h_ghazik/.conda/envs/venv_secondary_conda
 
 export PATH="$PATH:/home/h_ghazik/.local/bin"
 export ACCELERATE_CONFIG=/home/h_ghazik/accelerate_config/default_config.yaml
