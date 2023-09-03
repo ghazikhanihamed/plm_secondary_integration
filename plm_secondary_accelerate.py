@@ -4,7 +4,6 @@ from transformers import (
     TrainingArguments,
     Trainer,
 )
-from huggingface_hub import HfApi
 from datasets import load_dataset, concatenate_datasets
 import logging
 import torch
@@ -159,34 +158,35 @@ def compute_metrics(eval_pred):
 # Create the model and prepare it
 model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
+experiment = "p2s"
 
 # Prepare training args
 training_args = TrainingArguments(
-    output_dir="./results",
+    output_dir=f'./results_{experiment}',
+    num_train_epochs=5,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
+    warmup_steps=1000,
+    learning_rate=1e-03,
+    weight_decay=0.0,
+    logging_dir=f'./logs_{experiment}',
+    logging_steps=200,
     do_train=True,
     do_eval=True,
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=16,
-    evaluation_strategy="steps",
-    logging_dir="./logs",
-    logging_strategy="steps",
-    save_strategy="steps",
+    evaluation_strategy="epoch",
+    gradient_accumulation_steps=16,
+    fp16=False,
+    fp16_opt_level="02",
+    seed=7,
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    num_train_epochs=10,
-    seed=7,
+    save_strategy="epoch"
+    remove_unused_columns=False,
     run_name="SS-Generation",
     report_to="wandb",
-    gradient_accumulation_steps=1,
-    learning_rate=1e-4,
-    fp16=False,
-    remove_unused_columns=False,
-    max_grad_norm=1.0,
-    save_total_limit=1,
-    # hub_token="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",
-    # hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
-    # warmup_ratio=0.3,
+    hub_token="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",
+    hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
 )
 
 # Initialize Trainer
@@ -206,7 +206,7 @@ trainer.train()
 trainer.save_model("./best_model")
 
 # Push model to hub
-# trainer.push_to_hub(commit_message="PLM-Secondary-Structure-Generation")
+trainer.push_to_hub(commit_message="PLM-Secondary-Structure-Generation")
 
 
 # Evaluate the model on test datasets
