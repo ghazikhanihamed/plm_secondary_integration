@@ -3,7 +3,6 @@ from transformers import (
     AutoTokenizer,
     TrainingArguments,
     Trainer,
-    DataCollatorWithPadding,
 )
 from datasets import load_dataset, concatenate_datasets
 import logging
@@ -149,9 +148,6 @@ def compute_metrics(eval_pred):
     return {"q3_accuracy": q3_accuracy(labels.tolist(), predictions.tolist())}
 
 
-# Create the data collator to encode text to numbers
-data_collator = DataCollatorWithPadding(tokenizer=tokenizer, padding=True)
-
 # Create the model and prepare it
 model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
@@ -161,8 +157,8 @@ experiment = "p2s"
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
     num_train_epochs=10,
-    per_device_train_batch_size=2,
-    per_device_eval_batch_size=2,
+    per_device_train_batch_size=1,
+    per_device_eval_batch_size=1,
     warmup_steps=1000,
     learning_rate=1e-03,
     weight_decay=0.0,
@@ -171,7 +167,7 @@ training_args = TrainingArguments(
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=2,
+    gradient_accumulation_steps=4,
     fp16=False,
     fp16_opt_level="02",
     seed=7,
@@ -194,7 +190,6 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
     tokenizer=tokenizer,
-    data_collator=data_collator,
 )
 
 # Train the model
