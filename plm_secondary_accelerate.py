@@ -65,13 +65,6 @@ test_dataset2 = dataset3["CASP14"]
 input_column_name = "input"
 labels_column_name = "dssp3"
 
-# concatenate all sequences
-all_sequences = list(train_dataset[input_column_name])
-sequence_lengths = [len(seq) for seq in all_sequences]
-max_length = int(np.percentile(sequence_lengths, 95))
-
-print("Max length: ", max_length)
-
 # Consider each label as a tag for each token
 unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
 
@@ -94,21 +87,13 @@ def preprocess_data(examples):
     inputs = tokenizer(
         sequences,
         add_special_tokens=True,
-        padding="max_length",
-        max_length=max_length,
-        truncation=True,
         is_split_into_words=True,
         return_tensors="pt",
+        padding=True,
     )
 
     # encode labels
     labels_encoded = [[tag2id[tag] for tag in label] for label in labels]
-
-    # Pad or truncate the labels to match the sequence length
-    labels_encoded = [
-        label[:max_length] + [tag2id["<pad>"]] * (max_length - len(label))
-        for label in labels_encoded
-    ]
 
     assert len(inputs["input_ids"]) == len(labels_encoded)
 
@@ -163,7 +148,7 @@ experiment = "p2s"
 # Prepare training args
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=5,
+    num_train_epochs=10,
     per_device_train_batch_size=2,
     per_device_eval_batch_size=2,
     warmup_steps=1000,
