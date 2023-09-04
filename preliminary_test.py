@@ -1,10 +1,9 @@
 import pandas as pd
-from transformers import T5Model, AutoTokenizer, set_seed
+from transformers import T5EncoderModel, AutoTokenizer, set_seed
 import torch
 import wandb
 import json
 import accelerate
-from accelerate.tracking import WandBTracker
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -13,7 +12,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import matthews_corrcoef
 from sklearn.metrics import f1_score
-from sklearn.model_selection import train_test_split
 
 
 # Constants
@@ -34,7 +32,9 @@ def load_wandb_config(path):
 
 def get_model_and_tokenizer(model_name, accelerator):
     """Loads the model, puts it on the device and in eval mode, and retrieves the tokenizer."""
-    model = T5Model.from_pretrained(model_name).to(accelerator.device).eval()
+    model = (
+        T5EncoderModel.from_pretrained(model_name).to(accelerator.device).eval()
+    )  # <-- Change this line
     model = accelerator.prepare(model)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     return model, tokenizer
@@ -44,9 +44,6 @@ def get_embeddings(model, tokenizer, sequences, accelerator, batch_size=1):
     """Extracts embeddings from a model given protein sequences."""
     all_embeddings = []
 
-    # Check if the model is wrapped in DistributedDataParallel
-    inner_model = model.module if hasattr(model, "module") else model
-
     num_batches = len(sequences) // batch_size + (len(sequences) % batch_size != 0)
     for batch_num, idx in enumerate(range(0, len(sequences), batch_size)):
         batch_sequences = [list(seq) for seq in sequences[idx : idx + batch_size]]
@@ -55,18 +52,16 @@ def get_embeddings(model, tokenizer, sequences, accelerator, batch_size=1):
             add_special_tokens=True,  # Ensure special tokens are added
             is_split_into_words=True,
             return_tensors="pt",
-            truncation=True,
-            max_length=4096,
-            padding="max_length",  # Add this line for padding, especially if using batches
+            padding=True,
         )
 
-        # Replicating encoder input_ids for the decoder
-        outputs["decoder_input_ids"] = outputs["input_ids"].clone()
         outputs = {k: v.to(accelerator.device) for k, v in outputs.items()}
 
         with torch.no_grad():
             # Get the hidden states (not the logits)
-            model_outputs = inner_model.base_model(**outputs)  # Use inner_model here
+            model_outputs = model(
+                **outputs
+            ) 
             embeddings = model_outputs.last_hidden_state
 
             # Apply max pooling
