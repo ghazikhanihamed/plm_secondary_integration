@@ -21,7 +21,7 @@ conda activate py39
 export PATH="$PATH:/home/h_ghazik/.local/bin"
 export ACCELERATE_CONFIG=/home/h_ghazik/accelerate_config/default_config.yaml
 
-accelerate launch --multi_gpu plm_secondary_deepspeed.py
+accelerate launch --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml --multi_gpu plm_secondary_deepspeed.py
 
 conda deactivate
 

@@ -13,6 +13,10 @@ import sys
 import wandb
 import json
 
+from accelerate import Accelerator
+
+accelerator = Accelerator()
+
 # Load Weights & Biases Configuration
 with open("wandb_config.json") as f:
     data = json.load(f)
@@ -106,25 +110,28 @@ def preprocess_data(examples):
     assert len(inputs["input_ids"]) == len(labels_encoded)
 
     return {
-        "input_ids": inputs["input_ids"],
-        "attention_mask": inputs["attention_mask"],
-        "labels": torch.tensor(labels_encoded, dtype=torch.long),
+        "input_ids": inputs["input_ids"].to(accelerator.device),
+        "attention_mask": inputs["attention_mask"].to(accelerator.device),
+        "labels": torch.tensor(labels_encoded, dtype=torch.long).to(accelerator.device),
     }
 
 
-train_dataset = train_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=train_dataset.column_names,
-    desc="Running tokenizer on dataset for training",
-)
+with accelerator.main_process_first():
+    train_dataset = train_dataset.map(
+        preprocess_data,
+        batched=True,
+        num_proc=accelerator.num_processes,
+        remove_columns=train_dataset.column_names,
+        desc="Running tokenizer on dataset for training",
+    )
 
-valid_dataset = validation_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=validation_dataset.column_names,
-    desc="Running tokenizer on dataset for validation",
-)
+    valid_dataset = validation_dataset.map(
+        preprocess_data,
+        batched=True,
+        num_proc=accelerator.num_processes,
+        remove_columns=validation_dataset.column_names,
+        desc="Running tokenizer on dataset for validation",
+    )
 
 
 def q3_accuracy(y_true, y_pred):
@@ -150,13 +157,14 @@ def compute_metrics(eval_pred):
 
 # Create the model and prepare it
 model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
+model = accelerator.prepare(model)
 
 experiment = "p2s"
 
 # Prepare training args
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=10,
+    num_train_epochs=5,
     per_device_train_batch_size=1,
     per_device_eval_batch_size=1,
     warmup_steps=1000,
