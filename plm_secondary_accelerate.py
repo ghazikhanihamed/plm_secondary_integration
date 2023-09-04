@@ -92,8 +92,16 @@ def preprocess_data(examples):
         padding=True,
     )
 
-    # encode labels
-    labels_encoded = [[tag2id[tag] for tag in label] for label in labels]
+    max_length = inputs["input_ids"].shape[1]
+
+    # encode labels with padding
+    labels_encoded = []
+    for label in labels:
+        encoded_label = [tag2id[tag] for tag in label]
+        # Add padding to the encoded label if necessary
+        while len(encoded_label) < max_length:
+            encoded_label.append(tag2id["<pad>"])
+        labels_encoded.append(encoded_label)
 
     assert len(inputs["input_ids"]) == len(labels_encoded)
 
