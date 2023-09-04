@@ -65,6 +65,13 @@ test_dataset2 = dataset3["CASP14"]
 input_column_name = "input"
 labels_column_name = "dssp3"
 
+# concatenate all sequences
+all_sequences = list(train_dataset[input_column_name])
+sequence_lengths = [len(seq) for seq in all_sequences]
+max_length = int(np.percentile(sequence_lengths, 99))
+
+print("Max length: ", max_length)
+
 # Consider each label as a tag for each token
 unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
 
@@ -83,25 +90,27 @@ def preprocess_data(examples):
     sequences = [list("".join(seq.split())) for seq in sequences]
     labels = [list("".join(label.split())) for label in labels]
 
+    print("Max length: ", max_length)
+
     # encode sequences
     inputs = tokenizer(
         sequences,
         add_special_tokens=True,
+        padding="max_length",
+        max_length=max_length,
+        truncation=True,
         is_split_into_words=True,
         return_tensors="pt",
-        padding=True,
     )
 
-    max_length = inputs["input_ids"].shape[1]
+    # encode labels
+    labels_encoded = [[tag2id[tag] for tag in label] for label in labels]
 
-    # encode labels with padding
-    labels_encoded = []
-    for label in labels:
-        encoded_label = [tag2id[tag] for tag in label]
-        # Add padding to the encoded label if necessary
-        while len(encoded_label) < max_length:
-            encoded_label.append(tag2id["<pad>"])
-        labels_encoded.append(encoded_label)
+    # Pad or truncate the labels to match the sequence length
+    labels_encoded = [
+        label[:max_length] + [tag2id["<pad>"]] * (max_length - len(label))
+        for label in labels_encoded
+    ]
 
     assert len(inputs["input_ids"]) == len(labels_encoded)
 
