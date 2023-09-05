@@ -23,7 +23,7 @@ export TRANSFORMERS_CACHE=~/tmp
 # accelerate launch --multi_gpu preliminary_test.py
 # accelerate launch --multi_gpu plm_secondary_accelerate.py
 
-accelerate launch --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml --multi_gpu plm_secondary_accelerate.py
+accelerate launch --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml --multi_gpu binary_classification_solubility_task.py
 
 
 conda deactivate
