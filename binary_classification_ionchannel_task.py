@@ -1,4 +1,5 @@
 import torch
+import os
 import numpy as np
 import random
 import ankh
@@ -23,6 +24,9 @@ seed = 7
 torch.manual_seed(seed)
 np.random.seed(seed)
 random.seed(seed)
+
+model_type = "p2s_base"
+experiment = f"ionchannel_classification_{model_type}"
 
 # Load Weights & Biases Configuration
 with open("wandb_config.json") as f:
@@ -54,7 +58,7 @@ test_texts = test_df["sequence"].tolist()
 test_labels = test_df["label"].apply(lambda x: 1 if x == "ionchannels" else 0).tolist()
 
 train_texts, val_texts, train_labels, val_labels = train_test_split(
-    train_texts, train_labels, test_size=0.1, stratify=train_labels
+    train_texts, train_labels, test_size=0.1, stratify=train_labels, random_state=seed
 )
 
 # As your sequence lengths can be different from the previous dataset, we calculate the max length again
@@ -76,7 +80,16 @@ test_sequences, test_labels = preprocess_dataset(test_texts, test_labels, max_le
 
 
 # Embed dataset
-def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
+def embed_dataset(model, sequences, dataset_name, shift_left=0, shift_right=-1):
+    embed_dir = f"./embeddings/{experiment}"
+    os.makedirs(embed_dir, exist_ok=True)
+    embed_file = os.path.join(embed_dir, f"{dataset_name}_embeddings.npy")
+
+    # Check if embeddings already exist
+    if os.path.exists(embed_file):
+        print(f"Loading {dataset_name} embeddings from disk...")
+        return np.load(embed_file, allow_pickle=True)
+
     inputs_embedding = []
     with torch.no_grad():
         for sample in tqdm(sequences):
@@ -90,12 +103,15 @@ def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
             embedding = model(input_ids=ids["input_ids"])[0]
             embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
             inputs_embedding.append(embedding)
+
+    print(f"Saving {dataset_name} embeddings to disk...")
+    np.save(embed_file, inputs_embedding)
     return inputs_embedding
 
 
-training_embeddings = embed_dataset(model, training_sequences)
-validation_embeddings = embed_dataset(model, validation_sequences)
-test_embeddings = embed_dataset(model, test_sequences)
+training_embeddings = embed_dataset(model, training_sequences, "training")
+validation_embeddings = embed_dataset(model, validation_sequences, "validation")
+test_embeddings = embed_dataset(model, test_sequences, "test")
 
 
 # Define custom dataset class
@@ -153,9 +169,6 @@ def compute_metrics(p: EvalPrediction):
         "mcc": metrics.matthews_corrcoef(labels, preds),
     }
 
-
-model_type = "p2s_base"
-experiment = f"ionchannel_classification_{model_type}"
 
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
