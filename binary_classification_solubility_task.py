@@ -1,18 +1,15 @@
 import torch
 import numpy as np
 import random
-
-seed = 7
-
-torch.manual_seed(seed)
-np.random.seed(seed)
-random.seed(seed)
-
 import ankh
-
+import wandb
+import json
+from functools import partial
+from tqdm.auto import tqdm
+from sklearn import metrics
+from scipy import stats
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
-
 from transformers import (
     Trainer,
     TrainingArguments,
@@ -23,30 +20,22 @@ from transformers import (
 from datasets import load_dataset
 from accelerate import Accelerator
 
-from sklearn import metrics
-from scipy import stats
-from functools import partial
-import pandas as pd
-from tqdm.auto import tqdm
-
-import wandb
-import json
+# Set seed for reproducibility
+seed = 7
+torch.manual_seed(seed)
+np.random.seed(seed)
+random.seed(seed)
 
 # Load Weights & Biases Configuration
 with open("wandb_config.json") as f:
     data = json.load(f)
-
 api_key = data["api_key"]
-
-wandb_config = {
-    "project": "plm_secondary_integration",
-}
-
+wandb_config = {"project": "plm_secondary_integration"}
 wandb.login(key=api_key)
 
 
+# Load model and tokenizer
 def get_model_and_tokenizer(model_name):
-    """Loads the model, puts it on the device and in eval mode, and retrieves the tokenizer."""
     model = T5EncoderModel.from_pretrained(model_name)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     return model, tokenizer
@@ -55,8 +44,8 @@ def get_model_and_tokenizer(model_name):
 model, tokenizer = get_model_and_tokenizer("ghazikhanihamed/TooT-PLM-P2S")
 model.eval()
 
+# Load dataset
 dataset = load_dataset("proteinea/Solubility")
-
 training_sequences, training_labels = (
     dataset["train"]["sequences"],
     dataset["train"]["labels"],
@@ -68,20 +57,24 @@ validation_sequences, validation_labels = (
 test_sequences, test_labels = dataset["test"]["sequences"], dataset["test"]["labels"]
 
 
+# Preprocess dataset
 def preprocess_dataset(sequences, labels, max_length=None):
-    """
-    Args:
-        sequences: list, the list which contains the protein primary sequences.
-        labels: list, the list which contains the dataset labels.
-        max_length, Integer, the maximum sequence length,
-        if there is a sequence that is larger than the specified sequence length will be post-truncated.
-    """
     if max_length is None:
         max_length = len(max(training_sequences, key=lambda x: len(x)))
     splitted_sequences = [list(seq[:max_length]) for seq in sequences]
     return splitted_sequences, labels
 
 
+training_sequences, training_labels = preprocess_dataset(
+    training_sequences, training_labels
+)
+validation_sequences, validation_labels = preprocess_dataset(
+    validation_sequences, validation_labels
+)
+test_sequences, test_labels = preprocess_dataset(test_sequences, test_labels)
+
+
+# Embed dataset
 def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
     inputs_embedding = []
     with torch.no_grad():
@@ -99,19 +92,12 @@ def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
     return inputs_embedding
 
 
-training_sequences, training_labels = preprocess_dataset(
-    training_sequences, training_labels
-)
-validation_sequences, validation_labels = preprocess_dataset(
-    validation_sequences, validation_labels
-)
-test_sequences, test_labels = preprocess_dataset(test_sequences, test_labels)
-
 training_embeddings = embed_dataset(model, training_sequences)
 validation_embeddings = embed_dataset(model, validation_sequences)
 test_embeddings = embed_dataset(model, test_sequences)
 
 
+# Define custom dataset class
 class SolubilityDataset(Dataset):
     def __init__(self, sequences, labels):
         self.sequences = sequences
@@ -166,7 +152,7 @@ def compute_metrics(p: EvalPrediction):
     }
 
 
-model_type = "ankh_base"
+model_type = "p2s_base"
 experiment = f"solubility_{model_type}"
 
 training_args = TrainingArguments(
@@ -196,6 +182,7 @@ training_args = TrainingArguments(
 
 model_embed_dim = 768  # Embedding dimension for ankh large.
 
+# Initialize Trainer
 trainer = Trainer(
     model_init=partial(model_init, embed_dim=model_embed_dim),
     args=training_args,
@@ -204,11 +191,12 @@ trainer = Trainer(
     compute_metrics=compute_metrics,
 )
 
+# Train the model
 trainer.train()
 
+# Save the best model
 trainer.save_model(f"./best_model_{experiment}")
 
+# Make predictions and log metrics
 predictions, labels, metrics_output = trainer.predict(test_dataset)
-
-# log metrics
 print("Evaluation metrics: ", metrics_output)
