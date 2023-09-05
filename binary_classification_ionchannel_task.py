@@ -7,9 +7,7 @@ import json
 from functools import partial
 from tqdm.auto import tqdm
 from sklearn import metrics
-from scipy import stats
-from torch import nn
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from transformers import (
     Trainer,
     TrainingArguments,
@@ -17,8 +15,8 @@ from transformers import (
     AutoTokenizer,
     T5EncoderModel,
 )
-from datasets import load_dataset
-from accelerate import Accelerator
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
 # Set seed for reproducibility
 seed = 7
@@ -45,33 +43,36 @@ model, tokenizer = get_model_and_tokenizer("ghazikhanihamed/TooT-PLM-P2S")
 model.eval()
 
 # Load dataset
-dataset = load_dataset("proteinea/Solubility")
-training_sequences, training_labels = (
-    dataset["train"]["sequences"],
-    dataset["train"]["labels"],
+train_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_train.csv")
+test_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
+
+train_texts = train_df["sequence"].tolist()
+train_labels = (
+    train_df["label"].apply(lambda x: 1 if x == "ionchannels" else 0).tolist()
 )
-validation_sequences, validation_labels = (
-    dataset["validation"]["sequences"],
-    dataset["validation"]["labels"],
+test_texts = test_df["sequence"].tolist()
+test_labels = test_df["label"].apply(lambda x: 1 if x == "ionchannels" else 0).tolist()
+
+train_texts, val_texts, train_labels, val_labels = train_test_split(
+    train_texts, train_labels, test_size=0.1, stratify=train_labels
 )
-test_sequences, test_labels = dataset["test"]["sequences"], dataset["test"]["labels"]
+
+# As your sequence lengths can be different from the previous dataset, we calculate the max length again
+max_length = len(max(train_texts, key=lambda x: len(x)))
 
 
-# Preprocess dataset
 def preprocess_dataset(sequences, labels, max_length=None):
-    if max_length is None:
-        max_length = len(max(training_sequences, key=lambda x: len(x)))
     splitted_sequences = [list(seq[:max_length]) for seq in sequences]
     return splitted_sequences, labels
 
 
 training_sequences, training_labels = preprocess_dataset(
-    training_sequences, training_labels
+    train_texts, train_labels, max_length
 )
 validation_sequences, validation_labels = preprocess_dataset(
-    validation_sequences, validation_labels
+    val_texts, val_labels, max_length
 )
-test_sequences, test_labels = preprocess_dataset(test_sequences, test_labels)
+test_sequences, test_labels = preprocess_dataset(test_texts, test_labels, max_length)
 
 
 # Embed dataset
@@ -98,7 +99,7 @@ test_embeddings = embed_dataset(model, test_sequences)
 
 
 # Define custom dataset class
-class SolubilityDataset(Dataset):
+class IonChannelDataset(Dataset):  # Renamed for clarity
     def __init__(self, sequences, labels):
         self.sequences = sequences
         self.labels = labels
@@ -115,9 +116,9 @@ class SolubilityDataset(Dataset):
         return len(self.sequences)
 
 
-training_dataset = SolubilityDataset(training_embeddings, training_labels)
-validation_dataset = SolubilityDataset(validation_embeddings, validation_labels)
-test_dataset = SolubilityDataset(test_embeddings, test_labels)
+training_dataset = IonChannelDataset(training_embeddings, training_labels)
+validation_dataset = IonChannelDataset(validation_embeddings, validation_labels)
+test_dataset = IonChannelDataset(test_embeddings, test_labels)
 
 
 def model_init(embed_dim):
@@ -149,15 +150,16 @@ def compute_metrics(p: EvalPrediction):
         "precision": metrics.precision_score(labels, preds),
         "recall": metrics.recall_score(labels, preds),
         "f1": metrics.f1_score(labels, preds),
+        "mcc": metrics.matthews_corrcoef(labels, preds),
     }
 
 
 model_type = "p2s_base"
-experiment = f"solubility_{model_type}"
+experiment = f"ionchannel_classification_{model_type}"
 
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=5,
+    num_train_epochs=10,
     per_device_train_batch_size=1,
     per_device_eval_batch_size=1,
     warmup_steps=1000,
@@ -174,7 +176,7 @@ training_args = TrainingArguments(
     run_name=experiment,
     seed=seed,
     load_best_model_at_end=True,
-    metric_for_best_model="eval_accuracy",
+    metric_for_best_model="eval_mcc",
     greater_is_better=True,
     save_strategy="epoch",
     report_to="wandb",
