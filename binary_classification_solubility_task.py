@@ -191,6 +191,7 @@ training_args = TrainingArguments(
     metric_for_best_model="eval_accuracy",
     greater_is_better=True,
     save_strategy="epoch",
+    report_to="wandb",
 )
 
 model_embed_dim = 768  # Embedding dimension for ankh large.
