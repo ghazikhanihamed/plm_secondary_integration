@@ -51,7 +51,7 @@ combined_texts = train_texts + test_texts
 
 # Compute the max_length using the combined sequences
 sequence_lengths = [len(seq) for seq in combined_texts]
-max_length = int(np.percentile(sequence_lengths, 95))
+max_length = int(np.percentile(sequence_lengths, 90))
 
 train_texts, val_texts, train_labels, val_labels = train_test_split(
     train_texts, train_labels, test_size=0.1, stratify=train_labels, random_state=seed
