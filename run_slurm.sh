@@ -5,7 +5,7 @@
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=10gb:4
-#SBATCH -w virya4
+#SBATCH -w virya3
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hamed.ghazikhani@gmail.com
 
