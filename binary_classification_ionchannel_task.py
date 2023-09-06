@@ -63,7 +63,7 @@ def main():
 
     # Compute the max_length using the combined sequences
     sequence_lengths = [len(seq) for seq in combined_texts]
-    max_length = int(np.percentile(sequence_lengths, 90))
+    max_length = int(np.percentile(sequence_lengths, 100))
 
     train_texts, val_texts, train_labels, val_labels = train_test_split(
         train_texts,
