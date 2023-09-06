@@ -35,17 +35,6 @@ api_key = data["api_key"]
 wandb_config = {"project": "plm_secondary_integration"}
 wandb.login(key=api_key)
 
-
-# Load model and tokenizer
-def get_model_and_tokenizer(model_name):
-    model = T5EncoderModel.from_pretrained(model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    return model, tokenizer
-
-
-model, tokenizer = get_model_and_tokenizer("ghazikhanihamed/TooT-PLM-P2S")
-model.eval()
-
 # Load dataset
 train_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_train.csv")
 test_df = pd.read_csv("./dataset/ionchannels_membraneproteins_imbalanced_test.csv")
@@ -61,8 +50,26 @@ train_texts, val_texts, train_labels, val_labels = train_test_split(
     train_texts, train_labels, test_size=0.1, stratify=train_labels, random_state=seed
 )
 
+# Compute sequence lengths
+sequence_lengths = [len(seq) for seq in train_texts]
+# Get the 99th percentile of sequence lengths
+max_length_99 = int(np.percentile(sequence_lengths, 99))
+
+
 # As your sequence lengths can be different from the previous dataset, we calculate the max length again
-max_length = len(max(train_texts, key=lambda x: len(x)))
+# max_length = len(max(train_texts, key=lambda x: len(x)))
+max_length = max_length_99
+
+
+# Load model and tokenizer
+def get_model_and_tokenizer(model_name):
+    model = T5EncoderModel.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    return model, tokenizer
+
+
+model, tokenizer = get_model_and_tokenizer("ghazikhanihamed/TooT-PLM-P2S")
+model.eval()
 
 
 def preprocess_dataset(sequences, labels, max_length=None):
