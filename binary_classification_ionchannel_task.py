@@ -26,23 +26,26 @@ seed = 7
 set_seed(seed)
 
 
-def main():
-    model_type = "p2s_base"
-    experiment = f"ionchannel_classification_{model_type}"
-
+def load_wandb_config():
     # Load Weights & Biases Configuration
     with open("wandb_config.json") as f:
         data = json.load(f)
-    api_key = data["api_key"]
+    return data["api_key"]
+
+
+def setup_wandb(api_key):
+    # Setup Weights & Biases
     wandb_config = {"project": "plm_secondary_integration"}
     wandb.login(key=api_key)
+    wandb.init(project="plm_secondary_integration")
 
+
+def setup_accelerate():
     # Setup Accelerate
-    accelerator = accelerate.Accelerator(log_with=["wandb"])
+    return accelerate.Accelerator(log_with=["wandb"])
 
-    # Initialize wandb through accelerate
-    accelerator.init_trackers(project_name="plm_secondary_integration")
 
+def load_data():
     # Load dataset
     train_df = pd.read_csv(
         "./dataset/ionchannels_membraneproteins_imbalanced_train.csv"
@@ -58,6 +61,10 @@ def main():
         test_df["label"].apply(lambda x: 1 if x == "ionchannels" else 0).tolist()
     )
 
+    return train_texts, train_labels, test_texts, test_labels
+
+
+def combine_and_split_data(train_texts, train_labels, test_texts, test_labels):
     # Combine train and test sequences
     combined_texts = train_texts + test_texts
 
@@ -73,64 +80,68 @@ def main():
         random_state=seed,
     )
 
+    return train_texts, val_texts, train_labels, val_labels, max_length
+
+
+def load_model_and_tokenizer(model_name, accelerator):
     # Load model and tokenizer
-    def get_model_and_tokenizer(model_name):
-        model = T5EncoderModel.from_pretrained(model_name).to(accelerator.device).eval()
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        return model, tokenizer
+    model = T5EncoderModel.from_pretrained(model_name).to(accelerator.device).eval()
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    return accelerator.prepare(model), tokenizer
 
-    model, tokenizer = get_model_and_tokenizer("ghazikhanihamed/TooT-PLM-P2S")
-    model = accelerator.prepare(model)
 
-    def preprocess_dataset(sequences, labels, max_length=None):
-        splitted_sequences = [list(seq[:max_length]) for seq in sequences]
-        return splitted_sequences, labels
+def preprocess_dataset(sequences, labels, max_length=None):
+    splitted_sequences = [list(seq[:max_length]) for seq in sequences]
+    return splitted_sequences, labels
 
-    training_sequences, training_labels = preprocess_dataset(
-        train_texts, train_labels, max_length
-    )
-    validation_sequences, validation_labels = preprocess_dataset(
-        val_texts, val_labels, max_length
-    )
-    test_sequences, test_labels = preprocess_dataset(
-        test_texts, test_labels, max_length
-    )
 
-    # Embed dataset
-    def embed_dataset(model, sequences, dataset_name, shift_left=0, shift_right=-1):
-        embed_dir = f"./embeddings/{experiment}"
-        os.makedirs(embed_dir, exist_ok=True)
-        embed_file = os.path.join(embed_dir, f"{dataset_name}_embeddings.npy")
+def embed_dataset(
+    model,
+    sequences,
+    dataset_name,
+    tokenizer,
+    accelerator,
+    experiment,
+    shift_left=0,
+    shift_right=-1,
+):
+    embed_dir = f"./embeddings/{experiment}"
+    os.makedirs(embed_dir, exist_ok=True)
+    embed_file = os.path.join(embed_dir, f"{dataset_name}_embeddings.npy")
 
-        # Check if embeddings already exist
-        if os.path.exists(embed_file):
-            accelerator.print(f"Loading {dataset_name} embeddings from disk...")
-            return np.load(embed_file, allow_pickle=True)
+    # Check if embeddings already exist
+    if os.path.exists(embed_file):
+        accelerator.print(f"Loading {dataset_name} embeddings from disk...")
+        return np.load(embed_file, allow_pickle=True)
 
-        inputs_embedding = []
-        with torch.no_grad():
-            for sample in tqdm(sequences):
-                ids = tokenizer.batch_encode_plus(
-                    [sample],
-                    add_special_tokens=True,
-                    padding=True,
-                    is_split_into_words=True,
-                    return_tensors="pt",
-                )
-                embedding = model(input_ids=ids["input_ids"])[0]
-                embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
-                inputs_embedding.append(embedding)
+    inputs_embedding = []
+    with torch.no_grad():
+        for sample in tqdm(sequences):
+            ids = tokenizer.batch_encode_plus(
+                [sample],
+                add_special_tokens=True,
+                padding=True,
+                is_split_into_words=True,
+                return_tensors="pt",
+            )
+            ids = {k: v.to(accelerator.device) for k, v in ids.items()}
+            embedding = model(input_ids=ids["input_ids"])[0]
+            embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
+            inputs_embedding.append(embedding)
 
-        accelerator.print(f"Saving {dataset_name} embeddings to disk...")
-        np.save(embed_file, inputs_embedding)
-        return inputs_embedding
+    accelerator.print(f"Saving {dataset_name} embeddings to disk...")
+    np.save(embed_file, inputs_embedding)
+    return inputs_embedding
 
-    with accelerator.main_process_first():
-        training_embeddings = embed_dataset(model, training_sequences, "training")
-        validation_embeddings = embed_dataset(model, validation_sequences, "validation")
-        test_embeddings = embed_dataset(model, test_sequences, "test")
 
-    # Define custom dataset class
+def create_datasets(
+    training_sequences,
+    validation_sequences,
+    test_sequences,
+    training_labels,
+    validation_labels,
+    test_labels,
+):
     class IonChannelDataset(Dataset):  # Renamed for clarity
         def __init__(self, sequences, labels):
             self.sequences = sequences
@@ -147,40 +158,97 @@ def main():
         def __len__(self):
             return len(self.sequences)
 
-    training_dataset = IonChannelDataset(training_embeddings, training_labels)
-    validation_dataset = IonChannelDataset(validation_embeddings, validation_labels)
-    test_dataset = IonChannelDataset(test_embeddings, test_labels)
+    training_dataset = IonChannelDataset(training_sequences, training_labels)
+    validation_dataset = IonChannelDataset(validation_sequences, validation_labels)
+    test_dataset = IonChannelDataset(test_sequences, test_labels)
 
-    def model_init(embed_dim):
-        hidden_dim = int(embed_dim / 2)
-        num_hidden_layers = 1  # Number of hidden layers in ConvBert.
-        nlayers = 1  # Number of ConvBert layers.
-        nhead = 4
-        dropout = 0.2
-        conv_kernel_size = 7
-        pooling = "max"  # available pooling methods ['avg', 'max']
-        downstream_model = ankh.ConvBertForBinaryClassification(
-            input_dim=embed_dim,
-            nhead=nhead,
-            hidden_dim=hidden_dim,
-            num_hidden_layers=num_hidden_layers,
-            num_layers=nlayers,
-            kernel_size=conv_kernel_size,
-            dropout=dropout,
-            pooling=pooling,
-        )
-        return downstream_model
+    return training_dataset, validation_dataset, test_dataset
 
-    def compute_metrics(p: EvalPrediction):
-        preds = (torch.sigmoid(torch.tensor(p.predictions)).numpy() > 0.5).tolist()
-        labels = p.label_ids.tolist()
-        return {
-            "accuracy": metrics.accuracy_score(labels, preds),
-            "precision": metrics.precision_score(labels, preds),
-            "recall": metrics.recall_score(labels, preds),
-            "f1": metrics.f1_score(labels, preds),
-            "mcc": metrics.matthews_corrcoef(labels, preds),
-        }
+
+def model_init(embed_dim):
+    hidden_dim = int(embed_dim / 2)
+    num_hidden_layers = 1
+    nlayers = 1
+    nhead = 4
+    dropout = 0.2
+    conv_kernel_size = 7
+    pooling = "max"
+    downstream_model = ankh.ConvBertForBinaryClassification(
+        input_dim=embed_dim,
+        nhead=nhead,
+        hidden_dim=hidden_dim,
+        num_hidden_layers=num_hidden_layers,
+        num_layers=nlayers,
+        kernel_size=conv_kernel_size,
+        dropout=dropout,
+        pooling=pooling,
+    )
+    return downstream_model
+
+
+def compute_metrics(p: EvalPrediction):
+    preds = (torch.sigmoid(torch.tensor(p.predictions)).numpy() > 0.5).tolist()
+    labels = p.label_ids.tolist()
+    return {
+        "accuracy": metrics.accuracy_score(labels, preds),
+        "precision": metrics.precision_score(labels, preds),
+        "recall": metrics.recall_score(labels, preds),
+        "f1": metrics.f1_score(labels, preds),
+        "mcc": metrics.matthews_corrcoef(labels, preds),
+    }
+
+
+def main():
+    model_type = "p2s_base"
+    experiment = f"ionchannel_classification_{model_type}"
+
+    api_key = load_wandb_config()
+    setup_wandb(api_key)
+    accelerator = setup_accelerate()
+
+    train_texts, train_labels, test_texts, test_labels = load_data()
+    (
+        train_texts,
+        val_texts,
+        train_labels,
+        val_labels,
+        max_length,
+    ) = combine_and_split_data(train_texts, train_labels, test_texts, test_labels)
+
+    model, tokenizer = load_model_and_tokenizer(
+        "ghazikhanihamed/TooT-PLM-P2S", accelerator
+    )
+
+    training_sequences, training_labels = preprocess_dataset(
+        train_texts, train_labels, max_length
+    )
+    validation_sequences, validation_labels = preprocess_dataset(
+        val_texts, val_labels, max_length
+    )
+    test_sequences, test_labels = preprocess_dataset(
+        test_texts, test_labels, max_length
+    )
+
+    training_embeddings = embed_dataset(
+        model, training_sequences, "training", tokenizer, accelerator, experiment
+    )
+    validation_embeddings = embed_dataset(
+        model, validation_sequences, "validation", tokenizer, accelerator, experiment
+    )
+    test_embeddings = embed_dataset(
+        model, test_sequences, "test", tokenizer, accelerator, experiment
+    )
+
+    training_dataset, validation_dataset, test_dataset = create_datasets(
+        training_embeddings,
+        validation_embeddings,
+        test_embeddings,
+        training_labels,
+        validation_labels,
+        test_labels,
+    )
+
+    model_embed_dim = 768
 
     training_args = TrainingArguments(
         output_dir=f"./results_{experiment}",
@@ -205,9 +273,9 @@ def main():
         greater_is_better=True,
         save_strategy="epoch",
         report_to="wandb",
+        hub_token="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",
+        hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
     )
-
-    model_embed_dim = 768  # Embedding dimension for ankh large.
 
     # Initialize Trainer
     trainer = Trainer(
