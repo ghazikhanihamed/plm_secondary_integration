@@ -46,19 +46,16 @@ train_labels = (
 test_texts = test_df["sequence"].tolist()
 test_labels = test_df["label"].apply(lambda x: 1 if x == "ionchannels" else 0).tolist()
 
+# Combine train and test sequences
+combined_texts = train_texts + test_texts
+
+# Compute the max_length using the combined sequences
+sequence_lengths = [len(seq) for seq in combined_texts]
+max_length = int(np.percentile(sequence_lengths, 95))
+
 train_texts, val_texts, train_labels, val_labels = train_test_split(
     train_texts, train_labels, test_size=0.1, stratify=train_labels, random_state=seed
 )
-
-# Compute sequence lengths
-sequence_lengths = [len(seq) for seq in train_texts]
-# Get the 99th percentile of sequence lengths
-max_length_99 = int(np.percentile(sequence_lengths, 99))
-
-
-# As your sequence lengths can be different from the previous dataset, we calculate the max length again
-# max_length = len(max(train_texts, key=lambda x: len(x)))
-max_length = max_length_99
 
 
 # Load model and tokenizer
