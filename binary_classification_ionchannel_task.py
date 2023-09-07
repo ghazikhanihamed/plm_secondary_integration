@@ -107,12 +107,12 @@ def embed_dataset(
 ):
     embed_dir = f"./embeddings/{experiment}"
     os.makedirs(embed_dir, exist_ok=True)
-    embed_file = os.path.join(embed_dir, f"{dataset_name}_embeddings.npy")
+    embed_file = os.path.join(embed_dir, f"{dataset_name}_embeddings.pt")  # Use .pt for PyTorch tensor
 
     # Check if embeddings already exist
     if os.path.exists(embed_file):
         accelerator.print(f"Loading {dataset_name} embeddings from disk...")
-        return np.load(embed_file, allow_pickle=True)
+        return torch.load(embed_file)  # Load using torch.load
 
     inputs_embedding = []
     with torch.no_grad():
@@ -126,12 +126,13 @@ def embed_dataset(
             )
             ids = {k: v.to(accelerator.device) for k, v in ids.items()}
             embedding = model(input_ids=ids["input_ids"])[0]
-            embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
+            embedding = embedding[0].detach().cpu()[shift_left:shift_right]
             inputs_embedding.append(embedding)
 
     accelerator.print(f"Saving {dataset_name} embeddings to disk...")
-    np.save(embed_file, inputs_embedding)
+    torch.save(inputs_embedding, embed_file)  # Save the list of tensors
     return inputs_embedding
+
 
 
 def create_datasets(
