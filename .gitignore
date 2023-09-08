@@ -168,3 +168,5 @@ results/
 .DS_Store
 
 .vscode
+
+embeddings/
