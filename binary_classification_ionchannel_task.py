@@ -1,7 +1,6 @@
 import torch
 import os
 import numpy as np
-import random
 import ankh
 import wandb
 import json
@@ -107,7 +106,9 @@ def embed_dataset(
 ):
     embed_dir = f"./embeddings/{experiment}"
     os.makedirs(embed_dir, exist_ok=True)
-    embed_file = os.path.join(embed_dir, f"{dataset_name}_embeddings.pt")  # Use .pt for PyTorch tensor
+    embed_file = os.path.join(
+        embed_dir, f"{dataset_name}_embeddings.pt"
+    )  # Use .pt for PyTorch tensor
 
     # Check if embeddings already exist
     if os.path.exists(embed_file):
@@ -134,7 +135,6 @@ def embed_dataset(
     return inputs_embedding
 
 
-
 def create_datasets(
     training_sequences,
     validation_sequences,
@@ -152,7 +152,7 @@ def create_datasets(
             embedding = self.sequences[idx]
             label = self.labels[idx]
             return {
-                "embed": torch.tensor(embedding),
+                "embed": embedding.clone().detach(),
                 "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
             }
 
@@ -200,7 +200,7 @@ def compute_metrics(p: EvalPrediction):
 
 
 def main():
-    model_type = "p2s_base"
+    model_type = "ankh_base"
     experiment = f"ionchannel_classification_{model_type}"
 
     api_key = load_wandb_config()
@@ -216,9 +216,7 @@ def main():
         max_length,
     ) = combine_and_split_data(train_texts, train_labels, test_texts, test_labels)
 
-    model, tokenizer = load_model_and_tokenizer(
-        "ghazikhanihamed/TooT-PLM-P2S", accelerator
-    )
+    model, tokenizer = load_model_and_tokenizer("ElnaggarLab/ankh-base", accelerator)
 
     training_sequences, training_labels = preprocess_dataset(
         train_texts, train_labels, max_length
@@ -274,8 +272,9 @@ def main():
         greater_is_better=True,
         save_strategy="epoch",
         report_to="wandb",
-        hub_token="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",
-        hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
+        ddp_find_unused_parameters=False,
+        # hub_token="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",
+        # hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
     )
 
     # Initialize Trainer
