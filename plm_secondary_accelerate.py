@@ -2,7 +2,7 @@ from transformers import (
     T5ForConditionalGeneration,
     AutoTokenizer,
     TrainingArguments,
-    Trainer,
+    Seq2SeqTrainer,
 )
 from datasets import load_dataset, concatenate_datasets
 from sklearn.model_selection import train_test_split
@@ -199,7 +199,7 @@ training_args = TrainingArguments(
 )
 
 # Initialize Trainer
-trainer = Trainer(
+trainer = Seq2SeqTrainer(
     model=model,
     args=training_args,
     compute_metrics=compute_metrics,
