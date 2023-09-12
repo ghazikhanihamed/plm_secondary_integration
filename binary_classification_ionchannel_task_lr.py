@@ -118,7 +118,7 @@ def embed_dataset(
 
 
 def main():
-    model_type = "ankh_base"
+    model_type = "p2s_base"
     experiment = f"ionchannel_classification_{model_type}"
 
     api_key = load_wandb_config()
@@ -179,3 +179,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ankh_base:
+# Test Accuracy: 0.9516483516483516
+# Test Precision: 1.0
+# Test Recall: 0.26666666666666666
+# Test F1-Score: 0.4210526315789474
+# Test MCC: 0.5035296741372485
