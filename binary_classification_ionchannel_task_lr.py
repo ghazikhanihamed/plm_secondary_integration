@@ -84,23 +84,13 @@ def combine_and_split_data(train_texts, train_labels, test_texts, test_labels):
     return train_texts, val_texts, train_labels, val_labels, max_length
 
 
-def load_model_and_tokenizer(model_name, accelerator):
-    # Load model and tokenizer
-    model = T5EncoderModel.from_pretrained(model_name).to(accelerator.device).eval()
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    return accelerator.prepare(model), tokenizer
-
-
 def preprocess_dataset(sequences, labels, max_length=None):
     splitted_sequences = [list(seq[:max_length]) for seq in sequences]
     return splitted_sequences, labels
 
 
 def embed_dataset(
-    model,
-    sequences,
     dataset_name,
-    tokenizer,
     accelerator,
     experiment,
     shift_left=0,
@@ -120,27 +110,6 @@ def embed_dataset(
             tensor_data = tensor_data.cpu()
         return np.array(tensor_data.numpy())
 
-    inputs_embedding = []
-    with torch.no_grad():
-        for sample in tqdm(sequences):
-            ids = tokenizer.batch_encode_plus(
-                [sample],
-                add_special_tokens=True,
-                padding=True,
-                is_split_into_words=True,
-                return_tensors="pt",
-            )
-            ids = {k: v.to(accelerator.device) for k, v in ids.items()}
-            embedding = model(input_ids=ids["input_ids"])[0]
-            embedding = (
-                embedding[0].detach().cpu()[shift_left:shift_right].numpy().flatten()
-            )
-            inputs_embedding.append(embedding)
-
-    accelerator.print(f"Saving {dataset_name} embeddings to disk...")
-    torch.save(inputs_embedding, embed_file)  # Save the list of tensors
-    return np.array(inputs_embedding)
-
 
 def main():
     model_type = "ankh_base"
@@ -159,8 +128,6 @@ def main():
         max_length,
     ) = combine_and_split_data(train_texts, train_labels, test_texts, test_labels)
 
-    model, tokenizer = load_model_and_tokenizer("ElnaggarLab/ankh-base", accelerator)
-
     training_sequences, training_labels = preprocess_dataset(
         train_texts, train_labels, max_length
     )
@@ -171,12 +138,8 @@ def main():
         test_texts, test_labels, max_length
     )
 
-    training_embeddings = embed_dataset(
-        model, training_sequences, "training", tokenizer, accelerator, experiment
-    )
-    validation_embeddings = embed_dataset(
-        model, validation_sequences, "validation", tokenizer, accelerator, experiment
-    )
+    training_embeddings = embed_dataset("training", accelerator, experiment)
+    validation_embeddings = embed_dataset("validation", accelerator, experiment)
 
     # Combine training and validation embeddings
     combined_embeddings = np.vstack((training_embeddings, validation_embeddings))
@@ -184,9 +147,7 @@ def main():
     # Combine training and validation labels
     combined_labels = training_labels + validation_labels
 
-    test_embeddings = embed_dataset(
-        model, test_sequences, "test", tokenizer, accelerator, experiment
-    )
+    test_embeddings = embed_dataset("test", accelerator, experiment)
 
     # Initialize and train
     lr_model = LogisticRegression(random_state=1)
