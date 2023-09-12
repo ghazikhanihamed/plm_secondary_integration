@@ -105,7 +105,13 @@ def embed_dataset(
     # Check if embeddings already exist
     if os.path.exists(embed_file):
         accelerator.print(f"Loading {dataset_name} embeddings from disk...")
-        tensor_data = torch.load(embed_file)
+        tensor_data_list = torch.load(embed_file)
+
+        # Compute mean pooling for each sequence in tensor_data_list
+        mean_pooled_data_list = [torch.mean(seq, dim=0) for seq in tensor_data_list]
+
+        tensor_data = torch.stack(mean_pooled_data_list, dim=0)
+
         if tensor_data.is_cuda:  # Ensure the tensor is on CPU
             tensor_data = tensor_data.cpu()
         return np.array(tensor_data.numpy())
@@ -148,11 +154,6 @@ def main():
     combined_labels = training_labels + validation_labels
 
     test_embeddings = embed_dataset("test", accelerator, experiment)
-
-    if np.isnan(combined_embeddings).any():
-        print("There are NaN values in the embeddings.")
-    else:
-        print("No NaN values found.")
 
     # Initialize and train
     lr_model = LogisticRegression(random_state=1)
