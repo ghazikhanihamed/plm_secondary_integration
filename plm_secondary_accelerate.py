@@ -32,7 +32,7 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)],
 )
 
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-base")
+tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-base", use_fast=True)
 
 # load the dataset
 dataset1 = load_dataset(
@@ -96,7 +96,7 @@ def preprocess_data(examples):
     sequences = [list("".join(seq.split())) for seq in sequences]
     labels = [list("".join(label.split())) for label in labels]
 
-    print("Max length: ", max_length)
+    # print("Max length: ", max_length)
 
     # encode sequences
     inputs = tokenizer(
@@ -172,8 +172,8 @@ experiment = "p2s"
 training_args = Seq2SeqTrainingArguments(
     output_dir=f"./results_{experiment}",
     num_train_epochs=20,
-    per_device_train_batch_size=2,
-    per_device_eval_batch_size=2,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     warmup_steps=1000,
     learning_rate=1e-03,
     logging_dir=f"./logs_{experiment}",
@@ -181,7 +181,7 @@ training_args = Seq2SeqTrainingArguments(
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=2,
+    gradient_accumulation_steps=1,
     fp16=False,
     fp16_opt_level="02",
     seed=7,
@@ -195,6 +195,7 @@ training_args = Seq2SeqTrainingArguments(
     weight_decay=1e-5,
     hub_token="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",
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
+    ddp_find_unused_parameters=False,
 )
 
 # Initialize Trainer
