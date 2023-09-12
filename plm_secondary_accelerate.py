@@ -5,7 +5,7 @@ from transformers import (
     Trainer,
 )
 from datasets import load_dataset, concatenate_datasets
-from datasets import train_test_split
+from sklearn.model_selection import train_test_split
 import logging
 import torch
 import numpy as np
