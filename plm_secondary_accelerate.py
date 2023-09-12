@@ -5,7 +5,6 @@ from transformers import (
     Seq2SeqTrainer,
 )
 from datasets import load_dataset, concatenate_datasets
-from sklearn.model_selection import train_test_split
 import logging
 import torch
 import numpy as np
