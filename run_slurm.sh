@@ -4,8 +4,8 @@
 #SBATCH --mem=128G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=10gb:2
-#SBATCH -w virya3
+#SBATCH --gpus=10gb:4
+#SBATCH -w virya4
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hamed.ghazikhani@gmail.com
 
@@ -22,3 +22,7 @@ accelerate launch --config_file /home/h_ghazik/.cache/huggingface/accelerate/def
 
 conda deactivate
 module purge
+
+
+# srun --account=h_ghazik -w virya4 -t 24:00:00 --mem=128G --gpus=10gb:4 --pty /bin/zsh
+# ~/plm_secondary_integration/ds_config_p2s.json
