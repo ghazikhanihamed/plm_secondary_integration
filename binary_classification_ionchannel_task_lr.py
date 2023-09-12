@@ -1,17 +1,10 @@
 import torch
 import os
 import numpy as np
-import ankh
 import wandb
 import json
-from functools import partial
 from tqdm.auto import tqdm
-from sklearn import metrics
-from torch.utils.data import Dataset
 from transformers import (
-    Trainer,
-    TrainingArguments,
-    EvalPrediction,
     AutoTokenizer,
     T5EncoderModel,
     set_seed,
@@ -19,6 +12,15 @@ from transformers import (
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import accelerate
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    matthews_corrcoef,
+)
+
 
 # Set seed for reproducibility
 seed = 7
@@ -104,7 +106,7 @@ def embed_dataset(
     shift_left=0,
     shift_right=-1,
 ):
-    embed_dir = f"./embeddings/{experiment}"
+    embed_dir = f"../embeddings/{experiment}"
     os.makedirs(embed_dir, exist_ok=True)
     embed_file = os.path.join(
         embed_dir, f"{dataset_name}_embeddings.pt"
@@ -113,7 +115,10 @@ def embed_dataset(
     # Check if embeddings already exist
     if os.path.exists(embed_file):
         accelerator.print(f"Loading {dataset_name} embeddings from disk...")
-        return torch.load(embed_file)  # Load using torch.load
+        tensor_data = torch.load(embed_file)
+        if tensor_data.is_cuda:  # Ensure the tensor is on CPU
+            tensor_data = tensor_data.cpu()
+        return np.array(tensor_data.numpy())
 
     inputs_embedding = []
     with torch.no_grad():
@@ -127,76 +132,14 @@ def embed_dataset(
             )
             ids = {k: v.to(accelerator.device) for k, v in ids.items()}
             embedding = model(input_ids=ids["input_ids"])[0]
-            embedding = embedding[0].detach().cpu()[shift_left:shift_right]
+            embedding = (
+                embedding[0].detach().cpu()[shift_left:shift_right].numpy().flatten()
+            )
             inputs_embedding.append(embedding)
 
     accelerator.print(f"Saving {dataset_name} embeddings to disk...")
     torch.save(inputs_embedding, embed_file)  # Save the list of tensors
-    return inputs_embedding
-
-
-def create_datasets(
-    training_sequences,
-    validation_sequences,
-    test_sequences,
-    training_labels,
-    validation_labels,
-    test_labels,
-):
-    class IonChannelDataset(Dataset):  # Renamed for clarity
-        def __init__(self, sequences, labels):
-            self.sequences = sequences
-            self.labels = labels
-
-        def __getitem__(self, idx):
-            embedding = self.sequences[idx]
-            label = self.labels[idx]
-            return {
-                "embed": embedding.clone().detach(),
-                "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
-            }
-
-        def __len__(self):
-            return len(self.sequences)
-
-    training_dataset = IonChannelDataset(training_sequences, training_labels)
-    validation_dataset = IonChannelDataset(validation_sequences, validation_labels)
-    test_dataset = IonChannelDataset(test_sequences, test_labels)
-
-    return training_dataset, validation_dataset, test_dataset
-
-
-def model_init(embed_dim):
-    hidden_dim = int(embed_dim / 2)
-    num_hidden_layers = 1
-    nlayers = 1
-    nhead = 4
-    dropout = 0.2
-    conv_kernel_size = 7
-    pooling = "max"
-    downstream_model = ankh.ConvBertForBinaryClassification(
-        input_dim=embed_dim,
-        nhead=nhead,
-        hidden_dim=hidden_dim,
-        num_hidden_layers=num_hidden_layers,
-        num_layers=nlayers,
-        kernel_size=conv_kernel_size,
-        dropout=dropout,
-        pooling=pooling,
-    )
-    return downstream_model
-
-
-def compute_metrics(p: EvalPrediction):
-    preds = (torch.sigmoid(torch.tensor(p.predictions)).numpy() > 0.5).tolist()
-    labels = p.label_ids.tolist()
-    return {
-        "accuracy": metrics.accuracy_score(labels, preds),
-        "precision": metrics.precision_score(labels, preds),
-        "recall": metrics.recall_score(labels, preds),
-        "f1": metrics.f1_score(labels, preds),
-        "mcc": metrics.matthews_corrcoef(labels, preds),
-    }
+    return np.array(inputs_embedding)
 
 
 def main():
@@ -234,67 +177,37 @@ def main():
     validation_embeddings = embed_dataset(
         model, validation_sequences, "validation", tokenizer, accelerator, experiment
     )
+
+    # Combine training and validation embeddings
+    combined_embeddings = np.vstack((training_embeddings, validation_embeddings))
+
+    # Combine training and validation labels
+    combined_labels = training_labels + validation_labels
+
     test_embeddings = embed_dataset(
         model, test_sequences, "test", tokenizer, accelerator, experiment
     )
 
-    training_dataset, validation_dataset, test_dataset = create_datasets(
-        training_embeddings,
-        validation_embeddings,
-        test_embeddings,
-        training_labels,
-        validation_labels,
-        test_labels,
-    )
+    # Initialize and train
+    lr_model = LogisticRegression(random_state=1)
+    lr_model.fit(combined_embeddings, combined_labels)
 
-    model_embed_dim = 768
+    # Predict
+    test_preds = lr_model.predict(test_embeddings)
 
-    training_args = TrainingArguments(
-        output_dir=f"./results_{experiment}",
-        num_train_epochs=10,
-        per_device_train_batch_size=1,
-        per_device_eval_batch_size=1,
-        warmup_steps=1000,
-        learning_rate=1e-03,
-        weight_decay=0.0,
-        logging_dir=f"./logs_{experiment}",
-        logging_steps=200,
-        do_train=True,
-        do_eval=True,
-        evaluation_strategy="epoch",
-        gradient_accumulation_steps=4,
-        fp16=False,
-        fp16_opt_level="02",
-        run_name=experiment,
-        seed=seed,
-        load_best_model_at_end=True,
-        metric_for_best_model="eval_mcc",
-        greater_is_better=True,
-        save_strategy="epoch",
-        report_to="wandb",
-        ddp_find_unused_parameters=False,
-        # hub_token="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",
-        # hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
-    )
+    # Calculate metrics for test set
+    test_accuracy = accuracy_score(test_labels, test_preds)
+    test_precision = precision_score(test_labels, test_preds)
+    test_recall = recall_score(test_labels, test_preds)
+    test_f1 = f1_score(test_labels, test_preds)
+    test_mcc = matthews_corrcoef(test_labels, test_preds)
 
-    # Initialize Trainer
-    trainer = Trainer(
-        model_init=partial(model_init, embed_dim=model_embed_dim),
-        args=training_args,
-        train_dataset=training_dataset,
-        eval_dataset=validation_dataset,
-        compute_metrics=compute_metrics,
-    )
-
-    # Train the model
-    trainer.train()
-
-    # Save the best model
-    trainer.save_model(f"./best_model_{experiment}")
-
-    # Make predictions and log metrics
-    predictions, labels, metrics_output = trainer.predict(test_dataset)
-    print("Evaluation metrics: ", metrics_output)
+    # Print or log your metrics as needed
+    print(f"Test Accuracy: {test_accuracy}")
+    print(f"Test Precision: {test_precision}")
+    print(f"Test Recall: {test_recall}")
+    print(f"Test F1-Score: {test_f1}")
+    print(f"Test MCC: {test_mcc}")
 
 
 if __name__ == "__main__":
