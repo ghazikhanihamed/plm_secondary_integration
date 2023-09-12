@@ -57,7 +57,7 @@ dataset5 = load_dataset(
 train_dataset = concatenate_datasets([dataset1["train"], dataset4["CB513"]])
 
 # Split the concatenated dataset into training and validation sets
-split = train_test_split(train_dataset, test_size=0.1, seed=7)
+split = train_test_split(train_dataset, test_size=0.1, random_state=7)
 
 train_dataset = split["train"]
 validation_dataset = split["test"]
