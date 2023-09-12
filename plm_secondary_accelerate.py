@@ -5,6 +5,7 @@ from transformers import (
     Trainer,
 )
 from datasets import load_dataset, concatenate_datasets
+from datasets import train_test_split
 import logging
 import torch
 import numpy as np
@@ -55,8 +56,14 @@ dataset5 = load_dataset(
 # concatenate dataset1 and dataset4
 train_dataset = concatenate_datasets([dataset1["train"], dataset4["CB513"]])
 
+# Split the concatenated dataset into training and validation sets
+split = train_test_split(train_dataset, test_size=0.1, seed=7)
+
+train_dataset = split["train"]
+validation_dataset = split["test"]
+
 # The validation set will be dataset5
-validation_dataset = dataset5["TS115"]
+test_dataset3 = dataset5["TS115"]
 
 # Two separate test datasets
 test_dataset1 = dataset2["CASP12"]
@@ -166,8 +173,8 @@ experiment = "p2s"
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
     num_train_epochs=20,
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
     warmup_steps=1000,
     learning_rate=1e-03,
     weight_decay=0.0,
@@ -176,7 +183,7 @@ training_args = TrainingArguments(
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=4,
+    gradient_accumulation_steps=2,
     fp16=False,
     fp16_opt_level="02",
     seed=7,
@@ -226,6 +233,14 @@ test_dataset2 = test_dataset2.map(
     remove_columns=test_dataset2.column_names,
     desc="Running tokenizer on dataset for test",
 )
+
+test_dataset3 = test_dataset3.map(
+    preprocess_data,
+    batched=True,
+    remove_columns=test_dataset3.column_names,
+    desc="Running tokenizer on dataset for test",
+)
+
 # Set test dataset1 as evaluation dataset and evaluate
 trainer.eval_dataset = test_dataset1
 metrics_test1 = trainer.evaluate()
@@ -234,5 +249,9 @@ metrics_test1 = trainer.evaluate()
 trainer.eval_dataset = test_dataset2
 metrics_test2 = trainer.evaluate()
 
+trainer.eval_dataset = test_dataset3
+metrics_test3 = trainer.evaluate()
+
 print("Evaluation results on test set CASP12: ", metrics_test1)
 print("Evaluation results on test set CASP14: ", metrics_test2)
+print("Evaluation results on test set TS115: ", metrics_test3)

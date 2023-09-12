@@ -18,7 +18,7 @@ module load cuda/11.7.0
 source /usr/local/pkg/anaconda/v3.2023.03/root/etc/profile.d/conda.sh
 conda activate py39
 
-accelerate launch --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml --multi_gpu binary_classification_ionchannel_task.py
+accelerate launch --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml --multi_gpu plm_secondary_accelerate.py
 
 conda deactivate
 module purge
