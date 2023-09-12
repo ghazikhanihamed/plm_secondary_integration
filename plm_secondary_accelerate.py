@@ -195,7 +195,6 @@ training_args = Seq2SeqTrainingArguments(
     weight_decay=1e-5,
     hub_token="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",
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
-    ddp_find_unused_parameters=False,
 )
 
 # Initialize Trainer
