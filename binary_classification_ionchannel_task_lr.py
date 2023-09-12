@@ -96,7 +96,7 @@ def embed_dataset(
     shift_left=0,
     shift_right=-1,
 ):
-    embed_dir = f"../embeddings/{experiment}"
+    embed_dir = f"./embeddings/{experiment}"
     os.makedirs(embed_dir, exist_ok=True)
     embed_file = os.path.join(
         embed_dir, f"{dataset_name}_embeddings.pt"
@@ -148,6 +148,11 @@ def main():
     combined_labels = training_labels + validation_labels
 
     test_embeddings = embed_dataset("test", accelerator, experiment)
+
+    if np.isnan(combined_embeddings).any():
+        print("There are NaN values in the embeddings.")
+    else:
+        print("No NaN values found.")
 
     # Initialize and train
     lr_model = LogisticRegression(random_state=1)
