@@ -1,8 +1,8 @@
 from transformers import (
     T5ForConditionalGeneration,
     AutoTokenizer,
-    Seq2SeqTrainingArguments,
-    Seq2SeqTrainer,
+    TrainingArguments,
+    Trainer,
 )
 from datasets import load_dataset, concatenate_datasets
 import logging
@@ -169,7 +169,7 @@ model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 experiment = "p2s"
 
 # Prepare training args
-training_args = Seq2SeqTrainingArguments(
+training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
     num_train_epochs=20,
     per_device_train_batch_size=4,
@@ -198,7 +198,7 @@ training_args = Seq2SeqTrainingArguments(
 )
 
 # Initialize Trainer
-trainer = Seq2SeqTrainer(
+trainer = Trainer(
     model=model,
     args=training_args,
     compute_metrics=compute_metrics,

@@ -26,3 +26,4 @@ module purge
 
 # srun --account=h_ghazik -w virya4 -t 24:00:00 --mem=128G --gpus=10gb:4 --pty /bin/zsh
 # ~/plm_secondary_integration/ds_config_p2s.json
+# accelerate launch --multi_gpu plm_secondary_accelerate.py
