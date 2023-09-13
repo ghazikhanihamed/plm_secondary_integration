@@ -211,7 +211,7 @@ trainer = Trainer(
 trainer.train()
 
 # We save the best model in the folder "best_model"
-trainer.save_model("./best_model")
+trainer.save_model(f"./best_model_{experiment}")
 
 # Push model to hub
 trainer.push_to_hub(commit_message="PLM-Secondary-Structure-Generation")
