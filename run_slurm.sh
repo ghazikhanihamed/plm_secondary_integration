@@ -5,7 +5,7 @@
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=10gb:4
-#SBATCH -w virya3
+#SBATCH -w virya4
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hamed.ghazikhani@gmail.com
 
@@ -18,7 +18,9 @@ module load cuda/11.7.0
 source /usr/local/pkg/anaconda/v3.2023.03/root/etc/profile.d/conda.sh
 conda activate py39
 
-accelerate launch --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml --multi_gpu plm_secondary_accelerate.py
+nvidia-smi
+
+accelerate launch --multi_gpu plm_secondary_accelerate.py
 
 conda deactivate
 module purge
@@ -27,3 +29,4 @@ module purge
 # srun --account=h_ghazik -w virya4 -t 24:00:00 --mem=128G --gpus=10gb:4 --pty /bin/zsh
 # ~/plm_secondary_integration/ds_config_p2s.json
 # accelerate launch --multi_gpu plm_secondary_accelerate.py
+# --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml
