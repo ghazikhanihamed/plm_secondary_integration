@@ -1,5 +1,7 @@
 #!/bin/bash -l
 
+#SBATCH -A=h_ghazik
+#SBATCH --mem=64G
 #SBATCH --job-name=p2s        # name
 #SBATCH --nodes=1                    # nodes
 #SBATCH --ntasks-per-node=1          # crucial - only 1 task per dist per node!
@@ -7,8 +9,6 @@
 #SBATCH --gpus=4                     # number of gpus
 # #SBATCH --time 20:00:00              # maximum execution time (HH:MM:SS)
 #SBATCH --output=%x-%j.out           # output file name
-#SBATCH --mem=128G
-#SBATCH -A=h_ghazik
 
 export GPUS_PER_NODE=4
 export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
