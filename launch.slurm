@@ -14,6 +14,8 @@
 module load python/3.9.6
 module load anaconda/3.2023.03
 module load cuda/12.1.1
+
+source /usr/local/pkg/anaconda/v3.2023.03/root/etc/profile.d/conda.sh
 conda activate py39
 
 nvidia-smi
