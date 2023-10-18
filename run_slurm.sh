@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --account=h_ghazik
+#SBATCH -A=h_ghazik
 #SBATCH --mem=128G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
