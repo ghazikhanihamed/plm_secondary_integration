@@ -10,6 +10,7 @@
 #SBATCH --time 24:00:00              # maximum execution time (HH:MM:SS)
 #SBATCH --output=%x-%j.out           # output file name
 #SBATCH --partition=all  # or migs or phys, based on your need
+#SBATCH -w virya3
 
 module load python/3.9.6
 module load anaconda/3.2023.03
@@ -20,6 +21,7 @@ conda activate py39
 
 nvidia-smi
 
+export CUDA_LAUNCH_BLOCKING=1
 export GPUS_PER_NODE=2
 export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 export MASTER_PORT=9901
