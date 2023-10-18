@@ -5,7 +5,7 @@
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=4
-#SBATCH -w virya4
+#SBATCH -w virya3
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=hamed.ghazikhani@gmail.com
 
@@ -14,13 +14,12 @@ export TRANSFORMERS_CACHE=~/tmp
 
 module load python/3.9.6
 module load anaconda/3.2023.03
-module load cuda/11.7.0
-source /usr/local/pkg/anaconda/v3.2023.03/root/etc/profile.d/conda.sh
+module load cuda/12.1.1
 conda activate py39
 
 nvidia-smi
 
-accelerate launch --multi_gpu plm_secondary_accelerate.py
+accelerate launch plm_secondary_accelerate.py
 
 conda deactivate
 module purge
