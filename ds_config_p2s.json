@@ -14,7 +14,7 @@
     "params": {
       "last_batch_iteration": -1,
       "total_num_steps": "auto",
-      "warmup_min_lr": 1e-6,
+      "warmup_min_lr": 1e-7,
       "warmup_max_lr": "auto",
       "warmup_num_steps": "auto"
     }
@@ -27,17 +27,6 @@
     "reduce_scatter": true,
     "reduce_bucket_size": 5e8,
     "contiguous_gradients": true
-  },
-  "wandb": {
-    "enabled": true,
-    "team": "bioinformatics-group",
-    "group": "p2s_runs",
-    "project": "plm_secondary_integration"
-  },
-  "csv_monitor": {
-    "enabled": true,
-    "output_path": "output/ds_logs/",
-    "job_name": "TooT-PLM-P2T"
   },
   "gradient_accumulation_steps": "auto",
   "gradient_clipping": "auto",
