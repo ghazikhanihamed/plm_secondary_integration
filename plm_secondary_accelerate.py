@@ -171,7 +171,7 @@ experiment = "p2s"
 # Prepare training args
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=20,
+    num_train_epochs=10,
     per_device_train_batch_size=1,
     per_device_eval_batch_size=1,
     warmup_steps=1000,
@@ -192,7 +192,6 @@ training_args = TrainingArguments(
     remove_unused_columns=False,
     run_name="SS-Generation",
     report_to="wandb",
-    weight_decay=1e-5,
     hub_token="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",
     hub_model_id="ghazikhanihamed/TooT-PLM-P2S",
 )
