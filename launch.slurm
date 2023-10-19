@@ -1,16 +1,16 @@
 #!/bin/bash -l
 
 #SBATCH --account=h_ghazik
-#SBATCH --mem=64G
+#SBATCH --mem=128G
 #SBATCH --job-name=p2s               # name
 #SBATCH --nodes=1                    # nodes
 #SBATCH --ntasks-per-node=1          # crucial - only 1 task per dist per node!
 #SBATCH --cpus-per-task=10           # number of cores per tasks
-#SBATCH --gpus=2                     # number of gpus
+#SBATCH --gpus=4                     # number of gpus
 #SBATCH --time 24:00:00              # maximum execution time (HH:MM:SS)
 #SBATCH --output=%x-%j.out           # output file name
 #SBATCH --partition=all  # or migs or phys, based on your need
-#SBATCH -w virya3
+#SBATCH -w virya2
 
 module load python/3.9.6
 module load anaconda/3.2023.03
@@ -22,7 +22,7 @@ conda activate py39
 nvidia-smi
 
 export CUDA_LAUNCH_BLOCKING=1
-export GPUS_PER_NODE=2
+export GPUS_PER_NODE=4
 export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 export MASTER_PORT=9901
 

@@ -1,13 +1,11 @@
 #!/bin/bash -l
 
-#SBATCH -A=h_ghazik
+#SBATCH --account=h_ghazik
 #SBATCH --mem=128G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=4
-#SBATCH -w virya3
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user=hamed.ghazikhani@gmail.com
+#SBATCH -w virya2
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
