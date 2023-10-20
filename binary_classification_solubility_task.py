@@ -77,25 +77,6 @@ def load_data():
     )
 
 
-def combine_and_split_data(train_texts, train_labels, test_texts, test_labels):
-    # Combine train and test sequences
-    combined_texts = train_texts + test_texts
-
-    # Compute the max_length using the combined sequences
-    sequence_lengths = [len(seq) for seq in combined_texts]
-    max_length = int(np.percentile(sequence_lengths, 100))
-
-    train_texts, val_texts, train_labels, val_labels = train_test_split(
-        train_texts,
-        train_labels,
-        test_size=0.1,
-        stratify=train_labels,
-        random_state=seed,
-    )
-
-    return train_texts, val_texts, train_labels, val_labels, max_length
-
-
 def load_model_and_tokenizer(model_name):
     # Load model and tokenizer
     device = get_device()
@@ -104,7 +85,9 @@ def load_model_and_tokenizer(model_name):
     return model, tokenizer
 
 
-def preprocess_dataset(sequences, labels, max_length=None):
+def preprocess_dataset(training_sequences, sequences, labels, max_length=None):
+    if max_length is None:
+        max_length = len(max(training_sequences, key=lambda x: len(x)))
     splitted_sequences = [list(seq[:max_length]) for seq in sequences]
     return splitted_sequences, labels
 
@@ -222,25 +205,25 @@ def main():
     setup_wandb(api_key)
     # accelerator = setup_accelerate()
 
-    train_texts, train_labels, test_texts, test_labels = load_data()
     (
         train_texts,
-        val_texts,
         train_labels,
+        val_texts,
         val_labels,
-        max_length,
-    ) = combine_and_split_data(train_texts, train_labels, test_texts, test_labels)
+        test_texts,
+        test_labels,
+    ) = load_data()
 
     model, tokenizer = load_model_and_tokenizer("ghazikhanihamed/TooT-PLM-P2S")
 
     training_sequences, training_labels = preprocess_dataset(
-        train_texts, train_labels, max_length
+        train_texts, train_texts, train_labels
     )
     validation_sequences, validation_labels = preprocess_dataset(
-        val_texts, val_labels, max_length
+        train_texts, val_texts, val_labels
     )
     test_sequences, test_labels = preprocess_dataset(
-        test_texts, test_labels, max_length
+        train_texts, test_texts, test_labels
     )
 
     training_embeddings = embed_dataset(
