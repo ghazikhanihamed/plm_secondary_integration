@@ -17,6 +17,7 @@ from transformers import (
     TrainingArguments,
     EvalPrediction,
     AutoTokenizer,
+    T5Tokenizer,
     T5EncoderModel,
     set_seed,
 )
@@ -85,9 +86,9 @@ def load_model_and_tokenizer(model_name):
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     prostt5_model = T5EncoderModel.from_pretrained("Rostlab/ProstT5").to(device).eval()
-    prostt5_tokenizer = AutoTokenizer.from_pretrained(
+    prostt5_tokenizer = T5Tokenizer.from_pretrained(
         "Rostlab/ProstT5", do_lower_case=False
-    ).to(device)
+    )
     return model, tokenizer, prostt5_model, prostt5_tokenizer
 
 
@@ -104,10 +105,10 @@ def embed_dataset(
     dataset_name,
     tokenizer,
     experiment,
+    prostt5_model,
+    prostt5_tokenizer,
     shift_left=0,
     shift_right=-1,
-    prostt5_model=None,
-    prostt5_tokenizer=None,
 ):
     device = get_device()
     embed_dir = f"./embeddings/{experiment}"
@@ -132,20 +133,23 @@ def embed_dataset(
                 return_tensors="pt",
             ).to(device)
             # replace all rare/ambiguous amino acids by X
-            sample_prostt5 = re.sub(r"[UZOB]", "X", sample)
-            sample_prostt5 = "<AA2fold> " + " ".join(list(sample_prostt5))
+            sample = "".join(sample)
+            sample_prostt5 = " ".join(re.sub(r"[UZOB]", "X", sample))
+            sample_prostt5 = "<AA2fold> " + sample_prostt5
             ids_prostt5 = prostt5_tokenizer.batch_encode_plus(
                 [sample_prostt5],
                 add_special_tokens=True,
                 padding="longest",
                 return_tensors="pt",
             ).to(device)
+
             embedding_p2s = model(input_ids=ids_p2s["input_ids"])[0]
             embedding_prostt5 = prostt5_model(input_ids=ids_prostt5["input_ids"])[0]
             embedding_p2s = embedding_p2s[0].detach().cpu()[shift_left:shift_right]
             embedding_prostt5 = (
-                embedding_prostt5[0].detach().cpu()[shift_left:shift_right]
+                embedding_prostt5[0, 1:].detach().cpu()[shift_left:shift_right]
             )
+
             embedding = torch.cat((embedding_p2s, embedding_prostt5), dim=1)
             inputs_embedding.append(embedding)
 
