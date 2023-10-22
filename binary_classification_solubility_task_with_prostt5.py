@@ -132,12 +132,11 @@ def embed_dataset(
                 return_tensors="pt",
             ).to(device)
             # replace all rare/ambiguous amino acids by X
-            sample_prostt5 = "".join(list(re.sub(r"[UZOB]", "X", sample)))
+            sample_prostt5 = re.sub(r"[UZOB]", "X", sample)
             sample_prostt5 = "<AA2fold> " + " ".join(list(sample_prostt5))
             ids_prostt5 = prostt5_tokenizer.batch_encode_plus(
                 [sample_prostt5],
                 add_special_tokens=True,
-                padding=True,
                 padding="longest",
                 return_tensors="pt",
             ).to(device)
