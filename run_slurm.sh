@@ -4,7 +4,7 @@
 #SBATCH --mem=64G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=1
+#SBATCH --gpus=2
 #SBATCH -w virya2
 
 export TMPDIR=~/tmp
@@ -19,7 +19,7 @@ conda activate py39
 
 nvidia-smi
 
-python binary_classification_solubility_task.py
+python plm_secondary_accelerate.py
 
 conda deactivate
 module purge
