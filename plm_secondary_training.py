@@ -92,10 +92,15 @@ def mask_secondary_structure(sequences, mask_prob=0.20, mask_token="<mask>"):
     return masked_sequences
 
 
-# Mask 15% of secondary structure sequences
-train_dataset[input_column_name] = mask_secondary_structure(
-    train_dataset[input_column_name]
-)
+# Mask 20% of secondary structure sequences
+def apply_mask(example):
+    example[input_column_name] = mask_secondary_structure([example[input_column_name]])[
+        0
+    ]
+    return example
+
+
+train_dataset = train_dataset.map(apply_mask)
 
 
 def preprocess_data(examples):
