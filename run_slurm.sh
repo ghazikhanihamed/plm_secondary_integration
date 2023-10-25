@@ -4,8 +4,8 @@
 #SBATCH --mem=64G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=4
-#SBATCH -w virya1
+#SBATCH --gpus=8
+#SBATCH -w virya2
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
@@ -35,7 +35,7 @@ module purge
 # speed
 # module load python/3.9.1/default
 # module load anaconda3/2023.03/default
-# module load cuda/11.8/default 
+# module load cuda/11.8/default
 
 # source /encs/pkg/anaconda3-2023.03/root/etc/profile.d/conda.csh
 # conda activate py3.9
