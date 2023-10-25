@@ -9,6 +9,7 @@ import logging
 import torch
 import numpy as np
 import sys
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 import wandb
 import json
@@ -149,6 +150,25 @@ valid_dataset = validation_dataset.map(
 )
 
 
+def compute_metrics(p):
+    # Flatten the predictions and labels, and remove padding tags
+    predictions = np.argmax(p.predictions, axis=2).flatten()
+    labels = p.label_ids.flatten()
+
+    # Remove padding (<pad>) token id, which is 0 in this case
+    mask = labels != tag2id["<pad>"]
+    predictions = predictions[mask]
+    labels = labels[mask]
+
+    # Compute metrics
+    accuracy = accuracy_score(labels, predictions)
+    precision = precision_score(labels, predictions, average="weighted")
+    recall = recall_score(labels, predictions, average="weighted")
+    f1 = f1_score(labels, predictions, average="weighted")
+
+    return {"accuracy": accuracy, "precision": precision, "recall": recall, "f1": f1}
+
+
 # Create the model and prepare it
 model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
@@ -169,10 +189,13 @@ training_args = TrainingArguments(
     evaluation_strategy="epoch",
     gradient_accumulation_steps=32,
     fp16=False,
-    fp16_opt_level="02",
+    fp16_opt_level="O2",
     seed=42,
     save_strategy="epoch",
     remove_unused_columns=False,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_f1",
+    greater_is_better=True,
     run_name="secondary_integration",
     report_to="wandb",
     hub_token="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",
@@ -185,6 +208,7 @@ trainer = Trainer(
     args=training_args,
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
+    compute_metrics=compute_metrics,
     tokenizer=tokenizer,
 )
 
