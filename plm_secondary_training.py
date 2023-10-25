@@ -73,6 +73,7 @@ unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in do
 
 # add padding tag
 unique_tags.add("<pad>")
+unique_tags.add("<mask>")
 
 
 tag2id = {tag: id for id, tag in enumerate(unique_tags)}
