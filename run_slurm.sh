@@ -4,8 +4,8 @@
 #SBATCH --mem=64G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=2
-#SBATCH -w virya2
+#SBATCH --gpus=8
+#SBATCH -w virya1
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
@@ -19,7 +19,7 @@ conda activate py39
 
 nvidia-smi
 
-python plm_secondary_accelerate.py
+accelerate launch plm_secondary_accelerate.py
 
 conda deactivate
 module purge

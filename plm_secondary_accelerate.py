@@ -164,27 +164,25 @@ def compute_metrics(eval_pred):
 
 
 # Create the model and prepare it
-model = T5ForConditionalGeneration.from_pretrained(
-    "ElnaggarLab/ankh-base", dropout_rate=0.1
-)
+model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
 experiment = "p2s"
 
 # Prepare training args
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=3,
+    num_train_epochs=5,
     per_device_train_batch_size=1,
     per_device_eval_batch_size=1,
-    warmup_steps=500,
-    learning_rate=1e-5,
+    warmup_steps=1000,
+    learning_rate=1e-4,
     weight_decay=1e-4,
     logging_dir=f"./logs_{experiment}",
     logging_steps=200,
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=8,
+    gradient_accumulation_steps=4,
     fp16=False,
     fp16_opt_level="02",
     seed=7,
