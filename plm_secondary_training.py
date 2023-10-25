@@ -71,50 +71,41 @@ max_length = 512
 # Consider each label as a tag for each token
 unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
 
-# add padding tag
+# add padding and masking tag
 unique_tags.add("<pad>")
-unique_tags.add("<mask>")
+unique_tags.add("<extra_id_0>")
 
 
 tag2id = {tag: id for id, tag in enumerate(unique_tags)}
 id2tag = {id: tag for tag, id in tag2id.items()}
 
 
-def mask_secondary_structure(sequences, mask_prob=0.20, mask_token="<mask>"):
+def mask_secondary_structure(sequences, mask_prob=0.20, mask_token="<extra_id_0>"):
     masked_sequences = []
-    for seq in sequences:
+    for seq in sequences:  # seq is a list of amino acids
         masked_seq = []
         for element in seq:
             if random.random() < mask_prob:
                 masked_seq.append(mask_token)
             else:
                 masked_seq.append(element)
-        masked_sequences.append("".join(masked_seq))
+        masked_sequences.append(masked_seq)
     return masked_sequences
 
 
-# Mask 20% of secondary structure sequences
-def apply_mask(example):
-    example[input_column_name] = mask_secondary_structure([example[input_column_name]])[
-        0
-    ]
-    return example
-
-
-train_dataset = train_dataset.map(apply_mask)
-
-
 def preprocess_data(examples):
-    # Original sequences, labels = examples["input"], examples["dssp3"]
     # Now focusing on secondary structure
     sequences = examples["dssp3"]
 
     # remove whitespace and split each sequence into list of secondary structure elements
     sequences = [list("".join(seq.split())) for seq in sequences]
 
+    # Apply masking to sequences (20% mask probability by default)
+    masked_sequences = mask_secondary_structure(sequences)
+
     # encode sequences
     inputs = tokenizer(
-        sequences,
+        masked_sequences,
         add_special_tokens=True,
         padding="max_length",
         max_length=max_length,
@@ -124,7 +115,7 @@ def preprocess_data(examples):
     )
 
     # This part remains same as labels now point to secondary structure elements
-    labels_encoded = [[tag2id[tag] for tag in seq] for seq in sequences]
+    labels_encoded = [[tag2id[tag] for tag in seq] for seq in masked_sequences]
 
     # Pad or truncate the labels to match the sequence length
     labels_encoded = [
