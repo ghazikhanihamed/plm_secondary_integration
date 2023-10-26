@@ -1,6 +1,10 @@
+import os
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 from transformers import (
     T5ForConditionalGeneration,
-    AutoTokenizer,
+    T5TokenizerFast,
     TrainingArguments,
     Trainer,
 )
@@ -8,12 +12,19 @@ from datasets import load_dataset, concatenate_datasets
 import logging
 import torch
 import numpy as np
-import sys
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from accelerate import Accelerator
 
 import wandb
 import json
 import random
+import transformers
+from accelerate.logging import get_logger
+from accelerate.utils import set_seed
+import datasets
+
+set_seed(42)
+
 
 # Load Weights & Biases Configuration
 with open("wandb_config.json") as f:
@@ -27,14 +38,25 @@ wandb_config = {
 
 wandb.login(key=api_key)
 
-# Setup logging
+accelerator = Accelerator()
+
+# Make one log on every process with the configuration for debugging.
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     datefmt="%m/%d/%Y %H:%M:%S",
-    handlers=[logging.StreamHandler(sys.stdout)],
+    level=logging.INFO,
 )
+logger = get_logger(__name__)
 
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-base", use_fast=True)
+logger.info(accelerator.state, main_process_only=False)
+if accelerator.is_local_main_process:
+    datasets.utils.logging.set_verbosity_warning()
+    transformers.utils.logging.set_verbosity_info()
+else:
+    datasets.utils.logging.set_verbosity_error()
+    transformers.utils.logging.set_verbosity_error()
+
+tokenizer = T5TokenizerFast.from_pretrained("ElnaggarLab/ankh-base", use_fast=True)
 
 # Load the datasets
 dataset1 = load_dataset(
@@ -58,7 +80,7 @@ dataset5 = load_dataset(
 all_datasets = concatenate_datasets([dataset1, dataset2, dataset3, dataset4, dataset5])
 
 # Split the concatenated dataset into training and validation sets
-splits = all_datasets.train_test_split(test_size=0.1, seed=42)
+splits = all_datasets.train_test_split(test_size=0.1)
 
 train_dataset = splits["train"]
 validation_dataset = splits["test"]
@@ -132,23 +154,20 @@ def preprocess_data(examples):
     }
 
 
-train_dataset = train_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=train_dataset.column_names,
-    desc="Running tokenizer on dataset for training",
-)
+with accelerator.main_process_first():
+    train_dataset = train_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=train_dataset.column_names,
+        desc="Running tokenizer on dataset for training",
+    )
 
-small_train_dataset = train_dataset.select(
-    range(100)
-)  # Change 100 to the number of samples you want
-
-valid_dataset = validation_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=validation_dataset.column_names,
-    desc="Running tokenizer on dataset for validation",
-)
+    valid_dataset = validation_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=validation_dataset.column_names,
+        desc="Running tokenizer on dataset for validation",
+    )
 
 
 def compute_metrics(p):
@@ -157,12 +176,12 @@ def compute_metrics(p):
     if isinstance(p.predictions, tuple):
         for i, pred in enumerate(p.predictions):
             argmax_pred = np.argmax(pred, axis=2).flatten()
-            print(f"Argmax of predictions[{i}]: {argmax_pred}")
+            # print(f"Argmax of predictions[{i}]: {argmax_pred}")
             # Here, decide what to do with argmax_pred. For instance:
             predictions = argmax_pred  # if you want to use the last one
     else:
         predictions = np.argmax(p.predictions, axis=2).flatten()
-        print("Argmax of predictions:", predictions)
+        # print("Argmax of predictions:", predictions)
 
     if predictions is None:
         raise ValueError("Predictions not computed.")
@@ -213,7 +232,6 @@ training_args = TrainingArguments(
     gradient_accumulation_steps=32,
     fp16=False,
     fp16_opt_level="O2",
-    seed=42,
     save_strategy="epoch",
     remove_unused_columns=False,
     load_best_model_at_end=True,
@@ -229,7 +247,7 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=small_train_dataset,
+    train_dataset=train_dataset,
     eval_dataset=valid_dataset,
     compute_metrics=compute_metrics,
     tokenizer=tokenizer,
