@@ -152,15 +152,19 @@ valid_dataset = validation_dataset.map(
 
 
 def compute_metrics(p):
+    predictions = None  # Initialize predictions
+    
     if isinstance(p.predictions, tuple):
         for i, pred in enumerate(p.predictions):
             argmax_pred = np.argmax(pred, axis=2).flatten()
             print(f"Argmax of predictions[{i}]: {argmax_pred}")
-            # Use argmax_pred for metrics here, if applicable
+            # Use argmax_pred for metrics, or set predictions = argmax_pred
     else:
         predictions = np.argmax(p.predictions, axis=2).flatten()
         print("Argmax of predictions:", predictions)
-        # Use predictions for metrics here
+
+    if predictions is None:
+        raise ValueError("Predictions not computed.")
 
     labels = p.label_ids.flatten()
 
