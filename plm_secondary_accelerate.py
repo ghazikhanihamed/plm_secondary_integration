@@ -3,6 +3,7 @@ from transformers import (
     AutoTokenizer,
     TrainingArguments,
     Trainer,
+    EarlyStoppingCallback,
 )
 from datasets import load_dataset, concatenate_datasets
 import logging
@@ -168,20 +169,30 @@ model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
 experiment = "p2s"
 
+# Compute total steps
+num_train_samples = len(train_dataset)
+batch_size = 2  # Replace with your actual batch size
+num_epochs = 3  # Replace with your actual number of epochs
+total_steps = (num_train_samples // batch_size) * num_epochs
+
+# Compute warmup_steps
+warmup_steps = int(0.1 * total_steps)
+
 # Prepare training args
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=50,
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
-    warmup_steps=1000,
-    learning_rate=1e-3,
+    num_train_epochs=num_epochs,
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    warmup_steps=warmup_steps,
+    learning_rate=1e-5,
+    weight_decay=1e-5,
     logging_dir=f"./logs_{experiment}",
-    logging_steps=200,
+    logging_steps=warmup_steps,
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=2,  # 8 GPUs -> 16
+    gradient_accumulation_steps=4,
     fp16=False,
     fp16_opt_level="02",
     seed=7,
@@ -204,6 +215,9 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
     tokenizer=tokenizer,
+    callbacks=[
+        EarlyStoppingCallback(early_stopping_patience=3, early_stopping_threshold=0.05)
+    ],
 )
 
 # Train the model

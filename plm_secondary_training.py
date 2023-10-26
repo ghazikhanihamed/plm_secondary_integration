@@ -137,7 +137,7 @@ def preprocess_data(examples):
     )
 
     # This part remains same as labels now point to secondary structure elements
-    labels_encoded = [[tag2id[tag] for tag in seq] for seq in masked_sequences]
+    labels_encoded = [[tag2id[tag] for tag in seq] for seq in sequences]
 
     # Pad or truncate the labels to match the sequence length
     labels_encoded = [
@@ -210,7 +210,7 @@ experiment = "secondary_integration"
 # Compute total steps
 num_train_samples = len(train_dataset)
 batch_size = 4  # Replace with your actual batch size
-num_epochs = 60  # Replace with your actual number of epochs
+num_epochs = 3  # Replace with your actual number of epochs
 total_steps = (num_train_samples // batch_size) * num_epochs
 
 # Compute warmup_steps
@@ -223,13 +223,15 @@ training_args = TrainingArguments(
     per_device_train_batch_size=batch_size,
     per_device_eval_batch_size=batch_size,
     warmup_steps=warmup_steps,
-    learning_rate=4e-3,
+    learning_rate=5e-5,
+    weight_decay=0.01,
     logging_dir=f"./logs_{experiment}",
-    logging_steps=200,
+    logging_steps=warmup_steps,
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=64,
+    gradient_accumulation_steps=8,
+    max_grad_norm=1.0,
     fp16=False,
     fp16_opt_level="O2",
     save_strategy="epoch",
