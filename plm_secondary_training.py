@@ -139,6 +139,8 @@ train_dataset = train_dataset.map(
     desc="Running tokenizer on dataset for training",
 )
 
+small_train_dataset = train_dataset.select(range(100))  # Change 100 to the number of samples you want
+
 valid_dataset = validation_dataset.map(
     preprocess_data,
     batched=True,
@@ -148,6 +150,10 @@ valid_dataset = validation_dataset.map(
 
 
 def compute_metrics(p):
+    print("Shape of predictions:", p.predictions.shape)
+    print("Data type of predictions:", p.predictions.dtype)
+    print("First element:", p.predictions[0])
+
     # Flatten the predictions and labels, and remove padding tags
     predictions = np.argmax(p.predictions, axis=2).flatten()
     labels = p.label_ids.flatten()
@@ -212,7 +218,7 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=train_dataset,
+    train_dataset=small_train_dataset,
     eval_dataset=valid_dataset,
     compute_metrics=compute_metrics,
     tokenizer=tokenizer,
