@@ -171,7 +171,7 @@ experiment = "p2s"
 
 # Compute total steps
 num_train_samples = len(train_dataset)
-batch_size = 2  # Replace with your actual batch size
+batch_size = 1  # Replace with your actual batch size
 num_epochs = 3  # Replace with your actual number of epochs
 total_steps = (num_train_samples // batch_size) * num_epochs
 
@@ -192,7 +192,7 @@ training_args = TrainingArguments(
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=4,
+    gradient_accumulation_steps=2,
     fp16=False,
     fp16_opt_level="02",
     seed=7,
