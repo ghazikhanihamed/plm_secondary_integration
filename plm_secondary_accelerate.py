@@ -169,26 +169,17 @@ model = T5ForConditionalGeneration.from_pretrained("ElnaggarLab/ankh-base")
 
 experiment = "p2s"
 
-# Compute total steps
-num_train_samples = len(train_dataset)
-batch_size = 1  # Replace with your actual batch size
-num_epochs = 3  # Replace with your actual number of epochs
-total_steps = (num_train_samples // batch_size) * num_epochs
-
-# Compute warmup_steps
-warmup_steps = int(0.1 * total_steps)
-
 # Prepare training args
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=num_epochs,
-    per_device_train_batch_size=batch_size,
-    per_device_eval_batch_size=batch_size,
-    warmup_steps=warmup_steps,
+    num_train_epochs=3,
+    per_device_train_batch_size=1,
+    per_device_eval_batch_size=8,
+    warmup_ratio=0.3,
     learning_rate=1e-5,
     weight_decay=1e-5,
     logging_dir=f"./logs_{experiment}",
-    logging_steps=warmup_steps,
+    logging_steps=100,
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
