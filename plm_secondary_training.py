@@ -153,12 +153,13 @@ valid_dataset = validation_dataset.map(
 
 def compute_metrics(p):
     predictions = None  # Initialize predictions
-    
+
     if isinstance(p.predictions, tuple):
         for i, pred in enumerate(p.predictions):
             argmax_pred = np.argmax(pred, axis=2).flatten()
             print(f"Argmax of predictions[{i}]: {argmax_pred}")
-            # Use argmax_pred for metrics, or set predictions = argmax_pred
+            # Here, decide what to do with argmax_pred. For instance:
+            predictions = argmax_pred  # if you want to use the last one
     else:
         predictions = np.argmax(p.predictions, axis=2).flatten()
         print("Argmax of predictions:", predictions)
