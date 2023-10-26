@@ -4,7 +4,7 @@
 #SBATCH --mem=128G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=4
+#SBATCH --gpus=6
 #SBATCH -w virya1
 
 export TMPDIR=~/tmp

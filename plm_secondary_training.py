@@ -210,7 +210,7 @@ experiment = "secondary_integration"
 # Compute total steps
 num_train_samples = len(train_dataset)
 batch_size = 4  # Replace with your actual batch size
-num_epochs = 50  # Replace with your actual number of epochs
+num_epochs = 60  # Replace with your actual number of epochs
 total_steps = (num_train_samples // batch_size) * num_epochs
 
 # Compute warmup_steps
@@ -229,7 +229,7 @@ training_args = TrainingArguments(
     do_train=True,
     do_eval=True,
     evaluation_strategy="epoch",
-    gradient_accumulation_steps=32,
+    gradient_accumulation_steps=64,
     fp16=False,
     fp16_opt_level="O2",
     save_strategy="epoch",
