@@ -139,7 +139,9 @@ train_dataset = train_dataset.map(
     desc="Running tokenizer on dataset for training",
 )
 
-small_train_dataset = train_dataset.select(range(100))  # Change 100 to the number of samples you want
+small_train_dataset = train_dataset.select(
+    range(100)
+)  # Change 100 to the number of samples you want
 
 valid_dataset = validation_dataset.map(
     preprocess_data,
@@ -150,12 +152,16 @@ valid_dataset = validation_dataset.map(
 
 
 def compute_metrics(p):
-    print("Shape of predictions:", p.predictions.shape)
-    print("Data type of predictions:", p.predictions.dtype)
-    print("First element:", p.predictions[0])
+    if isinstance(p.predictions, tuple):
+        for i, pred in enumerate(p.predictions):
+            argmax_pred = np.argmax(pred, axis=2).flatten()
+            print(f"Argmax of predictions[{i}]: {argmax_pred}")
+            # Use argmax_pred for metrics here, if applicable
+    else:
+        predictions = np.argmax(p.predictions, axis=2).flatten()
+        print("Argmax of predictions:", predictions)
+        # Use predictions for metrics here
 
-    # Flatten the predictions and labels, and remove padding tags
-    predictions = np.argmax(p.predictions, axis=2).flatten()
     labels = p.label_ids.flatten()
 
     # Remove padding (<pad>) token id, which is 0 in this case
