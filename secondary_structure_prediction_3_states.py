@@ -134,13 +134,11 @@ def load_model_and_tokenizer(model_name):
 
 
 def preprocess_dataset(sequences, labels, max_length=None):
-    sequences = ["".join(seq.split()) for seq in sequences]
+    sequence_length = [len(seq) for seq in sequences]
+    max_length = int(np.percentile(sequence_length, 99))
+    print("Max length: ", max_length)
 
-    if max_length is None:
-        max_length = len(max(sequences, key=lambda x: len(x)))
-    assert isinstance(
-        max_length, int
-    ), f"max_length should be an int, got {type(max_length)}"
+    sequences = ["".join(seq.split()) for seq in sequences]
 
     seqs = [list(seq)[:max_length] for seq in sequences]
 
