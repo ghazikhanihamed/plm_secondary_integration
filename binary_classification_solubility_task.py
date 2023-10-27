@@ -166,7 +166,7 @@ def create_datasets(
 
 
 def model_init(embed_dim):
-    checkpoint_path = "./results_solubility_prediction_p2s/checkpoint-11714"
+    checkpoint_path = "./results_solubility_prediction_p2s/checkpoint-11714/pytorch_model.bin"
     state_dict = torch.load(checkpoint_path)
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
