@@ -18,6 +18,7 @@ from transformers import (
     AutoTokenizer,
     T5EncoderModel,
     set_seed,
+    EarlyStoppingCallback,
 )
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -249,11 +250,12 @@ def main():
 
     training_args = TrainingArguments(
         output_dir=f"./results_{experiment}",
-        num_train_epochs=5,
+        num_train_epochs=10,
         per_device_train_batch_size=1,
         per_device_eval_batch_size=1,
         warmup_steps=1000,
         learning_rate=1e-03,
+        weight_decay=1e-05,
         logging_dir=f"./logs_{experiment}",
         logging_steps=200,
         do_train=True,
@@ -280,6 +282,11 @@ def main():
         train_dataset=training_dataset,
         eval_dataset=validation_dataset,
         compute_metrics=compute_metrics,
+        callbacks=[
+            EarlyStoppingCallback(
+                early_stopping_patience=3, early_stopping_threshold=0.05
+            )
+        ],
     )
 
     # Train the model
