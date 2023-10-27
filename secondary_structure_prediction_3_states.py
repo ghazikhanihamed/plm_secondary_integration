@@ -428,8 +428,7 @@ def main():
     # Initialize Trainer
     trainer = Trainer(
         model_init=partial(
-            model_init,
-            embed_dim=model_embed_dim,
+            model_init, num_tokens=len(unique_tags), embed_dim=model_embed_dim
         ),
         args=training_args,
         train_dataset=training_dataset,
