@@ -133,7 +133,7 @@ def load_model_and_tokenizer(model_name):
     return model, tokenizer
 
 
-def preprocess_dataset(sequences, labels, max_length=None):
+def preprocess_dataset(sequences, labels, disorder, max_length=None):
     sequence_length = [len(seq) for seq in sequences]
     max_length = int(np.percentile(sequence_length, 99))
     print("Max length: ", max_length)
