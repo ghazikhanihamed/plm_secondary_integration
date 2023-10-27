@@ -31,6 +31,7 @@ from sklearn.metrics import (
     recall_score,
     f1_score,
 )
+from sklearn.preprocessing import MultiLabelBinarizer
 
 # Set seed for reproducibility
 seed = 7
@@ -344,11 +345,14 @@ def main():
 
     def compute_metrics(p: EvalPrediction):
         preds_list, out_label_list = align_predictions(p.predictions, p.label_ids)
+        flat_preds_list = [label for sublist in preds_list for label in sublist]
+        flat_out_label_list = [label for sublist in out_label_list for label in sublist]
+
         return {
-            "accuracy": accuracy_score(out_label_list, preds_list),
-            "precision": precision_score(out_label_list, preds_list),
-            "recall": recall_score(out_label_list, preds_list),
-            "f1": f1_score(out_label_list, preds_list),
+            "accuracy": accuracy_score(flat_out_label_list, flat_preds_list),
+            "precision": precision_score(flat_out_label_list, flat_preds_list),
+            "recall": recall_score(flat_out_label_list, flat_preds_list),
+            "f1": f1_score(flat_out_label_list, flat_preds_list),
         }
 
     def encode_tags(labels, tag2id):
