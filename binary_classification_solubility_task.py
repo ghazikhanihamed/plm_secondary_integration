@@ -254,7 +254,6 @@ def main():
         per_device_eval_batch_size=1,
         warmup_steps=1000,
         learning_rate=1e-03,
-        weight_decay=0.0,
         logging_dir=f"./logs_{experiment}",
         logging_steps=200,
         do_train=True,
