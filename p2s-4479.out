@@ -1,0 +1,114 @@
+==========================================
+SLURM_JOB_ID = 4479
+SLURM_NODELIST = virya3
+==========================================
+/home/h_ghazik/.bash_profile: line 1: /media/Data/default/common/settings.sh: No such file or directory
+Wed Oct 18 18:43:05 2023       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.86.10              Driver Version: 535.86.10    CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off | 00000000:81:00.0 Off |                   On |
+| N/A   27C    P0              42W / 400W |     74MiB / 40960MiB |     N/A      Default |
+|                                         |                      |              Enabled |
++-----------------------------------------+----------------------+----------------------+
+|   1  NVIDIA A100-SXM4-40GB          Off | 00000000:C1:00.0 Off |                   On |
+| N/A   25C    P0              41W / 400W |     74MiB / 40960MiB |     N/A      Default |
+|                                         |                      |              Enabled |
++-----------------------------------------+----------------------+----------------------+
+
++---------------------------------------------------------------------------------------+
+| MIG devices:                                                                          |
++------------------+--------------------------------+-----------+-----------------------+
+| GPU  GI  CI  MIG |                   Memory-Usage |        Vol|      Shared           |
+|      ID  ID  Dev |                     BAR1-Usage | SM     Unc| CE ENC DEC OFA JPG    |
+|                  |                                |        ECC|                       |
+|==================+================================+===========+=======================|
+|  0    1   0   0  |              37MiB / 19968MiB  | 42      0 |  3   0    2    0    0 |
+|                  |               0MiB / 32767MiB  |           |                       |
++------------------+--------------------------------+-----------+-----------------------+
+|  1    1   0   0  |              37MiB / 19968MiB  | 42      0 |  3   0    2    0    0 |
+|                  |               0MiB / 32767MiB  |           |                       |
++------------------+--------------------------------+-----------+-----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+/usr/bin/bash: /usr/local/pkg/anaconda/v3.2023.03/root/lib/libtinfo.so.6: no version information available (required by /usr/bin/bash)
+WARNING:__main__:
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+Max length:  825
+Max length:  825
+Running tokenizer on dataset for training:   0%|          | 0/10172 [00:00<?, ? examples/s]Running tokenizer on dataset for validation:   0%|          | 0/1131 [00:00<?, ? examples/s]Running tokenizer on dataset for training:  10%|▉         | 1000/10172 [00:00<00:04, 2158.95 examples/s]Running tokenizer on dataset for validation:  88%|████████▊ | 1000/1131 [00:00<00:00, 2171.22 examples/s]Running tokenizer on dataset for validation: 100%|██████████| 1131/1131 [00:00<00:00, 1964.23 examples/s]
+Running tokenizer on dataset for training:  20%|█▉        | 2000/10172 [00:00<00:03, 2332.52 examples/s]Running tokenizer on dataset for training:  29%|██▉       | 3000/10172 [00:01<00:02, 2437.06 examples/s]Running tokenizer on dataset for training:  39%|███▉      | 4000/10172 [00:01<00:02, 2460.67 examples/s]Running tokenizer on dataset for training:  49%|████▉     | 5000/10172 [00:02<00:02, 2461.83 examples/s]Running tokenizer on dataset for training:  59%|█████▉    | 6000/10172 [00:02<00:01, 2507.63 examples/s]Running tokenizer on dataset for training:  69%|██████▉   | 7000/10172 [00:02<00:01, 2555.26 examples/s]Running tokenizer on dataset for training:  79%|███████▊  | 8000/10172 [00:03<00:01, 1938.56 examples/s]Running tokenizer on dataset for training:  88%|████████▊ | 9000/10172 [00:04<00:00, 2082.70 examples/s]Running tokenizer on dataset for training:  98%|█████████▊| 10000/10172 [00:04<00:00, 2181.06 examples/s]Running tokenizer on dataset for training: 100%|██████████| 10172/10172 [00:04<00:00, 2118.91 examples/s]
+Running tokenizer on dataset for validation:   0%|          | 0/1131 [00:00<?, ? examples/s]Running tokenizer on dataset for validation:  88%|████████▊ | 1000/1131 [06:26<00:50,  2.59 examples/s]Running tokenizer on dataset for validation: 100%|██████████| 1131/1131 [06:26<00:00,  3.07 examples/s]Running tokenizer on dataset for validation: 100%|██████████| 1131/1131 [06:26<00:00,  2.93 examples/s]
+Traceback (most recent call last):
+  File "/home/h_ghazik/plm_secondary_integration/plm_secondary_accelerate.py", line 172, in <module>
+    training_args = TrainingArguments(
+  File "<string>", line 115, in __init__
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/training_args.py", line 1436, in __post_init__
+    and (self.device.type != "cuda")
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/training_args.py", line 1901, in device
+    return self._setup_devices
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/utils/generic.py", line 54, in __get__
+    cached = self.fget(obj)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/training_args.py", line 1831, in _setup_devices
+    self.distributed_state = PartialState(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/state.py", line 208, in __init__
+    torch.cuda.set_device(self.device)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/cuda/__init__.py", line 404, in set_device
+    torch._C._cuda_setDevice(device)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[2023-10-18 18:49:54,985] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 1293988 closing signal SIGTERM
+[2023-10-18 18:49:55,454] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 1 (pid: 1293989) of binary: /home/h_ghazik/.conda/envs/py39/bin/python
+Traceback (most recent call last):
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/run.py", line 810, in <module>
+    main()
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 346, in wrapper
+    return f(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/run.py", line 806, in main
+    run(args)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/run.py", line 797, in run
+    elastic_launch(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+plm_secondary_accelerate.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2023-10-18_18:49:54
+  host      : virya3
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 1293989)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+srun: error: virya3: task 0: Exited with exit code 1

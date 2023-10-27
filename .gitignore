@@ -171,6 +171,5 @@ results/
 
 embeddings/
 
-results_ionchannel_classification_ankh_base/
-best_model_ionchannel_classification_ankh_base/
-best_model_ionchannel_classification_p2s_base/
+results_*/
+best_*/

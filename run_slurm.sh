@@ -1,11 +1,11 @@
 #!/bin/bash -l
 
 #SBATCH --account=h_ghazik
-#SBATCH --mem=64G
+#SBATCH --mem=128G
 #SBATCH -J plm_sec
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=8
-#SBATCH -w virya2
+#SBATCH --gpus=6
+#SBATCH -w virya1
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp

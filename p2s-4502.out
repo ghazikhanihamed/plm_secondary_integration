@@ -1,0 +1,199 @@
+==========================================
+SLURM_JOB_ID = 4502
+SLURM_NODELIST = virya2
+==========================================
+/home/h_ghazik/.bash_profile: line 1: /media/Data/default/common/settings.sh: No such file or directory
+Thu Oct 19 09:02:43 2023       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.86.10              Driver Version: 535.86.10    CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  Tesla V100-PCIE-32GB           Off | 00000000:12:00.0 Off |                    0 |
+| N/A   31C    P0              25W / 250W |      0MiB / 32768MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+|   1  Tesla V100-PCIE-32GB           Off | 00000000:13:00.0 Off |                    0 |
+| N/A   29C    P0              23W / 250W |      0MiB / 32768MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+/usr/bin/bash: /usr/local/pkg/anaconda/v3.2023.03/root/lib/libtinfo.so.6: no version information available (required by /usr/bin/bash)
+WARNING:__main__:
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+Max length:  825
+Max length:  825
+Running tokenizer on dataset for validation:   0%|          | 0/1131 [00:00<?, ? examples/s]Running tokenizer on dataset for validation:   0%|          | 0/1131 [00:00<?, ? examples/s]Running tokenizer on dataset for validation:  88%|████████▊ | 1000/1131 [00:00<00:00, 1404.10 examples/s]Running tokenizer on dataset for validation:  88%|████████▊ | 1000/1131 [00:00<00:00, 1480.65 examples/s]Running tokenizer on dataset for validation: 100%|██████████| 1131/1131 [00:01<00:00, 1058.71 examples/s]
+Running tokenizer on dataset for validation: 100%|██████████| 1131/1131 [00:01<00:00, 1093.78 examples/s]
+huggingface/tokenizers: The current process just got forked, after parallelism has already been used. Disabling parallelism to avoid deadlocks...
+To disable this warning, you can either:
+	- Avoid using `tokenizers` before the fork if possible
+	- Explicitly set the environment variable TOKENIZERS_PARALLELISM=(true | false)
+wandb: Tracking run with wandb version 0.15.12
+wandb: Run data is saved locally in /home/h_ghazik/plm_secondary_integration/wandb/run-20231019_090344-fmbq74l1
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run SS-Generation
+wandb: ⭐️ View project at https://wandb.ai/bioinformatics-group/huggingface
+wandb: 🚀 View run at https://wandb.ai/bioinformatics-group/huggingface/runs/fmbq74l1
+  0%|          | 0/25440 [00:00<?, ?it/s]You're using a T5TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+You're using a T5TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+Traceback (most recent call last):
+  File "/home/h_ghazik/plm_secondary_integration/plm_secondary_accelerate.py", line 211, in <module>
+    trainer.train()
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 1591, in train
+    return inner_training_loop(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 1892, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 2776, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 2801, in compute_loss
+    outputs = model(**inputs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1519, in forward
+    else self._run_ddp_forward(*inputs, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1355, in _run_ddp_forward
+    return self.module(*inputs, **kwargs)  # type: ignore[index]
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 1746, in forward
+    decoder_outputs = self.decoder(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 1123, in forward
+    layer_outputs = layer_module(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 725, in forward
+    cross_attention_outputs = self.layer[1](
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 636, in forward
+    attention_output = self.EncDecAttention(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 562, in forward
+    attn_weights = nn.functional.softmax(scores.float(), dim=-1).type_as(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/functional.py", line 1856, in softmax
+    ret = input.softmax(dim)
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 126.00 MiB. GPU 1 has a total capacty of 31.74 GiB of which 83.12 MiB is free. Including non-PyTorch memory, this process has 31.65 GiB memory in use. Of the allocated memory 30.46 GiB is allocated by PyTorch, and 732.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+Traceback (most recent call last):
+  File "/home/h_ghazik/plm_secondary_integration/plm_secondary_accelerate.py", line 211, in <module>
+    trainer.train()
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 1591, in train
+    return inner_training_loop(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 1892, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 2776, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/trainer.py", line 2801, in compute_loss
+    outputs = model(**inputs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1519, in forward
+    else self._run_ddp_forward(*inputs, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/parallel/distributed.py", line 1355, in _run_ddp_forward
+    return self.module(*inputs, **kwargs)  # type: ignore[index]
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 1746, in forward
+    decoder_outputs = self.decoder(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 1123, in forward
+    layer_outputs = layer_module(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 725, in forward
+    cross_attention_outputs = self.layer[1](
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 636, in forward
+    attention_output = self.EncDecAttention(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/transformers/models/t5/modeling_t5.py", line 562, in forward
+    attn_weights = nn.functional.softmax(scores.float(), dim=-1).type_as(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/nn/functional.py", line 1856, in softmax
+    ret = input.softmax(dim)
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 126.00 MiB. GPU 0 has a total capacty of 31.74 GiB of which 83.12 MiB is free. Including non-PyTorch memory, this process has 31.65 GiB memory in use. Of the allocated memory 30.46 GiB is allocated by PyTorch, and 732.55 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: 🚀 View run SS-Generation at: https://wandb.ai/bioinformatics-group/huggingface/runs/fmbq74l1
+wandb: ️⚡ View job at https://wandb.ai/bioinformatics-group/huggingface/jobs/QXJ0aWZhY3RDb2xsZWN0aW9uOjk3MzEwMTMw/version_details/v2
+wandb: Synced 6 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20231019_090344-fmbq74l1/logs
+[2023-10-19 09:04:00,400] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 409362 closing signal SIGTERM
+[2023-10-19 09:04:00,915] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 1 (pid: 409363) of binary: /home/h_ghazik/.conda/envs/py39/bin/python
+Traceback (most recent call last):
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/run.py", line 810, in <module>
+    main()
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 346, in wrapper
+    return f(*args, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/run.py", line 806, in main
+    run(args)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/run.py", line 797, in run
+    elastic_launch(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+plm_secondary_accelerate.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2023-10-19_09:04:00
+  host      : virya2.encs.concordia.ca
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 409363)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+srun: error: virya2: task 0: Exited with exit code 1
