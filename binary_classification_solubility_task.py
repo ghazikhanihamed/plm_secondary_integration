@@ -166,6 +166,8 @@ def create_datasets(
 
 
 def model_init(embed_dim):
+    checkpoint_path = "./results_solubility_prediction_p2s/checkpoint-11714"
+    state_dict = torch.load(checkpoint_path)
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
     nlayers = 1
@@ -183,8 +185,7 @@ def model_init(embed_dim):
         dropout=dropout,
         pooling=pooling,
     )
-    checkpoint_path = './results_solubility_prediction_p2s/checkpoint-11714'
-    downstream_model = ankh.ConvBertForBinaryClassification.from_pretrained(checkpoint_path)
+    downstream_model.load_state_dict(state_dict)
     return downstream_model
 
 
