@@ -350,9 +350,13 @@ def main():
 
         return {
             "accuracy": accuracy_score(flat_out_label_list, flat_preds_list),
-            "precision": precision_score(flat_out_label_list, flat_preds_list),
-            "recall": recall_score(flat_out_label_list, flat_preds_list),
-            "f1": f1_score(flat_out_label_list, flat_preds_list),
+            "precision": precision_score(
+                flat_out_label_list, flat_preds_list, average="macro"
+            ),
+            "recall": recall_score(
+                flat_out_label_list, flat_preds_list, average="macro"
+            ),
+            "f1": f1_score(flat_out_label_list, flat_preds_list, average="macro"),
         }
 
     def encode_tags(labels, tag2id):
