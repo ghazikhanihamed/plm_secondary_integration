@@ -183,6 +183,8 @@ def model_init(embed_dim):
         dropout=dropout,
         pooling=pooling,
     )
+    checkpoint_path = './results_solubility_prediction_p2s/checkpoint-11714'
+    downstream_model = ankh.ConvBertForBinaryClassification.from_pretrained(checkpoint_path)
     return downstream_model
 
 
@@ -254,7 +256,7 @@ def main():
         per_device_train_batch_size=1,
         per_device_eval_batch_size=1,
         warmup_steps=1000,
-        learning_rate=1e-03,
+        learning_rate=1e-04,
         weight_decay=1e-05,
         logging_dir=f"./logs_{experiment}",
         logging_steps=200,
