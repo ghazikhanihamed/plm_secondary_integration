@@ -170,6 +170,8 @@ def create_datasets(
 
 
 def model_init(embed_dim, training_labels_mean=None):
+    checkpoint_path = "./results_flu_p2s/checkpoint-6701/pytorch_model.bin"
+    state_dict = torch.load(checkpoint_path)
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
     nlayers = 1
@@ -188,6 +190,7 @@ def model_init(embed_dim, training_labels_mean=None):
         pooling=pooling,
         training_labels_mean=training_labels_mean,
     )
+    downstream_model.load_state_dict(state_dict)
     return downstream_model
 
 
@@ -254,7 +257,7 @@ def main():
         per_device_train_batch_size=1,
         per_device_eval_batch_size=1,
         warmup_steps=1000,
-        learning_rate=1e-03,
+        learning_rate=1e-05,
         weight_decay=1e-05,
         logging_dir=f"./logs_{experiment}",
         logging_steps=200,

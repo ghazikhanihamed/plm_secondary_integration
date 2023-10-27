@@ -166,7 +166,9 @@ def create_datasets(
 
 
 def model_init(embed_dim):
-    checkpoint_path = "./results_solubility_prediction_p2s/checkpoint-11714/pytorch_model.bin"
+    checkpoint_path = (
+        "./results_solubility_prediction_p2s/checkpoint-19520/pytorch_model.bin"
+    )
     state_dict = torch.load(checkpoint_path)
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
@@ -257,7 +259,7 @@ def main():
         per_device_train_batch_size=1,
         per_device_eval_batch_size=1,
         warmup_steps=1000,
-        learning_rate=1e-04,
+        learning_rate=1e-05,
         weight_decay=1e-05,
         logging_dir=f"./logs_{experiment}",
         logging_steps=200,
