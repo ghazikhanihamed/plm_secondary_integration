@@ -51,9 +51,9 @@ def load_wandb_config():
 
 def setup_wandb(api_key):
     # Setup Weights & Biases
-    wandb_config = {"project": "plm_secondary_integration_fluorescence"}
+    wandb_config = {"project": "plm_secondary_integration_ssp3"}
     wandb.login(key=api_key)
-    wandb.init(project="plm_secondary_integration_fluorescence")
+    wandb.init(project="plm_secondary_integration_ssp3")
 
 
 def setup_accelerate():
@@ -138,6 +138,9 @@ def preprocess_dataset(sequences, labels, max_length=None):
 
     if max_length is None:
         max_length = len(max(sequences, key=lambda x: len(x)))
+    assert isinstance(
+        max_length, int
+    ), f"max_length should be an int, got {type(max_length)}"
 
     seqs = [list(seq)[:max_length] for seq in sequences]
 
