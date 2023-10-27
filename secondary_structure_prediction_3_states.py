@@ -196,19 +196,14 @@ def embed_dataset(
 def create_datasets(
     training_sequences,
     training_labels,
-    training_disorder,
     casp12_sequences,
     casp12_labels,
-    casp12_disorder,
     casp14_sequences,
     casp14_labels,
-    casp14_disorder,
     ts115_sequences,
     ts115_labels,
-    ts115_disorder,
     cb513_sequences,
     cb513_labels,
-    cb513_disorder,
 ):
     class SSPDataset(Dataset):
         def __init__(self, encodings, labels):
@@ -379,21 +374,16 @@ def main():
         ts115_dataset,
         cb513_dataset,
     ) = create_datasets(
-        training_sequences,
-        training_labels,
-        training_disorder,
-        casp12_sequences,
-        casp12_labels,
-        casp12_disorder,
-        casp14_sequences,
-        casp14_labels,
-        casp14_disorder,
-        ts115_sequences,
-        ts115_labels,
-        ts115_disorder,
-        cb513_sequences,
-        cb513_labels,
-        cb513_disorder,
+        training_embeddings,
+        train_labels_encodings,
+        casp12_embeddings,
+        casp12_labels_encodings,
+        casp14_embeddings,
+        casp14_labels_encodings,
+        ts115_embeddings,
+        ts115_labels_encodings,
+        cb513_embeddings,
+        cb513_labels_encodings,
     )
 
     model_embed_dim = 768
