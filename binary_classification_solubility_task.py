@@ -15,7 +15,7 @@ from transformers import (
     Trainer,
     TrainingArguments,
     EvalPrediction,
-    AutoTokenizer,
+    T5TokenizerFast,
     T5EncoderModel,
     set_seed,
     EarlyStoppingCallback,
@@ -82,7 +82,7 @@ def load_model_and_tokenizer(model_name):
     # Load model and tokenizer
     device = get_device()
     model = T5EncoderModel.from_pretrained(model_name).to(device).eval()
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    tokenizer = T5TokenizerFast.from_pretrained(model_name)
     return model, tokenizer
 
 
@@ -166,10 +166,10 @@ def create_datasets(
 
 
 def model_init(embed_dim):
-    checkpoint_path = (
-        "./results_solubility_prediction_p2s/checkpoint-19520/pytorch_model.bin"
-    )
-    state_dict = torch.load(checkpoint_path)
+    # checkpoint_path = (
+    #     "./results_solubility_prediction_p2s/checkpoint-19520/pytorch_model.bin"
+    # )
+    # state_dict = torch.load(checkpoint_path)
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
     nlayers = 1
@@ -187,7 +187,7 @@ def model_init(embed_dim):
         dropout=dropout,
         pooling=pooling,
     )
-    downstream_model.load_state_dict(state_dict)
+    # downstream_model.load_state_dict(state_dict)
     return downstream_model
 
 
@@ -255,12 +255,11 @@ def main():
 
     training_args = TrainingArguments(
         output_dir=f"./results_{experiment}",
-        num_train_epochs=10,
+        num_train_epochs=5,
         per_device_train_batch_size=1,
         per_device_eval_batch_size=1,
         warmup_steps=1000,
-        learning_rate=1e-05,
-        weight_decay=1e-05,
+        learning_rate=1e-03,
         logging_dir=f"./logs_{experiment}",
         logging_steps=200,
         do_train=True,
@@ -268,9 +267,8 @@ def main():
         evaluation_strategy="epoch",
         gradient_accumulation_steps=16,
         fp16=False,
-        fp16_opt_level="02",
+        fp16_opt_level="O2",
         run_name=experiment,
-        seed=seed,
         load_best_model_at_end=True,
         metric_for_best_model="eval_accuracy",
         greater_is_better=True,
