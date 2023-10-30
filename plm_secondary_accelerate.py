@@ -1,6 +1,10 @@
+import os
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 from transformers import (
     T5ForConditionalGeneration,
-    AutoTokenizer,
+    T5TokenizerFast,
     TrainingArguments,
     Trainer,
     EarlyStoppingCallback,
@@ -9,10 +13,16 @@ from datasets import load_dataset, concatenate_datasets
 import logging
 import torch
 import numpy as np
-import sys
+from accelerate import Accelerator
 
 import wandb
 import json
+import transformers
+from accelerate.logging import get_logger
+from accelerate.utils import set_seed
+import datasets
+
+set_seed(7)
 
 # Load Weights & Biases Configuration
 with open("wandb_config.json") as f:
@@ -26,14 +36,25 @@ wandb_config = {
 
 wandb.login(key=api_key)
 
-# Setup logging
+accelerator = Accelerator()
+
+# Make one log on every process with the configuration for debugging.
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     datefmt="%m/%d/%Y %H:%M:%S",
-    handlers=[logging.StreamHandler(sys.stdout)],
+    level=logging.INFO,
 )
+logger = get_logger(__name__)
 
-tokenizer = AutoTokenizer.from_pretrained("ElnaggarLab/ankh-base", use_fast=True)
+logger.info(accelerator.state, main_process_only=False)
+if accelerator.is_local_main_process:
+    datasets.utils.logging.set_verbosity_warning()
+    transformers.utils.logging.set_verbosity_info()
+else:
+    datasets.utils.logging.set_verbosity_error()
+    transformers.utils.logging.set_verbosity_error()
+
+tokenizer = T5TokenizerFast.from_pretrained("ElnaggarLab/ankh-base", use_fast=True)
 
 # load the dataset
 dataset1 = load_dataset(
@@ -57,7 +78,7 @@ dataset5 = load_dataset(
 concatenated_dataset = concatenate_datasets([dataset1["train"], dataset4["CB513"]])
 
 # Split the concatenated dataset into training and validation sets
-splits = concatenated_dataset.train_test_split(test_size=0.1, seed=7)
+splits = concatenated_dataset.train_test_split(test_size=0.1)
 
 train_dataset = splits["train"]
 validation_dataset = splits["test"]
@@ -77,7 +98,7 @@ all_sequences = list(train_dataset[input_column_name])
 sequence_lengths = [len(seq) for seq in all_sequences]
 max_length = int(np.percentile(sequence_lengths, 99))
 
-print("Max length: ", max_length)
+logger.info(f"Max length: {max_length}")
 
 # Consider each label as a tag for each token
 unique_tags = set(tag for doc in train_dataset[labels_column_name] for tag in doc)
@@ -128,19 +149,20 @@ def preprocess_data(examples):
     }
 
 
-train_dataset = train_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=train_dataset.column_names,
-    desc="Running tokenizer on dataset for training",
-)
+with accelerator.main_process_first():
+    train_dataset = train_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=train_dataset.column_names,
+        desc="Running tokenizer on dataset for training",
+    )
 
-valid_dataset = validation_dataset.map(
-    preprocess_data,
-    batched=True,
-    remove_columns=validation_dataset.column_names,
-    desc="Running tokenizer on dataset for validation",
-)
+    valid_dataset = validation_dataset.map(
+        preprocess_data,
+        batched=True,
+        remove_columns=validation_dataset.column_names,
+        desc="Running tokenizer on dataset for validation",
+    )
 
 
 def q3_accuracy(y_true, y_pred):
@@ -172,25 +194,23 @@ experiment = "p2s"
 # Prepare training args
 training_args = TrainingArguments(
     output_dir=f"./results_{experiment}",
-    num_train_epochs=3,
+    num_train_epochs=1,
     per_device_train_batch_size=1,
     per_device_eval_batch_size=8,
     warmup_ratio=0.3,
-    learning_rate=1e-5,
-    weight_decay=1e-5,
+    learning_rate=1e-3,
     logging_dir=f"./logs_{experiment}",
-    logging_steps=100,
+    logging_steps=50,
     do_train=True,
     do_eval=True,
-    evaluation_strategy="epoch",
-    gradient_accumulation_steps=2,
+    evaluation_strategy="steps",
+    gradient_accumulation_steps=4,
     fp16=False,
-    fp16_opt_level="02",
-    seed=7,
+    fp16_opt_level="O2",
     load_best_model_at_end=True,
     metric_for_best_model="eval_q3_accuracy",
     greater_is_better=True,
-    save_strategy="epoch",
+    save_strategy="steps",
     remove_unused_columns=False,
     run_name="SS-Generation",
     report_to="wandb",
