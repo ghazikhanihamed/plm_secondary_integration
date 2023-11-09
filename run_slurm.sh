@@ -20,7 +20,7 @@ conda activate py39
 nvidia-smi
 
 export CUDA_VISIBLE_DEVICES=0
-python plm_secondary_hyperparameter.py
+python plm_secondary_integration.py
 
 conda deactivate
 module purge
