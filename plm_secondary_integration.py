@@ -192,6 +192,9 @@ trainer = Trainer(
     tokenizer=tokenizer,
 )
 
+# Train the model
+trainer.train()
+
 # We save the best model in the folder "best_model"
 trainer.save_model(f"./best_model_{experiment}")
 
