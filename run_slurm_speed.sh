@@ -12,11 +12,12 @@
 setenv TMPDIR /nfs/speed-scratch/h_ghazik/tmp
 setenv TRANSFORMERS_CACHE /nfs/speed-scratch/h_ghazik/tmp
 
+module load python/3.9.1/default
 module load anaconda3/2023.03/default
 module load pytorch/1.10.0/GPU/default
 
 source /encs/pkg/anaconda3-2023.03/root/etc/profile.d/conda.csh
-conda activate py3.9
+conda activate py39
 
 python plm_secondary_integration.py
 
