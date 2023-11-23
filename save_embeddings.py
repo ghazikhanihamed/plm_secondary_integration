@@ -4,26 +4,6 @@ import os
 import json
 from transformers import AutoTokenizer, T5EncoderModel, AutoModel
 from tqdm.auto import tqdm
-from accelerate import Accelerator
-import logging
-import wandb
-from accelerate.logging import get_logger
-
-# Logging configuration
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s:%(message)s",
-)
-
-logger = get_logger(__name__)
-
-# Load Weights & Biases Configuration
-with open("wandb_config.json") as f:
-    data = json.load(f)
-
-api_key = data["api_key"]
-
-wandb.login(key=api_key)
 
 
 # Function to determine available device
@@ -32,11 +12,12 @@ def get_device():
 
 
 # Function to load model and tokenizer
-def load_model_and_tokenizer(model_name, accelerator, local_path=None):
+def load_model_and_tokenizer(model_name, local_path=None):
+    device = get_device()
     if local_path:
-        model = T5EncoderModel.from_pretrained(local_path).to(accelerator.device).eval()
+        model = T5EncoderModel.from_pretrained(local_path).to(device).eval()
     else:
-        model = AutoModel.from_pretrained(model_name).to(accelerator.device).eval()
+        model = AutoModel.from_pretrained(model_name).to(device).eval()
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     return model, tokenizer
 
@@ -75,7 +56,7 @@ def save_embeddings(embeddings, additional_data, filename):
 
 # Function to process a given dataset
 def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
-    logging.info(f"Processing dataset at {dataset_path}")
+    print(f"Processing dataset at {dataset_path}")
     for file in tqdm(
         os.listdir(dataset_path), desc=f"Processing files in {dataset_path}"
     ):
@@ -97,39 +78,18 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
                         labels,
                         f"{file}_{model_name}_{label_col}_embeddings.pt",
                     )
-    logging.info(f"Finished processing dataset at {dataset_path}")
+    print(f"Finished processing dataset at {dataset_path}")
 
 
 # Main function to process and save embeddings for multiple datasets
 def main():
-    # Initialize Accelerator
-    accelerator = Accelerator(log_with="wandb")
-
-    accelerator.init_trackers(
-        "save_embeddings",
-        init_kwargs={
-            "wandb": {
-                "notes": "Embeddings for all datasets",
-                "tags": ["embeddings"],
-            }
-        },
-    )
     # Load models and tokenizers
     models = {
         "p2s": load_model_and_tokenizer(
-            "ghazikhanihamed/TooT-PLM-P2S", accelerator, "./best_model_p2s_integration"
+            "ghazikhanihamed/TooT-PLM-P2S", "./best_model_p2s_integration"
         ),
-        "ankh": load_model_and_tokenizer("ElnaggarLab/ankh-base", accelerator),
+        "ankh": load_model_and_tokenizer("ElnaggarLab/ankh-base"),
     }
-
-    # Initialize models with Accelerator and update the models dictionary
-    for model_name in models:
-        model, tokenizer = models[model_name]
-        prepared_model = accelerator.prepare(model)
-        models[model_name] = (
-            prepared_model,
-            tokenizer,
-        )  # Update the model in the dictionary
 
     # Define datasets and their respective columns
     datasets = {
@@ -159,12 +119,10 @@ def main():
 
     # Process each dataset
     for dataset_path, details in datasets.items():
-        logging.info(f"Processing dataset at {dataset_path}")
+        print(f"Processing dataset at {dataset_path}")
         process_and_save_dataset(
             dataset_path, details["sequence_col"], details["label_cols"], models
         )
-
-    accelerator.end_training()
 
 
 if __name__ == "__main__":
