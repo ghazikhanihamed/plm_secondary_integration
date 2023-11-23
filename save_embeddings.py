@@ -38,13 +38,12 @@ def preprocess_dataset(sequences, tokenizer, max_length=None):
 
 
 # Function to embed dataset
-def embed_dataset(model, tokenized_sequences, accelerator):
+def embed_dataset(model, tokenized_sequences):
+    device = get_device()
     with torch.no_grad():
-        outputs = model(
-            **{k: v.to(accelerator.device) for k, v in tokenized_sequences.items()}
-        )
-        embeddings = outputs.last_hidden_state.detach()
-    return accelerator.gather(embeddings)
+        outputs = model(**{k: v.to(device) for k, v in tokenized_sequences.items()})
+        embeddings = outputs.last_hidden_state.detach().cpu()
+    return embeddings
 
 
 # Function to save embeddings and additional data
