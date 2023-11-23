@@ -170,8 +170,6 @@ def create_datasets(
 
 
 def model_init(embed_dim, training_labels_mean=None):
-    checkpoint_path = "./results_flu_p2s/checkpoint-6701/pytorch_model.bin"
-    state_dict = torch.load(checkpoint_path)
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
     nlayers = 1
@@ -190,7 +188,6 @@ def model_init(embed_dim, training_labels_mean=None):
         pooling=pooling,
         training_labels_mean=training_labels_mean,
     )
-    downstream_model.load_state_dict(state_dict)
     return downstream_model
 
 
@@ -274,8 +271,6 @@ def main():
         greater_is_better=True,
         save_strategy="epoch",
         report_to="wandb",
-        # hub_token="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",
-        # hub_model_id="ghazikhanihamed/TooT-PLM-P2S_ionchannels-membrane",
     )
 
     # Initialize Trainer
