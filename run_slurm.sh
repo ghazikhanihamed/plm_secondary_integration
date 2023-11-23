@@ -1,11 +1,10 @@
 #!/bin/bash -l
 
 #SBATCH --account=h_ghazik
-#SBATCH --mem=64G
+#SBATCH --mem=128G
 #SBATCH -J save_emb
 #SBATCH -o _%x%J.out
-#SBATCH --gpus=3
-#SBATCH -w virya1
+#SBATCH --gpus=1
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
@@ -19,7 +18,7 @@ conda activate py39
 
 nvidia-smi
 
-accelerate launch save_embeddings.py
+python save_embeddings.py
 
 conda deactivate
 module purge
@@ -30,7 +29,7 @@ module purge
 # accelerate launch --multi_gpu plm_secondary_accelerate.py
 # --config_file /home/h_ghazik/.cache/huggingface/accelerate/default_config.yaml
 
-
+# #SBATCH -w virya1
 
 # speed
 # module load python/3.9.1/default
