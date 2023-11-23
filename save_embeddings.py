@@ -6,6 +6,24 @@ from transformers import AutoTokenizer, T5EncoderModel, AutoModel
 from tqdm.auto import tqdm
 from accelerate import Accelerator
 import logging
+import wandb
+from accelerate.logging import get_logger
+
+# Logging configuration
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s:%(message)s",
+)
+
+logger = get_logger(__name__)
+
+# Load Weights & Biases Configuration
+with open("wandb_config.json") as f:
+    data = json.load(f)
+
+api_key = data["api_key"]
+
+wandb.login(key=api_key)
 
 
 # Function to determine available device
@@ -84,16 +102,18 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
 
 # Main function to process and save embeddings for multiple datasets
 def main():
-    # Logging configuration
-    logging.basicConfig(
-        filename="embedding_process.log",
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s:%(message)s",
-    )
-
     # Initialize Accelerator
-    accelerator = Accelerator()
+    accelerator = Accelerator(log_with="wandb")
 
+    accelerator.init_trackers(
+        "save_embeddings",
+        init_kwargs={
+            "wandb": {
+                "notes": "Embeddings for all datasets",
+                "tags": ["embeddings"],
+            }
+        },
+    )
     # Load models and tokenizers
     models = {
         "p2s": load_model_and_tokenizer(
@@ -139,9 +159,12 @@ def main():
 
     # Process each dataset
     for dataset_path, details in datasets.items():
+        logging.info(f"Processing dataset at {dataset_path}")
         process_and_save_dataset(
             dataset_path, details["sequence_col"], details["label_cols"], models
         )
+
+    accelerator.end_training()
 
 
 if __name__ == "__main__":
