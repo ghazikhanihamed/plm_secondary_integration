@@ -40,8 +40,9 @@ def load_model_and_tokenizer(model_name, local_path=None):
 # Function to preprocess dataset
 def preprocess_dataset(sequences, max_length=None):
     if max_length is None:
-        max_length = max(len(seq) for seq in sequences)
-    splitted_sequences = [list(seq[:max_length]) for seq in sequences]
+        max_length = max(len(str(seq)) for seq in sequences)  # Ensure seq is a string
+    max_length = int(max_length)  # Ensure max_length is an integer
+    splitted_sequences = [list(str(seq)[:max_length]) for seq in sequences]
     return splitted_sequences
 
 
