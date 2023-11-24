@@ -86,8 +86,8 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
             # Process data for each model
             for model_name, model_details in models.items():
                 model, tokenizer = model_details
-                tokenized = preprocess_dataset(sequences, tokenizer)
-                embeddings = embed_dataset(model, tokenized)
+                splitted_sequences = preprocess_dataset(sequences)
+                embeddings = embed_dataset(model, splitted_sequences, tokenizer)
 
                 # Save embeddings with each label column
                 for label_col in label_cols:

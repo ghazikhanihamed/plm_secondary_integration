@@ -5,6 +5,7 @@
 #SBATCH -J save_emb
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=1
+#SBATCH -w virya1
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
