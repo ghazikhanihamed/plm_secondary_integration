@@ -2,13 +2,28 @@ import torch
 import pandas as pd
 import os
 import json
-from transformers import AutoTokenizer, T5EncoderModel, AutoModel
+from transformers import T5TokenizerFast, T5EncoderModel
 from tqdm.auto import tqdm
+import wandb
 
 
 # Function to determine available device
 def get_device():
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
+def load_wandb_config():
+    # Load Weights & Biases Configuration
+    with open("wandb_config.json") as f:
+        data = json.load(f)
+    return data["api_key"]
+
+
+def setup_wandb(api_key):
+    # Setup Weights & Biases
+    wandb_config = {"project": "save_embeddings"}
+    wandb.login(key=api_key)
+    wandb.init(project="save_embeddings")
 
 
 # Function to load model and tokenizer
@@ -17,33 +32,37 @@ def load_model_and_tokenizer(model_name, local_path=None):
     if local_path:
         model = T5EncoderModel.from_pretrained(local_path).to(device).eval()
     else:
-        model = AutoModel.from_pretrained(model_name).to(device).eval()
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = T5EncoderModel.from_pretrained(model_name).to(device).eval()
+    tokenizer = T5TokenizerFast.from_pretrained(model_name)
     return model, tokenizer
 
 
 # Function to preprocess dataset
-def preprocess_dataset(sequences, tokenizer, max_length=None):
+def preprocess_dataset(sequences, max_length=None):
     if max_length is None:
         max_length = max(len(seq) for seq in sequences)
-    tokenized_sequences = tokenizer.batch_encode_plus(
-        sequences,
-        add_special_tokens=True,
-        padding=True,
-        truncation=True,
-        max_length=max_length,
-        return_tensors="pt",
-    )
-    return tokenized_sequences
+    splitted_sequences = [list(seq[:max_length]) for seq in sequences]
+    return splitted_sequences
 
 
 # Function to embed dataset
-def embed_dataset(model, tokenized_sequences):
+def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
     device = get_device()
+    inputs_embedding = []
     with torch.no_grad():
-        outputs = model(**{k: v.to(device) for k, v in tokenized_sequences.items()})
-        embeddings = outputs.last_hidden_state.detach().cpu()
-    return embeddings
+        for sample in tqdm(sequences, desc="Embedding sequences", total=len(sequences)):
+            ids = tokenizer.batch_encode_plus(
+                [sample],
+                add_special_tokens=True,
+                padding=True,
+                is_split_into_words=True,
+                return_tensors="pt",
+            )
+            ids = {k: v.to(device) for k, v in ids.items()}
+            embedding = model(input_ids=ids["input_ids"])[0]
+            embedding = embedding[0].detach().cpu()[shift_left:shift_right]
+            inputs_embedding.append(embedding)
+    return inputs_embedding
 
 
 # Function to save embeddings and additional data
@@ -57,7 +76,7 @@ def save_embeddings(embeddings, additional_data, filename):
 def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
     print(f"Processing dataset at {dataset_path}")
     for file in tqdm(
-        os.listdir(dataset_path), desc=f"Processing files in {dataset_path}"
+        os.listdir(dataset_path), desc=f"Processing files in {dataset_path}", total=7
     ):
         if file.endswith(".csv"):
             df = pd.read_csv(os.path.join(dataset_path, file))
@@ -82,6 +101,9 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
 
 # Main function to process and save embeddings for multiple datasets
 def main():
+    api_key = load_wandb_config()
+    setup_wandb(api_key)
+
     # Load models and tokenizers
     models = {
         "p2s": load_model_and_tokenizer(
