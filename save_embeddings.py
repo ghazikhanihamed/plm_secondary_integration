@@ -5,8 +5,10 @@ import json
 from transformers import T5TokenizerFast, T5EncoderModel, set_seed
 from tqdm.auto import tqdm
 import wandb
-import traceback
 import logging
+
+os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 set_seed(42)
 logging.basicConfig(filename="error_log.log", level=logging.ERROR)
@@ -96,8 +98,8 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
                         f"Processing file {dataset_path}, dataset {file} with model {model_name}"
                     )
                     model, tokenizer = model_details
-                    splitted_sequences = preprocess_dataset(sequences)
-                    embeddings = embed_dataset(model, splitted_sequences, tokenizer)
+                    # splitted_sequences = preprocess_dataset(sequences)
+                    embeddings = embed_dataset(model, sequences, tokenizer)
 
                     # Save embeddings with each label column
                     for label_col in label_cols:
