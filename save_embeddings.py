@@ -59,38 +59,24 @@ def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
     try:
         with torch.no_grad():
             for sample in tqdm(sequences):
-                # to debug, print sample and the type of sample and the length of sample
-                print(sample)
-                print(type(sample))
-                print(len(sample))
-
-                # Check if the sample is a list of tokenized words
-                if isinstance(sample, list):
-                    # If sample is a list of tokenized words
-                    ids = tokenizer.batch_encode_plus(
-                        sample,  # Directly pass the list of tokenized words
-                        add_special_tokens=True,
-                        padding=True,
-                        is_split_into_words=True,
-                        return_tensors="pt",
-                    )
-                else:
-                    # If sample is a single string sequence
-                    ids = tokenizer.batch_encode_plus(
-                        [sample],  # Wrap the string in a list
-                        add_special_tokens=True,
-                        padding=True,
-                        is_split_into_words=False,
-                        return_tensors="pt",
-                    )
+                ids = tokenizer.batch_encode_plus(
+                    [sample],
+                    add_special_tokens=True,
+                    padding=True,
+                    is_split_into_words=True,
+                    return_tensors="pt",
+                )
                 embedding = model(input_ids=ids["input_ids"].to(device))[0]
                 embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
                 inputs_embedding.append(embedding)
     except Exception as e:
+        logging.error("An error occurred in embed_dataset function")
         logging.error(f"Error embedding sequence with length {len(sample)}")
-        logging.error(f"Exception: {e}")
+        logging.error(f"Exception: {str(e)}")
+        logging.error(f"Exception Type: {type(e).__name__}")
         logging.error("Traceback:", exc_info=True)
         wandb.log({"error": str(e)})
+
     return inputs_embedding
 
 
@@ -144,7 +130,7 @@ def main():
     # Load models and tokenizers
     models = {
         "p2s": load_model_and_tokenizer(
-            "ghazikhanihamed/TooT-PLM-P2S", "./best_model_p2s_integration"
+            "ghazikhanihamed/TooT-PLM-P2S"  # , "./best_model_p2s_integration"
         ),
         "ankh": load_model_and_tokenizer("ElnaggarLab/ankh-base"),
     }
