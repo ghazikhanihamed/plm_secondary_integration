@@ -42,9 +42,8 @@ def load_model_and_tokenizer(model_name, local_path=None):
 # Function to preprocess dataset
 def preprocess_dataset(sequences, max_length=None):
     if max_length is None:
-        max_length = max(len(str(seq)) for seq in sequences)  # Ensure seq is a string
-    max_length = int(max_length)  # Ensure max_length is an integer
-    splitted_sequences = [list(str(seq)[:max_length]) for seq in sequences]
+        max_length = len(max(sequences, key=lambda x: len(x)))
+    splitted_sequences = [list(seq[:max_length]) for seq in sequences]
     return splitted_sequences
 
 
@@ -53,7 +52,7 @@ def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
     device = get_device()
     inputs_embedding = []
     with torch.no_grad():
-        for sample in tqdm(sequences, desc="Embedding sequences", total=len(sequences)):
+        for sample in tqdm(sequences):
             ids = tokenizer.batch_encode_plus(
                 [sample],
                 add_special_tokens=True,
@@ -61,9 +60,8 @@ def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
                 is_split_into_words=True,
                 return_tensors="pt",
             )
-            ids = {k: v.to(device) for k, v in ids.items()}
-            embedding = model(input_ids=ids["input_ids"])[0]
-            embedding = embedding[0].detach().cpu()[shift_left:shift_right]
+            embedding = model(input_ids=ids["input_ids"].to(device))[0]
+            embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
             inputs_embedding.append(embedding)
     return inputs_embedding
 
@@ -77,15 +75,14 @@ def save_embeddings(embeddings, additional_data, filename):
 
 # Function to process a given dataset
 def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
-    for file in tqdm(
-        os.listdir(dataset_path), desc=f"Processing files in {dataset_path}", total=7
-    ):
+    for file in os.listdir(dataset_path):
         if file.endswith(".csv"):
             df = pd.read_csv(os.path.join(dataset_path, file))
             sequences = df[sequence_col].tolist()
 
             # Process data for each model
             for model_name, model_details in models.items():
+                print(f"Processing dataset {file} with model {model_name}")
                 model, tokenizer = model_details
                 splitted_sequences = preprocess_dataset(sequences)
                 embeddings = embed_dataset(model, splitted_sequences, tokenizer)
@@ -142,7 +139,6 @@ def main():
 
     # Process each dataset
     for dataset_path, details in datasets.items():
-        print(f"Processing dataset at {dataset_path}")
         process_and_save_dataset(
             dataset_path, details["sequence_col"], details["label_cols"], models
         )
