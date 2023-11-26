@@ -5,7 +5,6 @@
 #SBATCH -J save_emb
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=1
-#SBATCH -w virya1
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
@@ -24,7 +23,7 @@ python save_embeddings.py
 conda deactivate
 module purge
 
-
+# #SBATCH -w virya1
 # salloc  -A h_ghazik -t 24:00:00 --mem=64G --gpus=1
 # ~/plm_secondary_integration/ds_config_p2s.json
 # accelerate launch --multi_gpu plm_secondary_accelerate.py
