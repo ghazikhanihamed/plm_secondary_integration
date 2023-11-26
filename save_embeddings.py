@@ -59,13 +59,25 @@ def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
     try:
         with torch.no_grad():
             for sample in tqdm(sequences):
-                ids = tokenizer.batch_encode_plus(
-                    [sample],
-                    add_special_tokens=True,
-                    padding=True,
-                    is_split_into_words=False,
-                    return_tensors="pt",
-                )
+                # Check if the sample is a list of tokenized words
+                if isinstance(sample, list):
+                    # If sample is a list of tokenized words
+                    ids = tokenizer.batch_encode_plus(
+                        sample,  # Directly pass the list of tokenized words
+                        add_special_tokens=True,
+                        padding=True,
+                        is_split_into_words=True,
+                        return_tensors="pt",
+                    )
+                else:
+                    # If sample is a single string sequence
+                    ids = tokenizer.batch_encode_plus(
+                        [sample],  # Wrap the string in a list
+                        add_special_tokens=True,
+                        padding=True,
+                        is_split_into_words=False,
+                        return_tensors="pt",
+                    )
                 embedding = model(input_ids=ids["input_ids"].to(device))[0]
                 embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
                 inputs_embedding.append(embedding)
