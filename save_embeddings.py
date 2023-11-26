@@ -2,9 +2,11 @@ import torch
 import pandas as pd
 import os
 import json
-from transformers import T5TokenizerFast, T5EncoderModel
+from transformers import T5TokenizerFast, T5EncoderModel, set_seed
 from tqdm.auto import tqdm
 import wandb
+
+set_seed(42)
 
 
 # Function to determine available device
@@ -75,7 +77,6 @@ def save_embeddings(embeddings, additional_data, filename):
 
 # Function to process a given dataset
 def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
-    print(f"Processing dataset at {dataset_path}")
     for file in tqdm(
         os.listdir(dataset_path), desc=f"Processing files in {dataset_path}", total=7
     ):
