@@ -103,18 +103,18 @@ def save_embeddings(embeddings, additional_data, filename):
 
 # Function to process a given dataset
 def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
-    for file in os.listdir(dataset_path):
-        if file.endswith(".csv"):
-            df = pd.read_csv(os.path.join(dataset_path, file))
-            sequences = df[sequence_col].tolist()
+    for model_name, model_details in models.items():
+        model, tokenizer = model_details
 
-            try:
-                # Process data for each model
-                for model_name, model_details in models.items():
+        for file in os.listdir(dataset_path):
+            if file.endswith(".csv"):
+                df = pd.read_csv(os.path.join(dataset_path, file))
+                sequences = df[sequence_col].tolist()
+
+                try:
                     print(
                         f"Processing file {dataset_path}, dataset {file} with model {model_name}"
                     )
-                    model, tokenizer = model_details
                     splitted_sequences = preprocess_dataset(sequences)
                     embeddings = embed_dataset(model, splitted_sequences, tokenizer)
 
@@ -126,11 +126,13 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
                             labels,
                             f"{file}_{model_name}_{label_col}_embeddings.pt",
                         )
-            except Exception as e:
-                logging.error(f"Error processing file {dataset_path}, dataset {file}")
-                logging.error(f"Exception: {e}")
-                logging.error("Traceback:", exc_info=True)
-                wandb.log({"error": str(e)})
+                except Exception as e:
+                    logging.error(
+                        f"Error processing file {dataset_path}, dataset {file}"
+                    )
+                    logging.error(f"Exception: {e}")
+                    logging.error("Traceback:", exc_info=True)
+                    wandb.log({"error": str(e)})
     print(f"Finished processing dataset at {dataset_path}")
 
 
