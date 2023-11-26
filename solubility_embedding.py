@@ -66,8 +66,8 @@ train_val_sequences, train_val_labels = preprocess_dataset(
 test_sequences, test_labels = preprocess_dataset(test_sequences, test_labels)
 
 # Embed datasets
-train_val_embeddings = embed_dataset(model, train_val_sequences, train_val_labels)
-test_embeddings = embed_dataset(model, test_sequences, test_labels)
+train_val_embeddings = embed_dataset(model, train_val_sequences)
+test_embeddings = embed_dataset(model, test_sequences)
 
 
 # Save embeddings with labels using HDF5
