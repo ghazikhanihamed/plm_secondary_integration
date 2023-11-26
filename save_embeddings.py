@@ -59,6 +59,11 @@ def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
     try:
         with torch.no_grad():
             for sample in tqdm(sequences):
+                # to debug, print sample and the type of sample and the length of sample
+                print(sample)
+                print(type(sample))
+                print(len(sample))
+
                 # Check if the sample is a list of tokenized words
                 if isinstance(sample, list):
                     # If sample is a list of tokenized words
@@ -110,8 +115,8 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
                         f"Processing file {dataset_path}, dataset {file} with model {model_name}"
                     )
                     model, tokenizer = model_details
-                    # splitted_sequences = preprocess_dataset(sequences)
-                    embeddings = embed_dataset(model, sequences, tokenizer)
+                    splitted_sequences = preprocess_dataset(sequences)
+                    embeddings = embed_dataset(model, splitted_sequences, tokenizer)
 
                     # Save embeddings with each label column
                     for label_col in label_cols:
