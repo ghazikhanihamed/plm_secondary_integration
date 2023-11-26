@@ -63,7 +63,7 @@ def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
                     [sample],
                     add_special_tokens=True,
                     padding=True,
-                    is_split_into_words=True,
+                    is_split_into_words=False,
                     return_tensors="pt",
                 )
                 embedding = model(input_ids=ids["input_ids"].to(device))[0]
