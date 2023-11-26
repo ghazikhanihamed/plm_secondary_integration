@@ -5,8 +5,11 @@ import json
 from transformers import T5TokenizerFast, T5EncoderModel, set_seed
 from tqdm.auto import tqdm
 import wandb
+import traceback
+import logging
 
 set_seed(42)
+logging.basicConfig(filename="error_log.log", level=logging.ERROR)
 
 
 # Function to determine available device
@@ -51,18 +54,24 @@ def preprocess_dataset(sequences, max_length=None):
 def embed_dataset(model, sequences, tokenizer, shift_left=0, shift_right=-1):
     device = get_device()
     inputs_embedding = []
-    with torch.no_grad():
-        for sample in tqdm(sequences):
-            ids = tokenizer.batch_encode_plus(
-                [sample],
-                add_special_tokens=True,
-                padding=True,
-                is_split_into_words=True,
-                return_tensors="pt",
-            )
-            embedding = model(input_ids=ids["input_ids"].to(device))[0]
-            embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
-            inputs_embedding.append(embedding)
+    try:
+        with torch.no_grad():
+            for sample in tqdm(sequences):
+                ids = tokenizer.batch_encode_plus(
+                    [sample],
+                    add_special_tokens=True,
+                    padding=True,
+                    is_split_into_words=True,
+                    return_tensors="pt",
+                )
+                embedding = model(input_ids=ids["input_ids"].to(device))[0]
+                embedding = embedding[0].detach().cpu().numpy()[shift_left:shift_right]
+                inputs_embedding.append(embedding)
+    except Exception as e:
+        logging.error(f"Error embedding sequence with length {len(sample)}")
+        logging.error(f"Exception: {e}")
+        logging.error("Traceback:", exc_info=True)
+        wandb.log({"error": str(e)})
     return inputs_embedding
 
 
@@ -80,21 +89,29 @@ def process_and_save_dataset(dataset_path, sequence_col, label_cols, models):
             df = pd.read_csv(os.path.join(dataset_path, file))
             sequences = df[sequence_col].tolist()
 
-            # Process data for each model
-            for model_name, model_details in models.items():
-                print(f"Processing dataset {file} with model {model_name}")
-                model, tokenizer = model_details
-                splitted_sequences = preprocess_dataset(sequences)
-                embeddings = embed_dataset(model, splitted_sequences, tokenizer)
-
-                # Save embeddings with each label column
-                for label_col in label_cols:
-                    labels = df[label_col].values
-                    save_embeddings(
-                        embeddings,
-                        labels,
-                        f"{file}_{model_name}_{label_col}_embeddings.pt",
+            try:
+                # Process data for each model
+                for model_name, model_details in models.items():
+                    print(
+                        f"Processing file {dataset_path}, dataset {file} with model {model_name}"
                     )
+                    model, tokenizer = model_details
+                    splitted_sequences = preprocess_dataset(sequences)
+                    embeddings = embed_dataset(model, splitted_sequences, tokenizer)
+
+                    # Save embeddings with each label column
+                    for label_col in label_cols:
+                        labels = df[label_col].values
+                        save_embeddings(
+                            embeddings,
+                            labels,
+                            f"{file}_{model_name}_{label_col}_embeddings.pt",
+                        )
+            except Exception as e:
+                logging.error(f"Error processing file {dataset_path}, dataset {file}")
+                logging.error(f"Exception: {e}")
+                logging.error("Traceback:", exc_info=True)
+                wandb.log({"error": str(e)})
     print(f"Finished processing dataset at {dataset_path}")
 
 
