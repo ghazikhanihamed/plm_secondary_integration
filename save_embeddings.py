@@ -130,7 +130,7 @@ def main():
     # Load models and tokenizers
     models = {
         "p2s": load_model_and_tokenizer(
-            "ghazikhanihamed/TooT-PLM-P2S"  # , "./best_model_p2s_integration"
+            "ghazikhanihamed/TooT-PLM-P2S", "./best_model_p2s_integration"
         ),
         "ankh": load_model_and_tokenizer("ElnaggarLab/ankh-base"),
     }
