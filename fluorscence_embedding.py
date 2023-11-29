@@ -6,6 +6,8 @@ from transformers import T5TokenizerFast, T5EncoderModel, set_seed
 from datasets import load_dataset
 from tqdm import tqdm
 import fire
+import random
+import numpy as np
 
 
 def main(
@@ -26,7 +28,9 @@ def main(
     os.environ["CUBLAS_WORKSPACE_CONFIG"] = ":4096:8"
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-    set_seed(seed)
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     logging.info(f"Available device: {device}")
