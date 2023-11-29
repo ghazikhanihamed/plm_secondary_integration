@@ -128,7 +128,11 @@ def save_embeddings_with_index_as_id(filename, embeddings, labels):
 
 logging.info("Saving embeddings and labels in an HDF5 file")
 
-embeddings_dir = "./embeddings"
+model_short_name = "p2s"
+dataset_name = "solubility"
+
+# Create a directory path that includes the model and dataset names
+embeddings_dir = f"./embeddings/{model_short_name}_{dataset_name}"
 os.makedirs(embeddings_dir, exist_ok=True)
 
 # Save the embeddings and labels in an HDF5 file inside the embeddings directory
