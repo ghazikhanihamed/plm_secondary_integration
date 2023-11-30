@@ -1,10 +1,11 @@
 #!/bin/bash -l
 
 #SBATCH --account=h_ghazik
-#SBATCH --mem=128G
+#SBATCH --mem=64G
 #SBATCH -J save_emb
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=1
+#SBATCH -w virya2
 
 export TMPDIR=~/tmp
 export TRANSFORMERS_CACHE=~/tmp
@@ -18,7 +19,7 @@ conda activate py39
 
 nvidia-smi
 
-python save_embeddings.py
+python ssp_embedding.py --model_name=ElnaggarLab/ankh-base --model_short_name=ankh --dataset_name=SSP
 
 conda deactivate
 module purge
