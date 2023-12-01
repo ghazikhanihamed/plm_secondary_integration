@@ -64,7 +64,7 @@ def main(
         if max_length is None:
             max_length = int(np.percentile([len(seq) for seq in sequences], 99))
 
-        truncated_sequences = [seq[:max_length] for seq in sequences]
+        truncated_sequences = [list(seq[:max_length]) for seq in sequences]
         return truncated_sequences, labels
 
     def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
