@@ -73,8 +73,9 @@ def main(
         splitted_sequences = [list(seq[:max_length]) for seq in sequences]
         return splitted_sequences, labels
 
-    def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
+    def embed_dataset(model, sequences, labels, shift_left=0, shift_right=-1):
         inputs_embedding = []
+        valid_labels = []
         progress_bar = tqdm(enumerate(sequences), total=len(sequences))
         with torch.no_grad():
             for i, sample in progress_bar:
@@ -91,14 +92,18 @@ def main(
                         embedding[0].detach().cpu().numpy()[shift_left:shift_right]
                     )
                     inputs_embedding.append(embedding)
+                    valid_labels.append(labels[i])
                 except Exception as e:
-                    logging.error(
+                    error_message = (
                         f"Error processing sequence at index {i}: {sample} - Error: {e}"
                     )
-                    continue  # Continue with the next sample
+                    logging.error(error_message)
+                    raise Exception(
+                        error_message
+                    )  # Raise an exception to halt processing
                 finally:
                     progress_bar.set_description(f"Processed: {len(inputs_embedding)}")
-        return inputs_embedding
+        return inputs_embedding, valid_labels
 
     training_sequences, training_labels = preprocess_dataset(
         training_sequences, training_labels
@@ -117,7 +122,9 @@ def main(
     logging.info(f"Number of training labels: {len(training_labels)}")
 
     logging.info("Starting to process training sequences")
-    training_embeddings = embed_dataset(model, training_sequences)
+    training_embeddings, training_labels = embed_dataset(
+        model, training_sequences, training_labels
+    )
     logging.info("Training sequences processed")
     logging.info(f"Number of generated embeddings: {len(training_embeddings)}")
     logging.info("Training sequences processed")
@@ -126,7 +133,7 @@ def main(
     ), "Not all training sequences were processed."
 
     logging.info("Starting to process test sequences")
-    test_embeddings = embed_dataset(model, test_sequences)
+    test_embeddings, test_labels = embed_dataset(model, test_sequences, test_labels)
     logging.info("Test sequences processed")
     assert len(test_embeddings) == len(
         test_labels
