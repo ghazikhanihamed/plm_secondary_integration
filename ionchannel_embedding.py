@@ -75,9 +75,9 @@ def main(
 
     def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
         inputs_embedding = []
-        progress_bar = tqdm(sequences)
+        progress_bar = tqdm(enumerate(sequences), total=len(sequences))
         with torch.no_grad():
-            for sample in progress_bar:
+            for i, sample in progress_bar:
                 try:
                     ids = tokenizer.batch_encode_plus(
                         [sample],
@@ -92,15 +92,25 @@ def main(
                     )
                     inputs_embedding.append(embedding)
                 except Exception as e:
-                    logging.error(f"Error processing sequence: {sample} - Error: {e}")
+                    logging.error(
+                        f"Error processing sequence at index {i}: {sample} - Error: {e}"
+                    )
                     continue  # Continue with the next sample
-        progress_bar.close()
+                finally:
+                    progress_bar.set_description(f"Processed: {len(inputs_embedding)}")
         return inputs_embedding
 
     training_sequences, training_labels = preprocess_dataset(
         training_sequences, training_labels
     )
+    assert len(training_sequences) == len(
+        training_labels
+    ), "Mismatch in number of training sequences and labels"
+
     test_sequences, test_labels = preprocess_dataset(test_sequences, test_labels)
+    assert len(test_sequences) == len(
+        test_labels
+    ), "Mismatch in number of test sequences and labels"
 
     logging.info("Starting to process training sequences")
     training_embeddings = embed_dataset(model, training_sequences)
