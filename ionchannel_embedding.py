@@ -112,8 +112,14 @@ def main(
         test_labels
     ), "Mismatch in number of test sequences and labels"
 
+    # Right before calling embed_dataset
+    logging.info(f"Number of training sequences: {len(training_sequences)}")
+    logging.info(f"Number of training labels: {len(training_labels)}")
+
     logging.info("Starting to process training sequences")
     training_embeddings = embed_dataset(model, training_sequences)
+    logging.info("Training sequences processed")
+    logging.info(f"Number of generated embeddings: {len(training_embeddings)}")
     logging.info("Training sequences processed")
     assert len(training_embeddings) == len(
         training_labels
