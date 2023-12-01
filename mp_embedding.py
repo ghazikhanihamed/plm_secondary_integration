@@ -61,17 +61,11 @@ def main(
     )
 
     def preprocess_dataset(sequences, labels, max_length=None):
-        """
-        Args:
-            sequences: list, the list which contains the protein primary sequences.
-            labels: list, the list which contains the dataset labels.
-            max_length, Integer, the maximum sequence length,
-            if there is a sequence that is larger than the specified sequence length will be post-truncated.
-        """
         if max_length is None:
-            max_length = len(max(training_sequences, key=lambda x: len(x)))
-        splitted_sequences = [list(seq[:max_length]) for seq in sequences]
-        return splitted_sequences, labels
+            max_length = int(np.percentile([len(seq) for seq in sequences], 99))
+
+        truncated_sequences = [seq[:max_length] for seq in sequences]
+        return truncated_sequences, labels
 
     def embed_dataset(model, sequences, shift_left=0, shift_right=-1):
         inputs_embedding = []
