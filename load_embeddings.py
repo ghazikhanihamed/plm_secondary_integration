@@ -4,9 +4,9 @@ import numpy as np
 
 
 def load_embeddings_and_labels(embedding_dir, dataset_name):
-    train_file = os.path.join(embedding_dir, dataset_name, "train.h5py")
-    test_file = os.path.join(embedding_dir, dataset_name, "test.h5py")
-    validation_file = os.path.join(embedding_dir, dataset_name, "validation.h5py")
+    train_file = os.path.join(embedding_dir, "train.h5py")
+    test_file = os.path.join(embedding_dir, "test.h5py")
+    validation_file = os.path.join(embedding_dir, "validation.h5py")
 
     def load_file(file_path, is_ssp=False):
         embeddings = []
@@ -36,10 +36,17 @@ def load_embeddings_and_labels(embedding_dir, dataset_name):
         validation_embeddings, validation_labels = load_file(
             validation_file, is_ssp=(dataset_name == "SSP")
         )
-        train_embeddings = np.concatenate((train_embeddings, validation_embeddings))
-        train_labels += validation_labels
+        # train_embeddings = np.concatenate((train_embeddings, validation_embeddings))
+        # train_labels += validation_labels
 
-    return train_embeddings, train_labels, test_embeddings, test_labels
+    return (
+        train_embeddings,
+        train_labels,
+        validation_embeddings,
+        validation_labels,
+        test_embeddings,
+        test_labels,
+    )
 
 
 # Usage example
