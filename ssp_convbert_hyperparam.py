@@ -155,7 +155,9 @@ def main():
         cb513_labels,
     ) = load_data()
 
-    unique_tags = set(tag for doc in train_labels["label3"] for tag in doc)
+    unique_tags = set()
+    for label_dict in train_labels:
+        unique_tags.update(label_dict["label3"])
     tag2id = {tag: id for id, tag in enumerate(unique_tags)}
     id2tag = {id: tag for tag, id in tag2id.items()}
 
