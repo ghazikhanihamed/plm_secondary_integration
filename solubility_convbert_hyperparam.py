@@ -113,8 +113,9 @@ def optuna_hp_space(trial):
         "weight_decay": trial.suggest_float("weight_decay", 0.0, 0.1, step=0.01),
         # Warmup ratio: As before, a step is introduced to not have a very granular search in this space.
         "warmup_ratio": trial.suggest_float("warmup_ratio", 0.0, 0.5, step=0.05),
-        "per_device_train_batch_size": trial.suggest_categorical(
-            "per_device_train_batch_size", [2, 4, 8]
+        # Gradient accumulation steps: This is a very important hyperparameter to tune. It is used to simulate
+        "gradient_accumulation_steps": trial.suggest_int(
+            "gradient_accumulation_steps", 1, 16
         ),
     }
 
