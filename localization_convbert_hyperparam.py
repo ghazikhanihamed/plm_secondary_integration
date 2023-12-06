@@ -22,10 +22,6 @@ from classes.ConvBertForMultiClassClassification import (
 )
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-import logging
-
-
-logging.basicConfig(level=logging.INFO)
 
 # Set seed for reproducibility
 seed = 7
