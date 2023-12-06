@@ -64,7 +64,7 @@ def create_datasets(
             }
 
         def __len__(self):
-            return len(self.sequences)
+            return len(self.labels)
 
         # Create the full training dataset
 
