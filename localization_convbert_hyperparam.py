@@ -93,6 +93,7 @@ def model_init(num_tokens, embed_dim, class_weights=None):
     dropout = 0.2
     conv_kernel_size = 7
     downstream_model = ankh.ConvBertForMultiClassClassification(
+        num_tokens=num_tokens,
         input_dim=embed_dim,
         nhead=nhead,
         hidden_dim=hidden_dim,
