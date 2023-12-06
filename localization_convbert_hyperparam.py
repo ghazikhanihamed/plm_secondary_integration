@@ -183,6 +183,7 @@ def main():
 
     api_key = load_wandb_config()
     setup_wandb(api_key)
+    wandb.init(project=experiment)
 
     (
         train_embeddings,
