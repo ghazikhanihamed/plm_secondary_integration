@@ -66,9 +66,6 @@ def create_datasets(
             # Convert string label to integer
             label_int = label_encoder.transform([label])[0]
 
-            # Logging shapes of embedding and label
-            logging.info(f"Embedding shape: {embedding.shape}, Label: {label_int}")
-
             return {
                 "embed": torch.tensor(embedding),
                 "labels": torch.tensor(label_int),
@@ -76,14 +73,6 @@ def create_datasets(
 
         def __len__(self):
             return len(self.labels)
-
-    # Logging dataset sizes
-    logging.info(
-        f"Training sequences: {len(training_sequences)}, Training labels: {len(training_labels)}"
-    )
-    logging.info(
-        f"Test sequences: {len(test_sequences)}, Test labels: {len(test_labels)}"
-    )
 
     # Create the full training dataset
     full_training_dataset = LocalizationDataset(training_sequences, training_labels)
@@ -99,11 +88,6 @@ def create_datasets(
     )
 
     test_dataset = LocalizationDataset(test_sequences, test_labels)
-
-    # Logging dataset split sizes
-    logging.info(
-        f"Training dataset size: {len(training_dataset)}, Validation dataset size: {len(validation_dataset)}, Test dataset size: {len(test_dataset)}"
-    )
 
     return training_dataset, validation_dataset, test_dataset
 
