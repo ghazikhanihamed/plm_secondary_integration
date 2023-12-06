@@ -142,32 +142,20 @@ def main():
 
     (
         train_embeddings,
-        train_labels3,
-        train_labels8,
-        train_disorder,
+        train_labels,
         casp12_embeddings,
-        casp12_labels3,
-        casp12_labels8,
-        casp12_disorder,
+        casp12_labels,
         casp13_embeddings,
-        casp13_labels3,
-        casp13_labels8,
-        casp13_disorder,
+        casp13_labels,
         casp14_embeddings,
-        casp14_labels3,
-        casp14_labels8,
-        casp14_disorder,
+        casp14_labels,
         ts115_embeddings,
-        ts115_labels3,
-        ts115_labels8,
-        ts115_disorder,
+        ts115_labels,
         cb513_embeddings,
-        cb513_labels3,
-        cb513_labels8,
-        cb513_disorder,
+        cb513_labels,
     ) = load_data()
 
-    unique_tags = set(tag for doc in train_labels3 for tag in doc)
+    unique_tags = set(tag for doc in train_labels["label3"] for tag in doc)
     tag2id = {tag: id for id, tag in enumerate(unique_tags)}
     id2tag = {id: tag for tag, id in tag2id.items()}
 
@@ -207,19 +195,31 @@ def main():
         labels = [[tag2id[tag] for tag in doc] for doc in labels]
         return labels
 
-    train_labels_encodings = encode_tags(train_labels3, tag2id)
-    casp12_labels_encodings = encode_tags(casp12_labels3, tag2id)
-    casp13_labels_encodings = encode_tags(casp13_labels3, tag2id)
-    casp14_labels_encodings = encode_tags(casp14_labels3, tag2id)
-    ts115_labels_encodings = encode_tags(ts115_labels3, tag2id)
-    cb513_labels_encodings = encode_tags(cb513_labels3, tag2id)
+    train_labels_encodings = encode_tags(train_labels["label3"], tag2id)
+    casp12_labels_encodings = encode_tags(casp12_labels["label3"], tag2id)
+    casp13_labels_encodings = encode_tags(casp13_labels["label3"], tag2id)
+    casp14_labels_encodings = encode_tags(casp14_labels["label3"], tag2id)
+    ts115_labels_encodings = encode_tags(ts115_labels["label3"], tag2id)
+    cb513_labels_encodings = encode_tags(cb513_labels["label3"], tag2id)
 
-    train_labels_encodings = mask_disorder(train_labels_encodings, train_disorder)
-    casp12_labels_encodings = mask_disorder(casp12_labels_encodings, casp12_disorder)
-    casp13_labels_encodings = mask_disorder(casp13_labels_encodings, casp13_disorder)
-    casp14_labels_encodings = mask_disorder(casp14_labels_encodings, casp14_disorder)
-    ts115_labels_encodings = mask_disorder(ts115_labels_encodings, ts115_disorder)
-    cb513_labels_encodings = mask_disorder(cb513_labels_encodings, cb513_disorder)
+    train_labels_encodings = mask_disorder(
+        train_labels_encodings, train_labels["disorder"]
+    )
+    casp12_labels_encodings = mask_disorder(
+        casp12_labels_encodings, casp12_labels["disorder"]
+    )
+    casp13_labels_encodings = mask_disorder(
+        casp13_labels_encodings, casp13_labels["disorder"]
+    )
+    casp14_labels_encodings = mask_disorder(
+        casp14_labels_encodings, casp14_labels["disorder"]
+    )
+    ts115_labels_encodings = mask_disorder(
+        ts115_labels_encodings, ts115_labels["disorder"]
+    )
+    cb513_labels_encodings = mask_disorder(
+        cb513_labels_encodings, cb513_labels["disorder"]
+    )
 
     (
         training_dataset,

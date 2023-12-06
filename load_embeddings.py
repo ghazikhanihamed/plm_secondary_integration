@@ -73,50 +73,26 @@ def load_ssp_embeddings_and_labels(embedding_dir):
                 )
         return embeddings, labels
 
-    train_embeddings, train_labels3, train_labels8, train_disorder = load_file(
-        train_file
-    )
-    casp12_embeddings, casp12_labels3, casp12_labels8, casp12_disorder = load_file(
-        casp12_file
-    )
-    casp13_embeddings, casp13_labels3, casp13_labels8, casp13_disorder = load_file(
-        casp13_file
-    )
-    casp14_embeddings, casp14_labels3, casp14_labels8, casp14_disorder = load_file(
-        casp14_file
-    )
-    ts115_embeddings, ts115_labels3, ts115_labels8, ts115_disorder = load_file(
-        ts115_file
-    )
-    cb513_embeddings, cb513_labels3, cb513_labels8, cb513_disorder = load_file(
-        cb513_file
-    )
+    train_embeddings, train_labels = load_file(train_file)
+    casp12_embeddings, casp12_labels = load_file(casp12_file)
+    casp13_embeddings, casp13_labels = load_file(casp13_file)
+    casp14_embeddings, casp14_labels = load_file(casp14_file)
+    ts115_embeddings, ts115_labels = load_file(ts115_file)
+    cb513_embeddings, cb513_labels = load_file(cb513_file)
 
     return (
         train_embeddings,
-        train_labels3,
-        train_labels8,
-        train_disorder,
+        train_labels,
         casp12_embeddings,
-        casp12_labels3,
-        casp12_labels8,
-        casp12_disorder,
+        casp12_labels,
         casp13_embeddings,
-        casp13_labels3,
-        casp13_labels8,
-        casp13_disorder,
+        casp13_labels,
         casp14_embeddings,
-        casp14_labels3,
-        casp14_labels8,
-        casp14_disorder,
+        casp14_labels,
         ts115_embeddings,
-        ts115_labels3,
-        ts115_labels8,
-        ts115_disorder,
+        ts115_labels,
         cb513_embeddings,
-        cb513_labels3,
-        cb513_labels8,
-        cb513_disorder,
+        cb513_labels,
     )
 
 
