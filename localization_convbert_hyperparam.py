@@ -23,6 +23,14 @@ from classes.ConvBertForMultiClassClassification import (
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
+import logging
+
+# Set up basic configuration for logging
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
+
 # Set seed for reproducibility
 seed = 7
 set_seed(seed)
@@ -183,6 +191,8 @@ def main():
         test_labels,
     ) = load_data()
 
+    logging.info("Data loaded successfully.")
+
     # a list of all possible labels in your dataset
     all_labels = list(set(train_labels + test_labels))
     label_encoder = LabelEncoder()
@@ -197,6 +207,12 @@ def main():
         test_embeddings,
         test_labels,
         label_encoder,
+    )
+
+    logging.info(
+        "Datasets created: Training {}, Validation {}, Test {}".format(
+            len(training_dataset), len(validation_dataset), len(test_dataset)
+        )
     )
 
     model_embed_dim = 768
@@ -241,6 +257,8 @@ def main():
             )
         ],
     )
+
+    logging.info("Trainer initialized.")
 
     best_trials = trainer.hyperparameter_search(
         direction="maximize",
