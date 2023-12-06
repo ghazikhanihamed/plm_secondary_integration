@@ -85,14 +85,13 @@ def create_datasets(
     return training_dataset, validation_dataset, test_dataset
 
 
-def model_init(embed_dim, class_weights=None):
+def model_init(num_tokens, embed_dim, class_weights=None):
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
     nlayers = 1
     nhead = 4
     dropout = 0.2
     conv_kernel_size = 7
-    pooling = "max"
     downstream_model = ankh.ConvBertForMultiClassClassification(
         input_dim=embed_dim,
         nhead=nhead,
@@ -101,7 +100,6 @@ def model_init(embed_dim, class_weights=None):
         num_layers=nlayers,
         kernel_size=conv_kernel_size,
         dropout=dropout,
-        pooling=pooling,
     )
     loss_fn = torch.nn.CrossEntropyLoss(
         weight=torch.tensor(class_weights, dtype=torch.float32)
@@ -227,7 +225,10 @@ def main():
     # Initialize Trainer
     trainer = Trainer(
         model_init=partial(
-            model_init, embed_dim=model_embed_dim, class_weights=class_weights
+            model_init,
+            len(np.unique(train_labels_encoded)),
+            model_embed_dim,
+            class_weights,
         ),
         args=training_args,
         train_dataset=training_dataset,
