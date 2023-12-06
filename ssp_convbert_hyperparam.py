@@ -208,24 +208,18 @@ def main():
     ts115_labels_encodings = encode_tags(ts115_labels, "label3", tag2id)
     cb513_labels_encodings = encode_tags(cb513_labels, "label3", tag2id)
 
-    train_labels_encodings = mask_disorder(
-        train_labels_encodings, train_labels["disorder"]
-    )
-    casp12_labels_encodings = mask_disorder(
-        casp12_labels_encodings, casp12_labels["disorder"]
-    )
-    casp13_labels_encodings = mask_disorder(
-        casp13_labels_encodings, casp13_labels["disorder"]
-    )
-    casp14_labels_encodings = mask_disorder(
-        casp14_labels_encodings, casp14_labels["disorder"]
-    )
-    ts115_labels_encodings = mask_disorder(
-        ts115_labels_encodings, ts115_labels["disorder"]
-    )
-    cb513_labels_encodings = mask_disorder(
-        cb513_labels_encodings, cb513_labels["disorder"]
-    )
+    train_disorders = [label_dict["disorder"] for label_dict in train_labels]
+    train_labels_encodings = mask_disorder(train_labels_encodings, train_disorders)
+    casp12_disorders = [label_dict["disorder"] for label_dict in casp12_labels]
+    casp12_labels_encodings = mask_disorder(casp12_labels_encodings, casp12_disorders)
+    casp13_disorders = [label_dict["disorder"] for label_dict in casp13_labels]
+    casp13_labels_encodings = mask_disorder(casp13_labels_encodings, casp13_disorders)
+    casp14_disorders = [label_dict["disorder"] for label_dict in casp14_labels]
+    casp14_labels_encodings = mask_disorder(casp14_labels_encodings, casp14_disorders)
+    ts115_disorders = [label_dict["disorder"] for label_dict in ts115_labels]
+    ts115_labels_encodings = mask_disorder(ts115_labels_encodings, ts115_disorders)
+    cb513_disorders = [label_dict["disorder"] for label_dict in cb513_labels]
+    cb513_labels_encodings = mask_disorder(cb513_labels_encodings, cb513_disorders)
 
     (
         training_dataset,
