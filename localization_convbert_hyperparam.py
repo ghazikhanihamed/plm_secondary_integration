@@ -85,7 +85,7 @@ def create_datasets(
     return training_dataset, validation_dataset, test_dataset
 
 
-def model_init(num_tokens, embed_dim, class_weights=None):
+def model_init(num_tokens, embed_dim):
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
     nlayers = 1
@@ -102,10 +102,6 @@ def model_init(num_tokens, embed_dim, class_weights=None):
         kernel_size=conv_kernel_size,
         dropout=dropout,
     )
-    loss_fn = torch.nn.CrossEntropyLoss(
-        weight=torch.tensor(class_weights, dtype=torch.float32)
-    )
-    downstream_model.set_loss_fn(loss_fn)
 
     return downstream_model
 
@@ -188,7 +184,7 @@ def main():
     label_encoder.fit(all_labels)
 
     train_labels_encoded = label_encoder.transform(train_labels)
-    class_weights = compute_class_weights(train_labels_encoded)
+    # class_weights = compute_class_weights(train_labels_encoded)
 
     training_dataset, validation_dataset, test_dataset = create_datasets(
         train_embeddings,
@@ -229,7 +225,6 @@ def main():
             model_init,
             len(np.unique(train_labels_encoded)),
             model_embed_dim,
-            class_weights,
         ),
         args=training_args,
         train_dataset=training_dataset,
