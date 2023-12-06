@@ -50,5 +50,75 @@ def load_embeddings_and_labels(embedding_dir, dataset_name):
     return train_embeddings, train_labels, test_embeddings, test_labels
 
 
+def load_ssp_embeddings_and_labels(embedding_dir):
+    train_file = os.path.join(embedding_dir, "train.h5py")
+    casp12_file = os.path.join(embedding_dir, "casp12.h5py")
+    casp13_file = os.path.join(embedding_dir, "casp13.h5py")
+    casp14_file = os.path.join(embedding_dir, "casp14.h5py")
+    ts115_file = os.path.join(embedding_dir, "ts115.h5py")
+    cb513_file = os.path.join(embedding_dir, "cb513.h5py")
+
+    def load_file(file_path):
+        embeddings = []
+        labels = []
+        with h5py.File(file_path, "r") as f:
+            for key in f.keys():
+                embeddings.append(f[key][()])
+                labels.append(
+                    {
+                        "label3": f[key].attrs["label3"],
+                        "label8": f[key].attrs["label8"],
+                        "disorder": f[key].attrs["disorder"],
+                    }
+                )
+        return embeddings, labels
+
+    train_embeddings, train_labels3, train_labels8, train_disorder = load_file(
+        train_file
+    )
+    casp12_embeddings, casp12_labels3, casp12_labels8, casp12_disorder = load_file(
+        casp12_file
+    )
+    casp13_embeddings, casp13_labels3, casp13_labels8, casp13_disorder = load_file(
+        casp13_file
+    )
+    casp14_embeddings, casp14_labels3, casp14_labels8, casp14_disorder = load_file(
+        casp14_file
+    )
+    ts115_embeddings, ts115_labels3, ts115_labels8, ts115_disorder = load_file(
+        ts115_file
+    )
+    cb513_embeddings, cb513_labels3, cb513_labels8, cb513_disorder = load_file(
+        cb513_file
+    )
+
+    return (
+        train_embeddings,
+        train_labels3,
+        train_labels8,
+        train_disorder,
+        casp12_embeddings,
+        casp12_labels3,
+        casp12_labels8,
+        casp12_disorder,
+        casp13_embeddings,
+        casp13_labels3,
+        casp13_labels8,
+        casp13_disorder,
+        casp14_embeddings,
+        casp14_labels3,
+        casp14_labels8,
+        casp14_disorder,
+        ts115_embeddings,
+        ts115_labels3,
+        ts115_labels8,
+        ts115_disorder,
+        cb513_embeddings,
+        cb513_labels3,
+        cb513_labels8,
+        cb513_disorder,
+    )
+
+
 # Usage example
 # train_dataset, test_dataset = load_embeddings_and_labels("./embeddings", "ionchannels")
