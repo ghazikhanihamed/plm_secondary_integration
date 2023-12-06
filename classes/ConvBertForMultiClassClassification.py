@@ -31,7 +31,6 @@ class ConvBertForMultiClassClassification(layers.BaseModule):
             kernel_size=kernel_size,
             dropout=dropout,
             pooling=pooling,
-            num_classes=num_classes,
         )
 
         """
