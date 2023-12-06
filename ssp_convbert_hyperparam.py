@@ -193,16 +193,20 @@ def main():
             "f1": f1_score(flat_out_label_list, flat_preds_list, average="macro"),
         }
 
-    def encode_tags(labels, tag2id):
-        labels = [[tag2id[tag] for tag in doc] for doc in labels]
-        return labels
+    def encode_tags(label_dicts, key, tag2id):
+        """Encodes tags in the list of label dictionaries for a specific key."""
+        encoded_labels = []
+        for label_dict in label_dicts:
+            labels = label_dict[key]
+            encoded_labels.append([tag2id[tag] for tag in labels])
+        return encoded_labels
 
-    train_labels_encodings = encode_tags(train_labels["label3"], tag2id)
-    casp12_labels_encodings = encode_tags(casp12_labels["label3"], tag2id)
-    casp13_labels_encodings = encode_tags(casp13_labels["label3"], tag2id)
-    casp14_labels_encodings = encode_tags(casp14_labels["label3"], tag2id)
-    ts115_labels_encodings = encode_tags(ts115_labels["label3"], tag2id)
-    cb513_labels_encodings = encode_tags(cb513_labels["label3"], tag2id)
+    train_labels_encodings = encode_tags(train_labels, "label3", tag2id)
+    casp12_labels_encodings = encode_tags(casp12_labels, "label3", tag2id)
+    casp13_labels_encodings = encode_tags(casp13_labels, "label3", tag2id)
+    casp14_labels_encodings = encode_tags(casp14_labels, "label3", tag2id)
+    ts115_labels_encodings = encode_tags(ts115_labels, "label3", tag2id)
+    cb513_labels_encodings = encode_tags(cb513_labels, "label3", tag2id)
 
     train_labels_encodings = mask_disorder(
         train_labels_encodings, train_labels["disorder"]
