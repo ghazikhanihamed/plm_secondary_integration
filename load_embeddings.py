@@ -24,7 +24,7 @@ def load_embeddings_and_labels(embedding_dir, dataset_name):
                     )
                 else:
                     labels.append(f[key].attrs["label"])
-        return np.array(embeddings), labels
+        return embeddings, labels
 
     train_embeddings, train_labels = load_file(
         train_file, is_ssp=(dataset_name == "SSP")
@@ -36,17 +36,18 @@ def load_embeddings_and_labels(embedding_dir, dataset_name):
         validation_embeddings, validation_labels = load_file(
             validation_file, is_ssp=(dataset_name == "SSP")
         )
+        return (
+            train_embeddings,
+            train_labels,
+            validation_embeddings,
+            validation_labels,
+            test_embeddings,
+            test_labels,
+        )
         # train_embeddings = np.concatenate((train_embeddings, validation_embeddings))
         # train_labels += validation_labels
 
-    return (
-        train_embeddings,
-        train_labels,
-        validation_embeddings,
-        validation_labels,
-        test_embeddings,
-        test_labels,
-    )
+    return train_embeddings, train_labels, test_embeddings, test_labels
 
 
 # Usage example
