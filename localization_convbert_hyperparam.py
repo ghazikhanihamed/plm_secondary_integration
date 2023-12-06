@@ -17,9 +17,13 @@ from transformers import (
     EarlyStoppingCallback,
 )
 from load_embeddings import load_embeddings_and_labels
+from classes.ConvBertForMultiClassClassification import (
+    ConvBertForMultiClassClassification,
+)
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 import logging
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -104,15 +108,15 @@ def create_datasets(
     return training_dataset, validation_dataset, test_dataset
 
 
-def model_init(num_tokens, embed_dim):
+def model_init(num_classes, embed_dim):
     hidden_dim = int(embed_dim / 2)
     num_hidden_layers = 1
     nlayers = 1
     nhead = 4
-    dropout = 0.2
+    dropout = 0.2ƒ
     conv_kernel_size = 7
-    downstream_model = ankh.ConvBertForMultiClassClassification(
-        num_tokens=num_tokens,
+    pooling = "max"
+    downstream_model = ConvBertForMultiClassClassification(
         input_dim=embed_dim,
         nhead=nhead,
         hidden_dim=hidden_dim,
@@ -120,6 +124,8 @@ def model_init(num_tokens, embed_dim):
         num_layers=nlayers,
         kernel_size=conv_kernel_size,
         dropout=dropout,
+        pooling=pooling,
+        num_classes=num_classes,
     )
 
     return downstream_model
