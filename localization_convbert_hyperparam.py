@@ -113,7 +113,7 @@ def model_init(num_classes, embed_dim):
     num_hidden_layers = 1
     nlayers = 1
     nhead = 4
-    dropout = 0.2ƒ
+    dropout = 0.2
     conv_kernel_size = 7
     pooling = "max"
     downstream_model = ConvBertForMultiClassClassification(
