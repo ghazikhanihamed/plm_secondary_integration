@@ -66,10 +66,11 @@ def create_datasets(
             label = self.labels[idx]
             # Convert string label to integer
             label_int = label_encoder.transform([label])[0]
+            label_int = torch.tensor(label_int).unsqueeze(-1)
 
             return {
                 "embed": torch.tensor(embedding),
-                "labels": torch.tensor(label_int),
+                "labels": label_int,
             }
 
         def __len__(self):
