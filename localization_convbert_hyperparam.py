@@ -8,7 +8,7 @@ import wandb
 import json
 from functools import partial
 from sklearn import metrics
-from torch.utils.data import Dataset, random_split
+from torch.utils.data import Dataset, Subset
 from transformers import (
     Trainer,
     TrainingArguments,
@@ -22,6 +22,7 @@ from classes.ConvBertForMultiClassClassification import (
 )
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
 import logging
 
@@ -52,6 +53,27 @@ def load_data():
     return load_embeddings_and_labels("./embeddings/p2s_localization", "localization")
 
 
+class LocalizationDataset(Dataset):
+    def __init__(self, sequences, labels, label_encoder):
+        self.sequences = sequences
+        self.labels = labels
+        self.label_encoder = label_encoder
+
+    def __getitem__(self, idx):
+        embedding = self.sequences[idx]
+        label = self.labels[idx]
+        # Convert string label to integer
+        label_int = self.label_encoder.transform([label])[0]
+
+        return {
+            "embed": torch.tensor(embedding),
+            "labels": torch.tensor(label_int),
+        }
+
+    def __len__(self):
+        return len(self.labels)
+
+
 def create_datasets(
     training_sequences,
     training_labels,
@@ -59,39 +81,26 @@ def create_datasets(
     test_labels,
     label_encoder=None,
 ):
-    class LocalizationDataset(Dataset):
-        def __init__(self, sequences, labels):
-            self.sequences = sequences
-            self.labels = labels
-
-        def __getitem__(self, idx):
-            embedding = self.sequences[idx]
-            label = self.labels[idx]
-            # Convert string label to integer
-            label_int = label_encoder.transform([label])[0]
-
-            return {
-                "embed": torch.tensor(embedding),
-                "labels": torch.tensor(label_int),
-            }
-
-        def __len__(self):
-            return len(self.labels)
-
     # Create the full training dataset
-    full_training_dataset = LocalizationDataset(training_sequences, training_labels)
-
-    # Calculate the size of training and validation sets
-    total_train_samples = len(full_training_dataset)
-    val_size = int(np.floor(0.1 * total_train_samples))
-    train_size = total_train_samples - val_size
-
-    # Randomly split the dataset into training and validation datasets
-    training_dataset, validation_dataset = random_split(
-        full_training_dataset, [train_size, val_size]
+    full_training_dataset = LocalizationDataset(
+        training_sequences, training_labels, label_encoder
     )
 
-    test_dataset = LocalizationDataset(test_sequences, test_labels)
+    # Convert labels to integers for stratification
+    int_labels = label_encoder.transform(training_labels)
+
+    # Stratified split into training and validation datasets
+    train_indices, val_indices = train_test_split(
+        np.arange(len(training_sequences)),
+        test_size=0.1,
+        stratify=int_labels,
+        random_state=seed,  # for reproducibility
+    )
+
+    training_dataset = Subset(full_training_dataset, train_indices)
+    validation_dataset = Subset(full_training_dataset, val_indices)
+
+    test_dataset = LocalizationDataset(test_sequences, test_labels, label_encoder)
 
     return training_dataset, validation_dataset, test_dataset
 
