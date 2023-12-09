@@ -24,7 +24,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 from sklearn.model_selection import StratifiedKFold
-from load_embeddings import load_ssp_embeddings_and_labels, load_embeddings_and_labels
+from load_embeddings import load_embeddings_and_labels_combined
 from scipy import stats
 
 import logging
@@ -56,7 +56,9 @@ def setup_wandb(api_key):
 
 def load_data(model_type, task):
     # Modify this function to load data based on model and task
-    return load_embeddings_and_labels(f"./embeddings/{model_type}_{task}", task)
+    return load_embeddings_and_labels_combined(
+        f"./embeddings/{model_type}_{task}", task
+    )
 
 
 class ProteinClassificationDataset(Dataset):
@@ -296,14 +298,16 @@ def main():
                 }
                 # Use ankh_learning_rate, ankh_warmup_steps, etc.
 
+            indices = np.arange(len(train_embeddings))
+
             for fold, (train_idx, val_idx) in enumerate(
-                skf.split(train_embeddings, train_labels_encoded)
+                skf.split(indices, train_labels)
             ):
                 # Split data into training and validation for the current fold
-                training_sequences = train_embeddings[train_idx]
-                training_labels = train_labels[train_idx]
-                validation_sequences = train_embeddings[val_idx]
-                validation_labels = train_labels[val_idx]
+                training_sequences = [train_embeddings[i] for i in train_idx]
+                training_labels = [train_labels[i] for i in train_idx]
+                validation_sequences = [train_embeddings[i] for i in val_idx]
+                validation_labels = [train_labels[i] for i in val_idx]
 
                 # Create the training and validation datasets
                 training_dataset, validation_dataset = create_datasets(
@@ -405,6 +409,7 @@ def main():
     results_df = pd.DataFrame(results)
     # Save results to CSV in the results folder
     results_df.to_csv(f"./results/cross_validation_results.csv", index=False)
+
 
 if __name__ == "__main__":
     main()

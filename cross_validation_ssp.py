@@ -296,8 +296,10 @@ def main():
                 cb513_labels_encodings, cb513_disorders
             )
 
+            indices = np.arange(len(train_embeddings))
+
             for fold, (train_idx, val_idx) in enumerate(
-                skf.split(train_embeddings, train_labels_encodings)
+                skf.split(indices, train_labels_encodings)
             ):
                 # Split data into training and validation for the current fold
                 training_sequences = [train_embeddings[i] for i in train_idx]
