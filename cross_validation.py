@@ -26,6 +26,9 @@ import pandas as pd
 from sklearn.model_selection import StratifiedKFold
 from load_embeddings import load_embeddings_and_labels_combined
 from scipy import stats
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
+
 
 import logging
 
@@ -40,6 +43,24 @@ seed = 7
 set_seed(seed)
 
 model_embed_dim = 768
+
+
+def custom_stratified_split(indices, labels, n_splits=5):
+    folds = []
+    remaining_indices = indices.copy()
+
+    for _ in range(n_splits):
+        # Stratified split for each fold
+        train_idx, val_idx = train_test_split(
+            remaining_indices,
+            test_size=1.0 / n_splits,
+            stratify=[labels[i] for i in remaining_indices],
+        )
+
+        folds.append((train_idx, val_idx))
+        remaining_indices = [idx for idx in remaining_indices if idx not in val_idx]
+
+    return folds
 
 
 def load_wandb_config():
@@ -204,7 +225,7 @@ def main():
         "ionchannels",
         "mp",
     ]
-    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    # skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
 
     p2s_hyperparams = {
         "solubility": {
@@ -299,9 +320,17 @@ def main():
                 # Use ankh_learning_rate, ankh_warmup_steps, etc.
 
             indices = np.arange(len(train_embeddings))
+            if task_type in ["binary", "multiclass"]:
+                # Use custom_stratified_split for classification tasks
+                skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+                cv_splitter = skf.split
+            elif task_type == "regression":
+                # Use KFold for regression tasks
+                kf = KFold(n_splits=5, shuffle=True, random_state=seed)
+                cv_splitter = kf.split
 
             for fold, (train_idx, val_idx) in enumerate(
-                skf.split(indices, train_labels)
+                cv_splitter(indices, train_labels)
             ):
                 # Split data into training and validation for the current fold
                 training_sequences = [train_embeddings[i] for i in train_idx]

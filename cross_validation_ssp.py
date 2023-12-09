@@ -27,6 +27,8 @@ from sklearn.model_selection import StratifiedKFold
 from load_embeddings import load_ssp_embeddings_and_labels, load_embeddings_and_labels
 from scipy import stats
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
 
 
 import logging
@@ -164,7 +166,9 @@ def main():
         "SSP",
     ]
     ssp_types = ["ssp3", "ssp8"]
-    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    kf = KFold(
+        n_splits=5, shuffle=True, random_state=seed
+    )  # Use KFold instead of StratifiedKFold
 
     p2s_hyperparams = {
         "learning_rate": 0.0030620212672418912,
@@ -298,9 +302,7 @@ def main():
 
             indices = np.arange(len(train_embeddings))
 
-            for fold, (train_idx, val_idx) in enumerate(
-                skf.split(indices, train_labels_encodings)
-            ):
+            for fold, (train_idx, val_idx) in enumerate(kf.split(indices)):
                 # Split data into training and validation for the current fold
                 training_sequences = [train_embeddings[i] for i in train_idx]
                 training_labels = [train_labels_encodings[i] for i in train_idx]
