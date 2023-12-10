@@ -381,6 +381,32 @@ def main():
                         }
                     )
 
+            final_trainer = Trainer(
+                model_init=partial(
+                    model_init,
+                    num_tokens=len(unique_tags),
+                    embed_dim=model_embed_dim,
+                ),
+                args=training_args,
+                train_dataset=create_datasets_ssp(
+                    train_embeddings, train_labels_encodings
+                ),
+                eval_dataset=create_datasets_ssp(
+                    casp12_embeddings, casp12_labels_encodings
+                ),
+                compute_metrics=compute_metrics,
+                callbacks=[
+                    EarlyStoppingCallback(
+                        early_stopping_patience=5, early_stopping_threshold=0.05
+                    )
+                ],
+            )
+
+            print(f"Training {experiment} on the full training set...")
+
+            # Train the model on the full training set
+            final_trainer.train()
+
             # After cross-validation, evaluate on the test set
             casp12_dataset, casp13_dataset = create_datasets_ssp(
                 casp12_embeddings,
@@ -396,11 +422,11 @@ def main():
             )
             cb513_dataset = SSPDataset(cb513_embeddings, cb513_labels_encodings)
 
-            casp12_results = trainer.evaluate(casp12_dataset)
-            casp13_results = trainer.evaluate(casp13_dataset)
-            casp14_results = trainer.evaluate(casp14_dataset)
-            ts115_results = trainer.evaluate(ts115_dataset)
-            cb513_results = trainer.evaluate(cb513_dataset)
+            casp12_results = final_trainer.evaluate(casp12_dataset)
+            casp13_results = final_trainer.evaluate(casp13_dataset)
+            casp14_results = final_trainer.evaluate(casp14_dataset)
+            ts115_results = final_trainer.evaluate(ts115_dataset)
+            cb513_results = final_trainer.evaluate(cb513_dataset)
 
             # Store test set results
             # For test set results

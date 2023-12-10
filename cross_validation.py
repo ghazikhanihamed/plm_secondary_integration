@@ -128,38 +128,37 @@ def create_datasets(
     return training_dataset
 
 
-def compute_metrics_wrapper(task_type):
-    def compute_metrics(p: EvalPrediction):
-        if task_type == "binary":
-            preds = (torch.sigmoid(torch.tensor(p.predictions)).numpy() > 0.5).tolist()
-            labels = p.label_ids.tolist()
-            return {
-                "accuracy": metrics.accuracy_score(labels, preds),
-                "precision": metrics.precision_score(labels, preds),
-                "recall": metrics.recall_score(labels, preds),
-                "f1": metrics.f1_score(labels, preds),
-                "mcc": metrics.matthews_corrcoef(labels, preds),
-            }
+def compute_metrics(p: EvalPrediction, task_type):
+    if task_type == "binary":
+        preds = (torch.sigmoid(torch.tensor(p.predictions)).numpy() > 0.5).tolist()
+        labels = p.label_ids.tolist()
+        return {
+            "accuracy": metrics.accuracy_score(labels, preds),
+            "precision": metrics.precision_score(labels, preds),
+            "recall": metrics.recall_score(labels, preds),
+            "f1": metrics.f1_score(labels, preds),
+            "mcc": metrics.matthews_corrcoef(labels, preds),
+        }
 
-        elif task_type == "multiclass":
-            # Use softmax and argmax for multiclass predictions
-            preds = torch.argmax(
-                torch.softmax(torch.tensor(p.predictions), dim=1), dim=1
-            ).numpy()
-            labels = p.label_ids
-            return {
-                "accuracy": metrics.accuracy_score(labels, preds),
-                # Use 'macro' or 'weighted' average in multiclass metrics
-                "precision": metrics.precision_score(labels, preds, average="weighted"),
-                "recall": metrics.recall_score(labels, preds, average="weighted"),
-                "f1": metrics.f1_score(labels, preds, average="weighted"),
-                "mcc": metrics.matthews_corrcoef(labels, preds),
-            }
+    elif task_type == "multiclass":
+        # Use softmax and argmax for multiclass predictions
+        preds = torch.argmax(
+            torch.softmax(torch.tensor(p.predictions), dim=1), dim=1
+        ).numpy()
+        labels = p.label_ids
+        return {
+            "accuracy": metrics.accuracy_score(labels, preds),
+            # Use 'macro' or 'weighted' average in multiclass metrics
+            "precision": metrics.precision_score(labels, preds, average="weighted"),
+            "recall": metrics.recall_score(labels, preds, average="weighted"),
+            "f1": metrics.f1_score(labels, preds, average="weighted"),
+            "mcc": metrics.matthews_corrcoef(labels, preds),
+        }
 
-        elif task_type == "regression":
-            return {
-                "spearmanr": stats.spearmanr(p.label_ids, p.predictions).correlation,
-            }
+    elif task_type == "regression":
+        return {
+            "spearmanr": stats.spearmanr(p.label_ids, p.predictions).correlation,
+        }
 
 
 def model_init(embed_dim, task_type=None, num_classes=None, training_labels_mean=None):
@@ -387,7 +386,7 @@ def main():
                     args=training_args,
                     train_dataset=training_dataset,
                     eval_dataset=validation_dataset,
-                    compute_metrics=compute_metrics_wrapper(task_type),
+                    compute_metrics=partial(compute_metrics, task_type=task_type),
                     callbacks=[
                         EarlyStoppingCallback(
                             early_stopping_patience=5, early_stopping_threshold=0.05
@@ -414,13 +413,43 @@ def main():
                         }
                     )
 
+            final_trainer = Trainer(
+                model_init=partial(
+                    model_init,
+                    embed_dim=model_embed_dim,
+                    task_type=task_type,
+                    num_classes=num_classes,
+                    training_labels_mean=training_labels_mean,
+                ),
+                args=training_args,
+                train_dataset=create_datasets(
+                    train_embeddings, train_labels, label_encoder=label_encoder
+                ),
+                eval_dataset=create_datasets(
+                    test_embeddings, test_labels, label_encoder=label_encoder
+                ),
+                compute_metrics=partial(compute_metrics, task_type=task_type),
+                callbacks=[
+                    EarlyStoppingCallback(
+                        early_stopping_patience=5, early_stopping_threshold=0.05
+                    )
+                ],
+            )
+
+            print(
+                f"Training on the full training set for the {task} task and {model} model."
+            )
+
+            # Train the model on the full training set
+            final_trainer.train()
+
             # After cross-validation, evaluate on the test set
             test_dataset = create_datasets(
                 test_embeddings,
                 test_labels,
                 label_encoder,
             )
-            test_results = trainer.evaluate(test_dataset)
+            test_results = final_trainer.evaluate(test_dataset)
 
             # Store test set results
             for key in test_results.keys():
