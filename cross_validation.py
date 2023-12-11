@@ -93,24 +93,43 @@ class ProteinClassificationDataset(Dataset):
         try:
             embedding = self.sequences[idx]
             label = self.labels[idx]
-            if self.label_encoder is None:
-                return {
-                    "embed": torch.tensor(embedding),
-                    "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
-                }
-            else:
-                # Convert string label to integer
-                label_int = self.label_encoder.transform([label])[0]
-                if self.membrane is not None:
-                    if self.membrane:
-                        label_int = torch.tensor(
-                            label_int, dtype=torch.float
-                        ).unsqueeze(-1)
 
-                    return {
-                        "embed": torch.tensor(embedding),
-                        "labels": torch.tensor(label_int),
-                    }
+            # Decode byte string to regular string if necessary
+            if isinstance(label, bytes):
+                label = label.decode("utf-8")
+
+            # Label encoding
+            if self.label_encoder is not None:
+                label = self.label_encoder.transform([label])[0]
+
+            # Tensor conversion
+            label_tensor = torch.tensor(
+                label, dtype=torch.float32 if self.membrane is None else torch.long
+            )
+
+            return {
+                "embed": torch.tensor(embedding),
+                "labels": label_tensor.unsqueeze(-1),
+            }
+
+            # if self.label_encoder is None:
+            #     return {
+            #         "embed": torch.tensor(embedding),
+            #         "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
+            #     }
+            # else:
+            #     # Convert string label to integer
+            #     label_int = self.label_encoder.transform([label])[0]
+            #     if self.membrane is not None:
+            #         if self.membrane:
+            #             label_int = torch.tensor(
+            #                 label_int, dtype=torch.float
+            #             ).unsqueeze(-1)
+
+            #         return {
+            #             "embed": torch.tensor(embedding),
+            #             "labels": torch.tensor(label_int),
+            #         }
         except Exception as e:
             print(f"Error at index {idx}: {e}")
             print(f"Label causing issue: {self.labels[idx]}")
