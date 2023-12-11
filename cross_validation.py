@@ -83,27 +83,39 @@ def load_data(model_type, task):
 
 
 class ProteinClassificationDataset(Dataset):
-    def __init__(self, sequences, labels, label_encoder=None):
+    def __init__(self, sequences, labels, label_encoder=None, membrane=None):
         self.sequences = sequences
         self.labels = labels
         self.label_encoder = label_encoder
+        self.membrane = membrane
 
     def __getitem__(self, idx):
-        embedding = self.sequences[idx]
-        label = self.labels[idx]
-        if self.label_encoder is None:
-            return {
-                "embed": torch.tensor(embedding),
-                "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
-            }
+        try:
+            embedding = self.sequences[idx]
+            label = self.labels[idx]
+            if self.label_encoder is None:
+                return {
+                    "embed": torch.tensor(embedding),
+                    "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
+                }
+            else:
+                # Convert string label to integer
+                label_int = self.label_encoder.transform([label])[0]
+                if self.membrane is not None:
+                    if self.membrane:
+                        label_int = torch.tensor(
+                            label_int, dtype=torch.float
+                        ).unsqueeze(-1)
 
-        # Convert string label to integer
-        label_int = self.label_encoder.transform([label])[0]
-
-        return {
-            "embed": torch.tensor(embedding),
-            "labels": torch.tensor(label_int),
-        }
+                    return {
+                        "embed": torch.tensor(embedding),
+                        "labels": torch.tensor(label_int),
+                    }
+        except Exception as e:
+            print(f"Error at index {idx}: {e}")
+            print(f"Label causing issue: {self.labels[idx]}")
+            print(f"label type: {type(self.labels[idx])}")
+            raise e
 
     def __len__(self):
         return len(self.labels)
@@ -115,14 +127,15 @@ def create_datasets(
     test_sequences=None,
     test_labels=None,
     label_encoder=None,
+    membrane=None,
 ):
     # Create the full training dataset
     training_dataset = ProteinClassificationDataset(
-        training_sequences, training_labels, label_encoder
+        training_sequences, training_labels, label_encoder, membrane
     )
     if test_sequences is not None and test_labels is not None:
         test_dataset = ProteinClassificationDataset(
-            test_sequences, test_labels, label_encoder
+            test_sequences, test_labels, label_encoder, membrane
         )
         return training_dataset, test_dataset
     return training_dataset
@@ -217,14 +230,14 @@ def main():
     results = []
     models = ["p2s", "ankh"]
     tasks = [
-        "fluorescence",
         "localization",
+        "fluorescence",
         "solubility",
         "transporters",
         "ionchannels",
         "mp",
     ]
-    # skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=seed)
+    membrane_tasks = ["transporters", "ionchannels", "mp"]
 
     p2s_hyperparams = {
         "solubility": {
@@ -278,6 +291,9 @@ def main():
 
     for model in models:
         for task in tasks:
+            print("****************************************************************")
+            print(f"Training on the {task} task and {model} model.")
+            print("****************************************************************")
             # set if the task is binary, multiclass, or regression
             if task == "localization":
                 task_type = "multiclass"
@@ -331,6 +347,13 @@ def main():
             for fold, (train_idx, val_idx) in enumerate(
                 cv_splitter(indices, train_labels)
             ):
+                print(
+                    "****************************************************************"
+                )
+                print(f"Training on fold {fold} of the {task} task and {model} model.")
+                print(
+                    "****************************************************************"
+                )
                 # Split data into training and validation for the current fold
                 training_sequences = [train_embeddings[i] for i in train_idx]
                 training_labels = [train_labels[i] for i in train_idx]
@@ -344,6 +367,7 @@ def main():
                     validation_sequences,
                     validation_labels,
                     label_encoder,
+                    membrane=task in membrane_tasks,
                 )
 
                 training_args = TrainingArguments(
@@ -423,10 +447,16 @@ def main():
                 ),
                 args=training_args,
                 train_dataset=create_datasets(
-                    train_embeddings, train_labels, label_encoder=label_encoder
+                    train_embeddings,
+                    train_labels,
+                    label_encoder=label_encoder,
+                    membrane=task in membrane_tasks,
                 ),
                 eval_dataset=create_datasets(
-                    test_embeddings, test_labels, label_encoder=label_encoder
+                    test_embeddings,
+                    test_labels,
+                    label_encoder=label_encoder,
+                    membrane=task in membrane_tasks,
                 ),
                 compute_metrics=partial(compute_metrics, task_type=task_type),
                 callbacks=[
@@ -448,6 +478,7 @@ def main():
                 test_embeddings,
                 test_labels,
                 label_encoder,
+                membrane=task in membrane_tasks,
             )
             test_results = final_trainer.evaluate(test_dataset)
 
