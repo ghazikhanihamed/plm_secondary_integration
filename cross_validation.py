@@ -98,6 +98,13 @@ class ProteinClassificationDataset(Dataset):
             if isinstance(label, bytes):
                 label = label.decode("utf-8")
 
+            # Convert label to integer if it's a string
+            if isinstance(label, str):
+                if self.label_encoder is not None:
+                    label = self.label_encoder.transform([label])[0]
+                else:
+                    raise ValueError("Label encoder is not set for string labels.")
+
             if self.label_encoder is None:
                 return {
                     "embed": torch.tensor(embedding),
