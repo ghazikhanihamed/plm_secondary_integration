@@ -1,0 +1,178 @@
+==========================================
+SLURM_JOB_ID = 5888
+SLURM_NODELIST = virya3
+==========================================
+Fri Dec  1 11:57:14 2023       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.86.10              Driver Version: 535.86.10    CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA A100-SXM4-40GB          Off | 00000000:01:00.0 Off |                   On |
+| N/A   28C    P0              41W / 400W |     74MiB / 40960MiB |     N/A      Default |
+|                                         |                      |              Enabled |
++-----------------------------------------+----------------------+----------------------+
+|   1  NVIDIA A100-SXM4-40GB          Off | 00000000:41:00.0 Off |                   On |
+| N/A   28C    P0              42W / 400W |     74MiB / 40960MiB |     N/A      Default |
+|                                         |                      |              Enabled |
++-----------------------------------------+----------------------+----------------------+
+
++---------------------------------------------------------------------------------------+
+| MIG devices:                                                                          |
++------------------+--------------------------------+-----------+-----------------------+
+| GPU  GI  CI  MIG |                   Memory-Usage |        Vol|      Shared           |
+|      ID  ID  Dev |                     BAR1-Usage | SM     Unc| CE ENC DEC OFA JPG    |
+|                  |                                |        ECC|                       |
+|==================+================================+===========+=======================|
+|  0    1   0   0  |              37MiB / 19968MiB  | 42      0 |  3   0    2    0    0 |
+|                  |               0MiB / 32767MiB  |           |                       |
++------------------+--------------------------------+-----------+-----------------------+
+|  0    2   0   1  |              37MiB / 19968MiB  | 42      0 |  3   0    2    0    0 |
+|                  |               0MiB / 32767MiB  |           |                       |
++------------------+--------------------------------+-----------+-----------------------+
+|  1    1   0   0  |              37MiB / 19968MiB  | 42      0 |  3   0    2    0    0 |
+|                  |               0MiB / 32767MiB  |           |                       |
++------------------+--------------------------------+-----------+-----------------------+
+|  1    2   0   1  |              37MiB / 19968MiB  | 42      0 |  3   0    2    0    0 |
+|                  |               0MiB / 32767MiB  |           |                       |
++------------------+--------------------------------+-----------+-----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+[2023-12-01 11:57:21,295] torch.distributed.run: [WARNING] 
+[2023-12-01 11:57:21,295] torch.distributed.run: [WARNING] *****************************************
+[2023-12-01 11:57:21,295] torch.distributed.run: [WARNING] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+[2023-12-01 11:57:21,295] torch.distributed.run: [WARNING] *****************************************
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: hamed-ghazikhani (bioinformatics-group). Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+wandb: Appending key for api.wandb.ai to your netrc file: /home/h_ghazik/.netrc
+[2023-12-01 11:57:31,107] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-12-01 11:57:31,107] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-12-01 11:57:31,108] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-12-01 11:57:31,108] [INFO] [real_accelerator.py:158:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-12-01 11:57:32,177] [INFO] [comm.py:637:init_distributed] cdb=None
+[2023-12-01 11:57:32,177] [INFO] [comm.py:637:init_distributed] cdb=None
+[2023-12-01 11:57:32,177] [INFO] [comm.py:668:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[2023-12-01 11:57:32,177] [INFO] [comm.py:637:init_distributed] cdb=None
+[2023-12-01 11:57:32,177] [INFO] [comm.py:637:init_distributed] cdb=None
+12/01/2023 11:57:32 - INFO - __main__ - Distributed environment: DEEPSPEED  Backend: nccl
+Num processes: 4
+Process index: 0
+Local process index: 0
+Device: cuda:0
+
+Mixed precision type: no
+ds_config: {'fp16': {'enabled': False}, 'optimizer': {'type': 'AdamW', 'params': {'lr': 'auto', 'weight_decay': 'auto'}}, 'scheduler': {'type': 'WarmupDecayLR', 'params': {'last_batch_iteration': -1, 'total_num_steps': 'auto', 'warmup_min_lr': 1e-08, 'warmup_max_lr': 'auto', 'warmup_num_steps': 'auto'}}, 'zero_optimization': {'stage': 2, 'allgather_partitions': True, 'allgather_bucket_size': 500000000.0, 'overlap_comm': True, 'reduce_scatter': True, 'reduce_bucket_size': 500000000.0, 'contiguous_gradients': True}, 'gradient_accumulation_steps': 'auto', 'gradient_clipping': 'auto', 'train_batch_size': 'auto', 'train_micro_batch_size_per_gpu': 'auto', 'steps_per_print': inf, 'wall_clock_breakdown': False, 'bf16': {'enabled': False}}
+
+Traceback (most recent call last):
+  File "/home/h_ghazik/plm_secondary_integration/plm_secondary_accelerate.py", line 39, in <module>
+    accelerator = Accelerator()
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/accelerator.py", line 369, in __init__
+    self.state = AcceleratorState(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/state.py", line 732, in __init__
+    PartialState(cpu, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/state.py", line 193, in __init__
+    torch.cuda.set_device(self.device)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/cuda/__init__.py", line 404, in set_device
+    torch._C._cuda_setDevice(device)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+Traceback (most recent call last):
+  File "/home/h_ghazik/plm_secondary_integration/plm_secondary_accelerate.py", line 39, in <module>
+    accelerator = Accelerator()
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/accelerator.py", line 369, in __init__
+    self.state = AcceleratorState(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/state.py", line 732, in __init__
+    PartialState(cpu, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/state.py", line 193, in __init__
+    torch.cuda.set_device(self.device)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/cuda/__init__.py", line 404, in set_device
+    torch._C._cuda_setDevice(device)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+Traceback (most recent call last):
+  File "/home/h_ghazik/plm_secondary_integration/plm_secondary_accelerate.py", line 39, in <module>
+    accelerator = Accelerator()
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/accelerator.py", line 369, in __init__
+    self.state = AcceleratorState(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/state.py", line 732, in __init__
+    PartialState(cpu, **kwargs)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/state.py", line 193, in __init__
+    torch.cuda.set_device(self.device)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/cuda/__init__.py", line 404, in set_device
+    torch._C._cuda_setDevice(device)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+loading file spiece.model from cache at None
+loading file tokenizer.json from cache at /home/h_ghazik/tmp/models--ElnaggarLab--ankh-base/snapshots/c8957643a8a415e218a14de8a97fea06ed27c0f0/tokenizer.json
+loading file added_tokens.json from cache at None
+loading file special_tokens_map.json from cache at /home/h_ghazik/tmp/models--ElnaggarLab--ankh-base/snapshots/c8957643a8a415e218a14de8a97fea06ed27c0f0/special_tokens_map.json
+loading file tokenizer_config.json from cache at /home/h_ghazik/tmp/models--ElnaggarLab--ankh-base/snapshots/c8957643a8a415e218a14de8a97fea06ed27c0f0/tokenizer_config.json
+12/01/2023 11:57:34 - INFO - __main__ - Max length: 825
+Running tokenizer on dataset for training:   0%|          | 0/10172 [00:00<?, ? examples/s]Running tokenizer on dataset for training:  10%|▉         | 1000/10172 [00:00<00:06, 1451.99 examples/s]Running tokenizer on dataset for training:  20%|█▉        | 2000/10172 [00:01<00:05, 1548.84 examples/s][2023-12-01 11:57:36,420] torch.distributed.elastic.multiprocessing.api: [WARNING] Sending process 3982423 closing signal SIGTERM
+[2023-12-01 11:57:36,684] torch.distributed.elastic.multiprocessing.api: [ERROR] failed (exitcode: 1) local_rank: 1 (pid: 3982424) of binary: /home/h_ghazik/.conda/envs/py39/bin/python
+Traceback (most recent call last):
+  File "/home/h_ghazik/.conda/envs/py39/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/commands/accelerate_cli.py", line 47, in main
+    args.func(args)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/commands/launch.py", line 971, in launch_command
+    deepspeed_launcher(args)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/accelerate/commands/launch.py", line 687, in deepspeed_launcher
+    distrib_run.run(args)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/run.py", line 797, in run
+    elastic_launch(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 134, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+plm_secondary_accelerate.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2023-12-01_11:57:36
+  host      : virya3
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 3982425)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[2]:
+  time      : 2023-12-01_11:57:36
+  host      : virya3
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 3982426)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2023-12-01_11:57:36
+  host      : virya3
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 3982424)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

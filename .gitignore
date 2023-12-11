@@ -163,7 +163,6 @@ cython_debug/
 wandb/
 
 # models
-results/
 
 .DS_Store
 
