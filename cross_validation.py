@@ -45,22 +45,19 @@ set_seed(seed)
 model_embed_dim = 768
 
 
-def custom_stratified_split(indices, labels, n_splits=5):
-    folds = []
-    remaining_indices = indices.copy()
+def create_label_mapping(labels):
+    unique_labels = set(labels)
+    label_to_int = {label: i for i, label in enumerate(unique_labels)}
+    int_to_label = {i: label for label, i in label_to_int.items()}
+    return label_to_int, int_to_label
 
-    for _ in range(n_splits):
-        # Stratified split for each fold
-        train_idx, val_idx = train_test_split(
-            remaining_indices,
-            test_size=1.0 / n_splits,
-            stratify=[labels[i] for i in remaining_indices],
-        )
 
-        folds.append((train_idx, val_idx))
-        remaining_indices = [idx for idx in remaining_indices if idx not in val_idx]
+def transform_labels(labels, label_to_int):
+    return [label_to_int[label] for label in labels]
 
-    return folds
+
+def inverse_transform_labels(int_labels, int_to_label):
+    return [int_to_label[i] for i in int_labels]
 
 
 def load_wandb_config():
@@ -83,51 +80,30 @@ def load_data(model_type, task):
 
 
 class ProteinClassificationDataset(Dataset):
-    def __init__(self, sequences, labels, label_encoder=None, membrane=None):
+    def __init__(self, sequences, labels, label_to_int=None):
         self.sequences = sequences
         self.labels = labels
-        self.label_encoder = label_encoder
-        self.membrane = membrane
+        self.label_to_int = label_to_int
 
     def __getitem__(self, idx):
-        try:
-            embedding = self.sequences[idx]
-            label = self.labels[idx]
+        embedding = self.sequences[idx]
+        label = self.labels[idx]
 
-            # Decode byte string to regular string if necessary
-            if isinstance(label, bytes):
-                label = label.decode("utf-8")
+        # If label_to_int mapping exists and label is a string, convert it to an integer
+        if self.label_to_int is not None and isinstance(label, str):
+            label = self.label_to_int.get(label, -1)  # Default to -1 for unknown labels
 
-            # Convert label to integer if it's a string
-            if isinstance(label, str):
-                if self.label_encoder is not None:
-                    label = self.label_encoder.transform([label])[0]
-                else:
-                    raise ValueError("Label encoder is not set for string labels.")
+        # Handle the case where the label is not found in the mapping
+        if label == -1:
+            raise ValueError(
+                f"Label '{self.labels[idx]}' at index {idx} not found in label mapping."
+            )
 
-            if self.label_encoder is None:
-                return {
-                    "embed": torch.tensor(embedding),
-                    "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
-                }
-            else:
-                # Convert string label to integer
-                label_int = self.label_encoder.transform([label])[0]
-                if self.membrane is not None:
-                    if self.membrane:
-                        label_int = torch.tensor(
-                            label_int, dtype=torch.float
-                        ).unsqueeze(-1)
+        # Convert label to tensor
+        label_tensor = torch.tensor(label, dtype=torch.float32).unsqueeze(-1)
 
-                    return {
-                        "embed": torch.tensor(embedding),
-                        "labels": torch.tensor(label_int),
-                    }
-        except Exception as e:
-            print(f"Error at index {idx}: {e}")
-            print(f"Label causing issue: {self.labels[idx]}")
-            print(f"label type: {type(self.labels[idx])}")
-            raise e
+        # Return the embedding and label tensor
+        return {"embed": torch.tensor(embedding), "labels": label_tensor}
 
     def __len__(self):
         return len(self.labels)
@@ -138,16 +114,15 @@ def create_datasets(
     training_labels,
     test_sequences=None,
     test_labels=None,
-    label_encoder=None,
-    membrane=None,
+    label_to_int=None,
 ):
     # Create the full training dataset
     training_dataset = ProteinClassificationDataset(
-        training_sequences, training_labels, label_encoder, membrane
+        training_sequences, training_labels, label_to_int
     )
     if test_sequences is not None and test_labels is not None:
         test_dataset = ProteinClassificationDataset(
-            test_sequences, test_labels, label_encoder, membrane
+            test_sequences, test_labels, label_to_int
         )
         return training_dataset, test_dataset
     return training_dataset
@@ -320,11 +295,13 @@ def main():
                 model, task
             )
 
-            label_encoder = None
+            label_to_int, int_to_label = None, None
             if task in ["localization", "ionchannels", "mp", "transporters"]:
-                label_encoder = LabelEncoder()
-                label_encoder.fit(list(set(train_labels + test_labels)))
-                train_labels_encoded = label_encoder.transform(train_labels)
+                label_to_int, int_to_label = create_label_mapping(
+                    set(train_labels + test_labels)
+                )
+                train_labels = transform_labels(train_labels, label_to_int)
+                test_labels = transform_labels(test_labels, label_to_int)
 
             training_labels_mean = None
             if task == "fluorescence":
@@ -332,7 +309,7 @@ def main():
 
             num_classes = None
             if task == "localization":
-                num_classes = len(np.unique(train_labels_encoded))
+                num_classes = len(np.unique(train_labels))
 
             if model == "p2s":
                 hyperparams = p2s_hyperparams[task]
@@ -378,8 +355,7 @@ def main():
                     training_labels,
                     validation_sequences,
                     validation_labels,
-                    label_encoder,
-                    membrane=task in membrane_tasks,
+                    label_to_int=label_to_int,
                 )
 
                 training_args = TrainingArguments(
@@ -461,14 +437,12 @@ def main():
                 train_dataset=create_datasets(
                     train_embeddings,
                     train_labels,
-                    label_encoder=label_encoder,
-                    membrane=task in membrane_tasks,
+                    label_to_int=label_to_int,
                 ),
                 eval_dataset=create_datasets(
                     test_embeddings,
                     test_labels,
-                    label_encoder=label_encoder,
-                    membrane=task in membrane_tasks,
+                    label_to_int=label_to_int,
                 ),
                 compute_metrics=partial(compute_metrics, task_type=task_type),
                 callbacks=[
@@ -489,8 +463,7 @@ def main():
             test_dataset = create_datasets(
                 test_embeddings,
                 test_labels,
-                label_encoder,
-                membrane=task in membrane_tasks,
+                label_to_int=label_to_int,
             )
             test_results = final_trainer.evaluate(test_dataset)
 
