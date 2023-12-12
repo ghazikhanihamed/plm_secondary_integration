@@ -80,10 +80,11 @@ def load_data(model_type, task):
 
 
 class ProteinClassificationDataset(Dataset):
-    def __init__(self, sequences, labels, label_to_int=None):
+    def __init__(self, sequences, labels, label_to_int=None, membrane=None):
         self.sequences = sequences
         self.labels = labels
         self.label_to_int = label_to_int
+        self.membrane = membrane
 
     def __getitem__(self, idx):
         embedding = self.sequences[idx]
@@ -99,11 +100,20 @@ class ProteinClassificationDataset(Dataset):
                 f"Label '{self.labels[idx]}' at index {idx} not found in label mapping."
             )
 
-        # Convert label to tensor
-        label_tensor = torch.tensor(label, dtype=torch.float32).unsqueeze(-1)
+        if self.label_to_int is None:
+            return {
+                "embed": torch.tensor(embedding),
+                "labels": torch.tensor(label, dtype=torch.float32).unsqueeze(-1),
+            }
+        else:
+            if self.membrane is not None:
+                if self.membrane:
+                    label = torch.tensor(label, dtype=torch.float).unsqueeze(-1)
 
-        # Return the embedding and label tensor
-        return {"embed": torch.tensor(embedding), "labels": label_tensor}
+                return {
+                    "embed": torch.tensor(embedding),
+                    "labels": torch.tensor(label),
+                }
 
     def __len__(self):
         return len(self.labels)
@@ -115,14 +125,15 @@ def create_datasets(
     test_sequences=None,
     test_labels=None,
     label_to_int=None,
+    membrane=None,
 ):
     # Create the full training dataset
     training_dataset = ProteinClassificationDataset(
-        training_sequences, training_labels, label_to_int
+        training_sequences, training_labels, label_to_int, membrane
     )
     if test_sequences is not None and test_labels is not None:
         test_dataset = ProteinClassificationDataset(
-            test_sequences, test_labels, label_to_int
+            test_sequences, test_labels, label_to_int, membrane
         )
         return training_dataset, test_dataset
     return training_dataset
@@ -356,6 +367,7 @@ def main():
                     validation_sequences,
                     validation_labels,
                     label_to_int=label_to_int,
+                    membrane=task in membrane_tasks,
                 )
 
                 training_args = TrainingArguments(
@@ -438,11 +450,13 @@ def main():
                     train_embeddings,
                     train_labels,
                     label_to_int=label_to_int,
+                    membrane=task in membrane_tasks,
                 ),
                 eval_dataset=create_datasets(
                     test_embeddings,
                     test_labels,
                     label_to_int=label_to_int,
+                    membrane=task in membrane_tasks,
                 ),
                 compute_metrics=partial(compute_metrics, task_type=task_type),
                 callbacks=[
@@ -464,6 +478,7 @@ def main():
                 test_embeddings,
                 test_labels,
                 label_to_int=label_to_int,
+                membrane=task in membrane_tasks,
             )
             test_results = final_trainer.evaluate(test_dataset)
 
