@@ -506,7 +506,7 @@ def main():
         ]
 
         # Select a random subset of the common misclassified samples
-        sample_size = 10  # Adjust this number based on your computational resources
+        sample_size = min(10, len(common_features))
         sampled_common_features = random.sample(common_features, sample_size)
 
         # Initialize the SHAP explainer with the final model
