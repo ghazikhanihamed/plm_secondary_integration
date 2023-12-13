@@ -237,15 +237,18 @@ def capture_misclassifications(p: EvalPrediction, task_type):
 
 # Function to compare misclassified samples and find common ones
 def find_common_misclassified(samples_dict):
-    # Extract misclassified samples for each model
-    misclassified_ankh = {frozenset(sample.items()) for sample in samples_dict["ankh"]}
-    misclassified_p2s = {frozenset(sample.items()) for sample in samples_dict["p2s"]}
+    misclassified_ankh = samples_dict["ankh"]
+    misclassified_p2s = samples_dict["p2s"]
 
-    # Find common elements
-    common = misclassified_ankh.intersection(misclassified_p2s)
+    common_samples = []
+    for sample_ankh in misclassified_ankh:
+        for sample_p2s in misclassified_p2s:
+            if all(
+                sample_ankh[k] == sample_p2s[k] for k in sample_ankh if k in sample_p2s
+            ):
+                common_samples.append(sample_ankh)
+                break
 
-    # Convert back to original format (list of dictionaries)
-    common_samples = [dict(sample) for sample in common]
     return common_samples
 
 
