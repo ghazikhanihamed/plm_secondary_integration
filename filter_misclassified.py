@@ -504,10 +504,15 @@ def main():
         common_features = [
             test_embeddings[sample["index"]] for sample in common_misclassified_samples
         ]
+        print(f"length of common features of {task} is {len(common_features)}")
+        # we print a few of the common features
+        print([features for features in common_features[:3]])
 
         # Select a random subset of the common misclassified samples
         sample_size = min(10, len(common_features))
         sampled_common_features = random.sample(common_features, sample_size)
+
+        print([np.array(features).shape for features in sampled_common_features])
 
         # Initialize the SHAP explainer with the final model
         explainer = shap.Explainer(final_trainer.model, sampled_common_features)
