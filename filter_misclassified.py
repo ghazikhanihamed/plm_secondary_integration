@@ -274,6 +274,12 @@ def map_shap_to_amino_acids(shap_values, sequences_df, common_misclassified_samp
     return shap_amino_acid_impact
 
 
+def max_pooling(embeddings):
+    # Apply max pooling to each embedding in the list
+    pooled_embeddings = [np.max(embedding, axis=0) for embedding in embeddings]
+    return pooled_embeddings
+
+
 def main():
     # create a new folder to store results
     os.makedirs("shap", exist_ok=True)
@@ -506,13 +512,16 @@ def main():
         ]
         print(f"length of common features of {task} is {len(common_features)}")
         # we print a few of the common features
-        print([features for features in common_features[:3]])
+        # print([features for features in common_features[:3]])
+
+        # Assuming 'common_features' is your list of 2D embedding arrays
+        pooled_common_features = max_pooling(common_features)
 
         # Select a random subset of the common misclassified samples
-        sample_size = min(10, len(common_features))
-        sampled_common_features = random.sample(common_features, sample_size)
+        sample_size = min(10, len(pooled_common_features))
+        sampled_common_features = random.sample(pooled_common_features, sample_size)
 
-        print([np.array(features).shape for features in sampled_common_features])
+        # print([np.array(features).shape for features in sampled_common_features])
 
         # Initialize the SHAP explainer with the final model
         explainer = shap.Explainer(final_trainer.model, sampled_common_features)
