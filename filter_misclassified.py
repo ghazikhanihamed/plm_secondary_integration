@@ -31,6 +31,7 @@ from sklearn.model_selection import KFold
 
 import shap
 import matplotlib.pyplot as plt
+import random
 
 
 import logging
@@ -280,10 +281,9 @@ def main():
     results = []
     models = ["p2s", "ankh"]
     tasks = [
-        "localization",
-        # "fluorescence",
-        "solubility",
         "transporters",
+        "localization",
+        "solubility",
         "ionchannels",
         "mp",
     ]
@@ -502,11 +502,15 @@ def main():
             test_embeddings[sample["index"]] for sample in common_misclassified_samples
         ]
 
+        # Select a random subset of the common misclassified samples
+        sample_size = 10  # Adjust this number based on your computational resources
+        sampled_common_features = random.sample(common_features, sample_size)
+
         # Initialize the SHAP explainer with the final model
-        explainer = shap.Explainer(final_trainer.model, common_features)
+        explainer = shap.Explainer(final_trainer.model, sampled_common_features)
 
         # Compute SHAP values
-        shap_values = explainer(common_features)
+        shap_values = explainer(sampled_common_features)
 
         # Save SHAP values and visualizations
         for i, sample in enumerate(common_misclassified_samples):
