@@ -33,6 +33,9 @@ import shap
 import matplotlib.pyplot as plt
 import random
 
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
 
 import logging
 
@@ -283,6 +286,8 @@ def max_pooling(embeddings):
 def main():
     # create a new folder to store results
     os.makedirs("shap", exist_ok=True)
+    os.makedirs("confusion_matrices", exist_ok=True)
+
     # Load Weights & Biases API key
     api_key = load_wandb_config()
     setup_wandb(api_key)
@@ -351,6 +356,10 @@ def main():
     for task in tasks:
         # Dictionaries to hold misclassified samples for each model
         misclassified_samples_model = {}
+
+        # Dictionaries to hold all predictions and true labels for each model
+        all_predictions = {}
+        all_true_labels = {}
         for model in models:
             print("****************************************************************")
             print(f"Training on the {task} task and {model} model.")
@@ -362,6 +371,20 @@ def main():
                 task_type = "regression"
             else:
                 task_type = "binary"
+
+            def capture_eval_loop(trainer, eval_dataset):
+                predictions, label_ids, metrics = trainer.predict(eval_dataset)
+                if task_type == "binary":
+                    preds = (
+                        torch.sigmoid(torch.tensor(predictions)).numpy() > 0.5
+                    ).astype(int)
+                elif task_type == "multiclass":
+                    preds = torch.argmax(
+                        torch.softmax(torch.tensor(predictions), dim=1), dim=1
+                    ).numpy()
+                else:
+                    preds = predictions  # For regression tasks
+                return preds, label_ids, metrics
 
             experiment = f"{task}_best_{model}"
             # Load data for the current model and task
@@ -500,6 +523,29 @@ def main():
 
             # Store misclassified samples in respective dictionary
             misclassified_samples_model[model] = misclassified_samples
+
+            # Evaluate the model and get all predictions and true labels
+            preds, true_labels, _ = capture_eval_loop(final_trainer, test_dataset)
+            all_predictions[model] = preds
+            all_true_labels[model] = true_labels
+
+            # Calculate the confusion matrix
+            cm = confusion_matrix(true_labels, preds)
+
+            # Save the confusion matrix
+            cm_file = f"./confusion_matrices/cm_{task}_{model}.csv"
+            np.savetxt(cm_file, cm, delimiter=",")
+
+            # Optional: Create a heatmap of the confusion matrix and save it
+            plt.figure(figsize=(10, 8))
+            sns.heatmap(cm, annot=True, fmt="d")
+            plt.title(f"Confusion Matrix: {task} - {model}")
+            plt.ylabel("Actual")
+            plt.xlabel("Predicted")
+            plt.savefig(f"./confusion_matrices/cm_heatmap_{task}_{model}.png")
+            plt.close()
+
+            print(f"Confusion matrix for task: {task}, model: {model} saved.")
 
         # Find common misclassified samples
         common_misclassified_samples = find_common_misclassified(
