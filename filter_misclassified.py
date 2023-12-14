@@ -356,10 +356,6 @@ def main():
     for task in tasks:
         # Dictionaries to hold misclassified samples for each model
         misclassified_samples_model = {}
-
-        # Dictionaries to hold all predictions and true labels for each model
-        all_predictions = {}
-        all_true_labels = {}
         for model in models:
             print("****************************************************************")
             print(f"Training on the {task} task and {model} model.")
@@ -372,7 +368,7 @@ def main():
             else:
                 task_type = "binary"
 
-            def capture_eval_loop(trainer, eval_dataset):
+            def capture_eval_pred(trainer, eval_dataset):
                 predictions, label_ids, metrics = trainer.predict(eval_dataset)
                 if task_type == "binary":
                     preds = (
@@ -525,9 +521,7 @@ def main():
             misclassified_samples_model[model] = misclassified_samples
 
             # Evaluate the model and get all predictions and true labels
-            preds, true_labels, _ = capture_eval_loop(final_trainer, test_dataset)
-            all_predictions[model] = preds
-            all_true_labels[model] = true_labels
+            preds, true_labels, _ = capture_eval_pred(final_trainer, test_dataset)
 
             # Calculate the confusion matrix
             cm = confusion_matrix(true_labels, preds)
