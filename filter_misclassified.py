@@ -561,13 +561,15 @@ def main():
         sample_size = min(10, len(pooled_common_features))
         sampled_common_features = random.sample(pooled_common_features, sample_size)
 
+        max_evals = max(500, 2 * len(sampled_common_features[0]) + 1)
+
         # print([np.array(features).shape for features in sampled_common_features])
 
         # Initialize the SHAP explainer with the final model
         explainer = shap.Explainer(final_trainer.model, sampled_common_features)
 
         # Compute SHAP values
-        shap_values = explainer(sampled_common_features)
+        shap_values = explainer(sampled_common_features, max_evals=max_evals)
 
         # Save SHAP values and visualizations
         for i, sample in enumerate(common_misclassified_samples):
