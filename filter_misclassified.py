@@ -282,6 +282,17 @@ def max_pooling(embeddings):
     pooled_embeddings = [np.max(embedding, axis=0) for embedding in embeddings]
     return pooled_embeddings
 
+class VariableLengthSequenceMasker:
+    def __init__(self, background_data):
+        self.background_data = background_data
+
+    def __call__(self, masks, *args):
+        masked_data = []
+        for mask, seq in zip(masks, self.background_data):
+            masked_seq = [seq[i] if mask[i] else np.zeros_like(seq[i]) for i in range(len(seq))]
+            masked_data.append(np.array(masked_seq))
+        return np.array(masked_data)
+
 
 def main():
     # create a new folder to store results
@@ -565,9 +576,9 @@ def main():
         # make list of numpy arrays
         sampled_common_features = [np.array(features) for features in sampled_common_features]
         print(f"type of sampled features: {type(sampled_common_features)}")
-        
-        masker = shap.maskers.Independent(data=sampled_common_features)
 
+        masker = VariableLengthSequenceMasker(sampled_common_features)
+        
         max_evals = max(500, 2 * len(sampled_common_features[0]) + 1)
         print(f"max_evals set to: {max_evals}")
 
