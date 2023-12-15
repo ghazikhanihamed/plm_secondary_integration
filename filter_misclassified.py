@@ -293,13 +293,13 @@ def main():
     setup_wandb(api_key)
 
     results = []
-    models = ["p2s", "ankh"]
+    models = ["p2s"]  # , "ankh"]
     tasks = [
         "transporters",
-        "localization",
-        "solubility",
-        "ionchannels",
-        "mp",
+        # "localization",
+        # "solubility",
+        # "ionchannels",
+        # "mp",
     ]
     membrane_tasks = ["transporters", "ionchannels", "mp"]
 
@@ -433,7 +433,7 @@ def main():
                 learning_rate=hyperparams["learning_rate"],
                 weight_decay=hyperparams["weight_decay"],
                 gradient_accumulation_steps=hyperparams["gradient_accumulation_steps"],
-                num_train_epochs=10,
+                num_train_epochs=1,  # 10,
                 per_device_train_batch_size=1,
                 per_device_eval_batch_size=1,
                 logging_dir=f"./logs_{experiment}",
@@ -553,23 +553,42 @@ def main():
         print(f"length of common features of {task} is {len(common_features)}")
         # we print a few of the common features
         # print([features for features in common_features[:3]])
+        print(f"Length of common features for {task}: {len(common_features)}")
+        if common_features:
+            print(
+                f"Shape of a few original features: {[np.array(f).shape for f in common_features[:3]]}"
+            )
 
         # Assuming 'common_features' is your list of 2D embedding arrays
-        pooled_common_features = max_pooling(common_features)
+        # pooled_common_features = max_pooling(common_features)
+        # print(
+        #     f"Shape of a few pooled features: {[f.shape for f in pooled_common_features[:3]]}"
+        # )
 
         # Select a random subset of the common misclassified samples
-        sample_size = min(10, len(pooled_common_features))
-        sampled_common_features = random.sample(pooled_common_features, sample_size)
+        sample_size = min(10, len(common_features))
+        print(f"Sample size: {sample_size}")
+        sampled_common_features = random.sample(common_features, sample_size)
+        sampled_common_features = np.array(sampled_common_features)
+        print(f"Shape of sampled features: {sampled_common_features.shape}")
+
+        masker = shap.maskers.Independent(data=sampled_common_features)
 
         max_evals = max(500, 2 * len(sampled_common_features[0]) + 1)
+        print(f"max_evals set to: {max_evals}")
 
         # print([np.array(features).shape for features in sampled_common_features])
-
+        print(f"Initializing SHAP explainer for {task} with {model}")
         # Initialize the SHAP explainer with the final model
-        explainer = shap.Explainer(final_trainer.model, sampled_common_features)
+        explainer = shap.Explainer(final_trainer.model, masker=masker)
 
-        # Compute SHAP values
-        shap_values = explainer(sampled_common_features, max_evals=max_evals)
+        try:
+            print("Computing SHAP values...")
+            # Compute SHAP values
+            shap_values = explainer(sampled_common_features)
+            print("SHAP values computed successfully.")
+        except Exception as e:
+            print(f"Error during SHAP analysis: {e}")
 
         # Save SHAP values and visualizations
         for i, sample in enumerate(common_misclassified_samples):
@@ -583,6 +602,7 @@ def main():
             [sv.values for sv in shap_values], columns=shap_values.feature_names
         )
         shap_df.to_csv(f"./shap/shap_values_{task}.csv", index=False)
+        print(f"SHAP values and visualizations saved for {task}.")
 
 
 if __name__ == "__main__":
