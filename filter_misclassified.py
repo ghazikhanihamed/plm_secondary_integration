@@ -293,7 +293,7 @@ def main():
     setup_wandb(api_key)
 
     results = []
-    models = ["p2s"]  # , "ankh"]
+    models = ["p2s", "ankh"]
     tasks = [
         "transporters",
         # "localization",
