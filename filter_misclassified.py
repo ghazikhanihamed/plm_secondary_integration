@@ -569,7 +569,10 @@ def main():
         sample_size = min(10, len(common_features))
         print(f"Sample size: {sample_size}")
         sampled_common_features = random.sample(common_features, sample_size)
-        sampled_common_features = np.array(sampled_common_features)
+        # sampled_common_features = np.array(sampled_common_features)
+        # make list of numpy arrays
+        sampled_common_features = [np.array(features) for features in sampled_common_features]
+        print(f"type of sampled features: {type(sampled_common_features)}")
         print(f"Shape of sampled features: {sampled_common_features.shape}")
 
         masker = shap.maskers.Independent(data=sampled_common_features)
