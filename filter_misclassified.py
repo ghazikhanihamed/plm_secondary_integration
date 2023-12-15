@@ -552,18 +552,10 @@ def main():
         ]
         print(f"length of common features of {task} is {len(common_features)}")
         # we print a few of the common features
-        # print([features for features in common_features[:3]])
-        print(f"Length of common features for {task}: {len(common_features)}")
         if common_features:
             print(
                 f"Shape of a few original features: {[np.array(f).shape for f in common_features[:3]]}"
             )
-
-        # Assuming 'common_features' is your list of 2D embedding arrays
-        # pooled_common_features = max_pooling(common_features)
-        # print(
-        #     f"Shape of a few pooled features: {[f.shape for f in pooled_common_features[:3]]}"
-        # )
 
         # Select a random subset of the common misclassified samples
         sample_size = min(10, len(common_features))
@@ -573,8 +565,7 @@ def main():
         # make list of numpy arrays
         sampled_common_features = [np.array(features) for features in sampled_common_features]
         print(f"type of sampled features: {type(sampled_common_features)}")
-        print(f"Shape of sampled features: {sampled_common_features.shape}")
-
+        
         masker = shap.maskers.Independent(data=sampled_common_features)
 
         max_evals = max(500, 2 * len(sampled_common_features[0]) + 1)
