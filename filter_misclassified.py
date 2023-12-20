@@ -282,6 +282,7 @@ def max_pooling(embeddings):
     pooled_embeddings = [np.max(embedding, axis=0) for embedding in embeddings]
     return pooled_embeddings
 
+
 class VariableLengthSequenceMasker:
     def __init__(self, background_data):
         self.background_data = background_data
@@ -289,15 +290,42 @@ class VariableLengthSequenceMasker:
     def __call__(self, masks, *args):
         masked_data = []
         for mask, seq in zip(masks, self.background_data):
-            masked_seq = [seq[i] if mask[i] else np.zeros_like(seq[i]) for i in range(len(seq))]
+            masked_seq = [
+                seq[i] if mask[i] else np.zeros_like(seq[i]) for i in range(len(seq))
+            ]
             masked_data.append(np.array(masked_seq))
         return np.array(masked_data)
+
+
+def save_common_misclassified_sequences(
+    common_misclassified_samples, task, sequences_df
+):
+    if task in ["ionchannels", "transporters", "mp"]:
+        col_name = "sequence"
+    elif task == "localization":
+        col_name = "input"
+    elif task == "solubility":
+        col_name = "sequences"
+    # Extract sequences using indices from common misclassified samples
+    misclassified_sequences = []
+    for sample in common_misclassified_samples:
+        index = sample["index"]
+        sequence = sequences_df.iloc[index][col_name]
+        misclassified_sequences.append(sequence)
+
+    # Save to CSV
+    misclassified_df = pd.DataFrame(misclassified_sequences, columns=["sequence"])
+    misclassified_df.to_csv(
+        f"./misclassified_sequences/{task}_common_misclassified.csv", index=False
+    )
+    print(f"Saved common misclassified sequences for task: {task}")
 
 
 def main():
     # create a new folder to store results
     os.makedirs("shap", exist_ok=True)
     os.makedirs("confusion_matrices", exist_ok=True)
+    os.makedirs("misclassified_sequences", exist_ok=True)
 
     # Load Weights & Biases API key
     api_key = load_wandb_config()
@@ -307,10 +335,10 @@ def main():
     models = ["p2s", "ankh"]
     tasks = [
         "transporters",
-        # "localization",
-        # "solubility",
-        # "ionchannels",
-        # "mp",
+        "localization",
+        "solubility",
+        "ionchannels",
+        "mp",
     ]
     membrane_tasks = ["transporters", "ionchannels", "mp"]
 
@@ -444,7 +472,7 @@ def main():
                 learning_rate=hyperparams["learning_rate"],
                 weight_decay=hyperparams["weight_decay"],
                 gradient_accumulation_steps=hyperparams["gradient_accumulation_steps"],
-                num_train_epochs=1,  # 10,
+                num_train_epochs=10,
                 per_device_train_batch_size=1,
                 per_device_eval_batch_size=1,
                 logging_dir=f"./logs_{experiment}",
@@ -552,62 +580,70 @@ def main():
 
             print(f"Confusion matrix for task: {task}, model: {model} saved.")
 
+        # Load sequences for saving misclassified ones
+        sequences_df = load_sequences(task)
+
         # Find common misclassified samples
         common_misclassified_samples = find_common_misclassified(
             misclassified_samples_model
         )
 
-        # Extract the feature vectors of the common misclassified samples
-        common_features = [
-            test_embeddings[sample["index"]] for sample in common_misclassified_samples
-        ]
-        print(f"length of common features of {task} is {len(common_features)}")
-        # we print a few of the common features
-        if common_features:
-            print(
-                f"Shape of a few original features: {[np.array(f).shape for f in common_features[:3]]}"
-            )
-
-        # Select a random subset of the common misclassified samples
-        sample_size = min(10, len(common_features))
-        print(f"Sample size: {sample_size}")
-        sampled_common_features = random.sample(common_features, sample_size)
-        # sampled_common_features = np.array(sampled_common_features)
-        # make list of numpy arrays
-        sampled_common_features = [np.array(features) for features in sampled_common_features]
-        print(f"type of sampled features: {type(sampled_common_features)}")
-
-        masker = VariableLengthSequenceMasker(sampled_common_features)
-        
-        max_evals = max(500, 2 * len(sampled_common_features[0]) + 1)
-        print(f"max_evals set to: {max_evals}")
-
-        # print([np.array(features).shape for features in sampled_common_features])
-        print(f"Initializing SHAP explainer for {task} with {model}")
-        # Initialize the SHAP explainer with the final model
-        explainer = shap.Explainer(final_trainer.model, masker=masker)
-
-        try:
-            print("Computing SHAP values...")
-            # Compute SHAP values
-            shap_values = explainer(sampled_common_features)
-            print("SHAP values computed successfully.")
-        except Exception as e:
-            print(f"Error during SHAP analysis: {e}")
-
-        # Save SHAP values and visualizations
-        for i, sample in enumerate(common_misclassified_samples):
-            # Visualization for each sample
-            shap.plots.waterfall(shap_values[i], show=False)
-            plt.savefig(f"./shap/shap_visualization_{task}_{sample['index']}.png")
-            plt.close()
-
-        # Optionally, save the raw SHAP values to a file
-        shap_df = pd.DataFrame(
-            [sv.values for sv in shap_values], columns=shap_values.feature_names
+        # Save the common misclassified sequences
+        save_common_misclassified_sequences(
+            common_misclassified_samples, task, sequences_df
         )
-        shap_df.to_csv(f"./shap/shap_values_{task}.csv", index=False)
-        print(f"SHAP values and visualizations saved for {task}.")
+
+        # # Extract the feature vectors of the common misclassified samples
+        # common_features = [
+        #     test_embeddings[sample["index"]] for sample in common_misclassified_samples
+        # ]
+        # print(f"length of common features of {task} is {len(common_features)}")
+        # # we print a few of the common features
+        # if common_features:
+        #     print(
+        #         f"Shape of a few original features: {[np.array(f).shape for f in common_features[:3]]}"
+        #     )
+
+        # # Select a random subset of the common misclassified samples
+        # sample_size = min(10, len(common_features))
+        # print(f"Sample size: {sample_size}")
+        # sampled_common_features = random.sample(common_features, sample_size)
+        # # sampled_common_features = np.array(sampled_common_features)
+        # # make list of numpy arrays
+        # sampled_common_features = [np.array(features) for features in sampled_common_features]
+        # print(f"type of sampled features: {type(sampled_common_features)}")
+
+        # masker = VariableLengthSequenceMasker(sampled_common_features)
+
+        # max_evals = max(500, 2 * len(sampled_common_features[0]) + 1)
+        # print(f"max_evals set to: {max_evals}")
+
+        # # print([np.array(features).shape for features in sampled_common_features])
+        # print(f"Initializing SHAP explainer for {task} with {model}")
+        # # Initialize the SHAP explainer with the final model
+        # explainer = shap.Explainer(final_trainer.model, masker=masker)
+
+        # try:
+        #     print("Computing SHAP values...")
+        #     # Compute SHAP values
+        #     shap_values = explainer(sampled_common_features)
+        #     print("SHAP values computed successfully.")
+        # except Exception as e:
+        #     print(f"Error during SHAP analysis: {e}")
+
+        # # Save SHAP values and visualizations
+        # for i, sample in enumerate(common_misclassified_samples):
+        #     # Visualization for each sample
+        #     shap.plots.waterfall(shap_values[i], show=False)
+        #     plt.savefig(f"./shap/shap_visualization_{task}_{sample['index']}.png")
+        #     plt.close()
+
+        # # Optionally, save the raw SHAP values to a file
+        # shap_df = pd.DataFrame(
+        #     [sv.values for sv in shap_values], columns=shap_values.feature_names
+        # )
+        # shap_df.to_csv(f"./shap/shap_values_{task}.csv", index=False)
+        # print(f"SHAP values and visualizations saved for {task}.")
 
 
 if __name__ == "__main__":
