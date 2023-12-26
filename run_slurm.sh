@@ -2,7 +2,7 @@
 
 #SBATCH --account=h_ghazik
 #SBATCH --mem=64G
-#SBATCH -J att_trns
+#SBATCH -J fil_class
 #SBATCH -o _%x%J.out
 #SBATCH --gpus=1
 
@@ -18,7 +18,7 @@ conda activate py39
 
 nvidia-smi
 
-python transporters_attention.py
+python filter_classified.py
 
 conda deactivate
 module purge

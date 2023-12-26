@@ -22,3 +22,24 @@ Wed Dec 20 14:28:01 2023
 |=======================================================================================|
 |  No running processes found                                                           |
 +---------------------------------------------------------------------------------------+
+2023-12-22 21:33:49,402 - INFO - Available device: cuda:0
+Traceback (most recent call last):
+  File "/home/h_ghazik/plm_secondary_integration/solubility_attention.py", line 126, in <module>
+    fire.Fire(main)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/fire/core.py", line 141, in Fire
+    component_trace = _Fire(component, args, parsed_flag_args, context, name)
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/fire/core.py", line 475, in _Fire
+    component, remaining_args = _CallAndUpdateTrace(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/fire/core.py", line 691, in _CallAndUpdateTrace
+    component = fn(*varargs, **kwargs)
+  File "/home/h_ghazik/plm_secondary_integration/solubility_attention.py", line 76, in main
+    dataset = load_dataset("proteinea/solubility")
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/datasets/load.py", line 2129, in load_dataset
+    builder_instance = load_dataset_builder(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/datasets/load.py", line 1815, in load_dataset_builder
+    dataset_module = dataset_module_factory(
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/datasets/load.py", line 1512, in dataset_module_factory
+    raise e1 from None
+  File "/home/h_ghazik/.conda/envs/py39/lib/python3.9/site-packages/datasets/load.py", line 1468, in dataset_module_factory
+    raise ConnectionError(f"Couldn't reach '{path}' on the Hub ({type(e).__name__})")
+ConnectionError: Couldn't reach 'proteinea/solubility' on the Hub (SSLError)
