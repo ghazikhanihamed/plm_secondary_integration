@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 
 def csv_to_fasta(csv_file, fasta_file, seq_col):
@@ -22,9 +23,23 @@ def csv_to_fasta(csv_file, fasta_file, seq_col):
             f.write(f">{index}\n{row[seq_col]}\n")
 
 
-# Example usage
-csv_file = "path/to/your/csvfile.csv"  # Replace with your CSV file path
-fasta_file = "path/to/output.fasta"  # Replace with your desired output path
-seq_col = "sequence"  # Replace with your sequence column name
+def convert_all_csv_to_fasta(folder_path, seq_col):
+    """
+    Convert all CSV files in a folder to FASTA format.
 
-csv_to_fasta(csv_file, fasta_file, seq_col)
+    Parameters:
+    folder_path (str): Path to the folder containing CSV files.
+    seq_col (str): Column name in CSV files that contains sequences.
+    """
+    for file in os.listdir(folder_path):
+        if file.endswith(".csv"):
+            csv_file = os.path.join(folder_path, file)
+            fasta_file = os.path.join(folder_path, file.replace(".csv", ".fasta"))
+            csv_to_fasta(csv_file, fasta_file, seq_col)
+
+
+# Run the function
+folder_path = "./correctly_classified_sequences" 
+seq_col = "sequence" 
+
+convert_all_csv_to_fasta(folder_path, seq_col)
