@@ -3,31 +3,20 @@ import subprocess
 import random
 
 
-def prepend_id_prefix(file_path, prefix):
-    with open(file_path, "r") as file:
-        lines = file.readlines()
-    with open(file_path, "w") as file:
-        for line in lines:
-            if line.startswith(">"):
-                file.write(f">{prefix}{line[1:]}")
-            else:
-                file.write(line)
-
-
-def perform_msa(task, seq_file1, seq_files_group, output_path):
-    # Combine the single sequence with the group of sequences into one file
-    combined_file = f"{task}_combined_temp.fasta"
+def perform_msa(task, misclassified_seq, correctly_classified_seqs, output_path, i):
+    # Create a combined file for MSA
+    combined_file = os.path.join(output_path, f"{task}_combined_temp_{i}.fasta")
     with open(combined_file, "w") as outfile:
-        with open(seq_file1) as infile:
-            outfile.write(infile.read())
-            outfile.write("\n")
-        for seq_file in seq_files_group:
-            with open(seq_file) as infile:
-                outfile.write(infile.read())
-                outfile.write("\n")
+        # Write the misclassified sequence
+        outfile.write(f">misclassified_{i}\n{misclassified_seq}\n")
+
+        # Write the correctly classified sequences
+        for j, seq in enumerate(correctly_classified_seqs):
+            outfile.write(f">correctly_classified_{j}\n{seq}\n")
 
     # Run T-Coffee for MSA
-    command = f"t_coffee -in {combined_file} -outfile {output_path} -output fasta"
+    msa_output_file = os.path.join(output_path, f"{task}_msa_{i}.fasta")
+    command = f"t_coffee -in {combined_file} -outfile {msa_output_file} -output fasta"
     subprocess.run(command, shell=True)
 
     # Remove the temporary combined file
@@ -51,28 +40,22 @@ def run_t_coffee_for_tasks(
             correctly_classified_folder, f"{task}_common_correctly_classified.fasta"
         )
 
-        # Prepend unique prefixes to sequence IDs in each file
-        prepend_id_prefix(misclassified_file, "mis_")
-        prepend_id_prefix(correctly_classified_file, "cor_")
-
         # Read sequences from files and randomly select five from each
         misclassified_seqs = read_sequences(misclassified_file, 5)
         correctly_classified_seqs = read_sequences(correctly_classified_file, 5)
 
         for i, misclassified_seq in enumerate(misclassified_seqs):
-            output_path = os.path.join(output_folder, f"alignment_{i+1}.fasta")
-            perform_msa(task, misclassified_seq, correctly_classified_seqs, output_path)
+            perform_msa(
+                task, misclassified_seq, correctly_classified_seqs, output_folder, i
+            )
 
 
 def read_sequences(seq_file, num_seqs):
     # Read sequences from a file and return 'num_seqs' random sequences
     with open(seq_file, "r") as file:
-        sequences = [
-            line.strip()
-            for line in file.readlines()
-            if line.strip() and not line.startswith(">")
-        ]
-    return random.sample(sequences, min(num_seqs, len(sequences)))
+        sequences = [line.strip() for line in file if line.startswith(">")]
+        sequences = random.sample(sequences, min(num_seqs, len(sequences)))
+        return [seq.split("\n", 1)[1].replace("\n", "") for seq in sequences]
 
 
 # Example usage
