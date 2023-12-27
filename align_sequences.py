@@ -51,11 +51,34 @@ def run_t_coffee_for_tasks(
 
 
 def read_sequences(seq_file, num_seqs):
-    # Read sequences from a file and return 'num_seqs' random sequences
+    """
+    Read sequences from a FASTA file and return 'num_seqs' random sequences.
+
+    Parameters:
+    seq_file (str): Path to the input FASTA file.
+    num_seqs (int): Number of sequences to randomly select.
+
+    Returns:
+    list: A list of randomly selected sequences.
+    """
     with open(seq_file, "r") as file:
-        sequences = [line.strip() for line in file if line.startswith(">")]
-        sequences = random.sample(sequences, min(num_seqs, len(sequences)))
-        return [seq.split("\n", 1)[1].replace("\n", "") for seq in sequences]
+        lines = file.readlines()
+
+    sequences = []
+    current_seq = ""
+
+    for line in lines:
+        if line.startswith(">"):
+            if current_seq:
+                sequences.append(current_seq)
+                current_seq = ""
+        else:
+            current_seq += line.strip()
+
+    if current_seq:
+        sequences.append(current_seq)
+
+    return random.sample(sequences, min(num_seqs, len(sequences)))
 
 
 # Example usage
