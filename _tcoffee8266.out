@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "align_sequences.py", line 92, in <module>
+    tasks, misclassified_folder, correctly_classified_folder, output_base_folder
+  File "align_sequences.py", line 64, in run_t_coffee_for_tasks
+    perform_msa(task, misclassified_seq, correctly_classified_seqs, output_path)
+  File "align_sequences.py", line 21, in perform_msa
+    with open(seq_file1) as infile:
+OSError: [Errno 36] File name too long: 'MSVERWVFPGCSVMARFRRGLSDLGGRVRNIGDVMEHPLVELGVSYAALLSVIVVVVEYTMQLSGEYLVRLYLVDLILVIILWADYAYRAYKSGDPAGYVKKTLYEIPALVPAGLLALIEGHLAGLGLFRLVRLLRFLRILLIISRGSKFLSAIADAADKIRFYHLFGAVMLTVLYGAFAIYIVEYPDPNSSIKSVFDALWWAVVTATTVGYGDVVPATPIGKVIGIAVMLTGISALTLLIGTVSNMFQKILVGEPEPSCSPAKLAEMVSSMSEEEFEEFVRTLKNLRRLENSMK'

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "align_sequences.py", line 75, in <module>
+    tasks, misclassified_folder, correctly_classified_folder, output_base_folder
+  File "align_sequences.py", line 44, in run_t_coffee_for_tasks
+    misclassified_seqs = read_sequences(misclassified_file, 5)
+  File "align_sequences.py", line 58, in read_sequences
+    return [seq.split("\n", 1)[1].replace("\n", "") for seq in sequences]
+  File "align_sequences.py", line 58, in <listcomp>
+    return [seq.split("\n", 1)[1].replace("\n", "") for seq in sequences]
+IndexError: list index out of range

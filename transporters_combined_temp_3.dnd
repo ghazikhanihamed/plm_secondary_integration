@@ -1,0 +1,13 @@
+(
+(
+correctly_classified_0:0.13000,
+(
+correctly_classified_1:0.11667,
+correctly_classified_2:0.12333)
+:0.00500)
+:0.00500,
+correctly_classified_3:0.13250,
+(
+correctly_classified_4:0.10500,
+misclassified_3:0.10500)
+:0.01750);
