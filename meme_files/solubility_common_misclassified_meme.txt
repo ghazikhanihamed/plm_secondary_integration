@@ -1,0 +1,1340 @@
+********************************************************************************
+MEME - Motif discovery tool
+********************************************************************************
+MEME version 5.5.5 (Release date: Thu Sep 14 08:48:04 2023 +1000)
+
+For further information on how to interpret these results please access https://meme-suite.org/meme.
+To get a copy of the MEME Suite software please access https://meme-suite.org.
+
+********************************************************************************
+
+
+********************************************************************************
+REFERENCE
+********************************************************************************
+If you use this program in your research, please cite:
+
+Timothy L. Bailey and Charles Elkan,
+"Fitting a mixture model by expectation maximization to
+discover motifs in biopolymers",
+Proceedings of the Second International Conference on Intelligent Systems
+for Molecular Biology, pp. 28-36, AAAI Press, Menlo Park, California, 1994.
+********************************************************************************
+
+
+********************************************************************************
+TRAINING SET
+********************************************************************************
+PRIMARY SEQUENCES= solubility_common_misclassified.fasta
+CONTROL SEQUENCES= --none--
+ALPHABET= ACDEFGHIKLMNPQRSTVWY
+Sequence name            Weight Length  Sequence name            Weight Length  
+-------------            ------ ------  -------------            ------ ------  
+0                        1.0000    553  1                        1.0000    322  
+2                        1.0000    194  3                        1.0000    369  
+4                        1.0000    421  5                        1.0000    375  
+6                        1.0000    365  7                        1.0000    407  
+8                        1.0000    413  9                        1.0000     86  
+10                       1.0000    118  11                       1.0000    295  
+12                       1.0000    346  13                       1.0000    235  
+14                       1.0000    255  15                       1.0000     99  
+16                       1.0000    210  17                       1.0000    342  
+18                       1.0000    167  19                       1.0000    149  
+20                       1.0000    311  21                       1.0000    526  
+22                       1.0000    364  23                       1.0000     56  
+24                       1.0000    239  25                       1.0000    131  
+26                       1.0000    269  27                       1.0000    209  
+28                       1.0000    601  29                       1.0000    103  
+30                       1.0000    256  31                       1.0000    357  
+32                       1.0000    126  33                       1.0000    323  
+34                       1.0000    759  35                       1.0000    197  
+36                       1.0000    228  37                       1.0000    110  
+38                       1.0000     99  39                       1.0000    249  
+40                       1.0000    157  41                       1.0000    312  
+42                       1.0000    376  43                       1.0000    109  
+44                       1.0000    590  45                       1.0000    246  
+46                       1.0000    118  47                       1.0000    449  
+48                       1.0000    284  49                       1.0000    422  
+50                       1.0000    259  51                       1.0000    277  
+52                       1.0000    365  53                       1.0000    226  
+54                       1.0000    430  55                       1.0000    444  
+56                       1.0000    367  57                       1.0000    222  
+58                       1.0000    262  59                       1.0000    350  
+60                       1.0000    250  61                       1.0000    280  
+62                       1.0000    330  63                       1.0000    255  
+64                       1.0000    254  65                       1.0000    353  
+66                       1.0000    168  67                       1.0000    114  
+68                       1.0000    272  69                       1.0000    312  
+70                       1.0000    156  71                       1.0000    159  
+72                       1.0000    199  73                       1.0000    305  
+74                       1.0000    540  75                       1.0000    128  
+76                       1.0000     64  77                       1.0000    139  
+78                       1.0000    159  79                       1.0000    167  
+80                       1.0000    294  81                       1.0000    358  
+82                       1.0000    146  83                       1.0000    273  
+84                       1.0000    304  85                       1.0000    183  
+86                       1.0000    238  87                       1.0000    374  
+88                       1.0000    185  89                       1.0000    560  
+90                       1.0000    162  91                       1.0000    474  
+92                       1.0000    387  93                       1.0000    323  
+94                       1.0000     70  95                       1.0000    171  
+96                       1.0000     98  97                       1.0000    268  
+98                       1.0000    583  99                       1.0000    470  
+100                      1.0000    325  101                      1.0000    305  
+102                      1.0000    249  103                      1.0000    296  
+104                      1.0000    389  105                      1.0000    106  
+106                      1.0000    248  107                      1.0000    297  
+108                      1.0000    351  109                      1.0000    122  
+110                      1.0000    494  111                      1.0000    305  
+112                      1.0000     95  113                      1.0000    112  
+114                      1.0000     96  115                      1.0000    137  
+116                      1.0000    121  117                      1.0000    222  
+118                      1.0000    139  119                      1.0000    233  
+120                      1.0000     78  121                      1.0000     75  
+122                      1.0000    132  123                      1.0000    145  
+124                      1.0000    536  125                      1.0000    329  
+126                      1.0000    457  127                      1.0000    302  
+128                      1.0000    434  129                      1.0000    262  
+130                      1.0000    407  131                      1.0000    243  
+132                      1.0000    353  133                      1.0000    260  
+134                      1.0000    163  135                      1.0000    375  
+136                      1.0000    121  137                      1.0000    320  
+138                      1.0000    203  139                      1.0000    157  
+140                      1.0000    189  141                      1.0000    256  
+142                      1.0000    391  143                      1.0000    216  
+144                      1.0000    141  145                      1.0000    304  
+146                      1.0000    512  147                      1.0000    448  
+148                      1.0000     65  149                      1.0000    238  
+150                      1.0000    158  151                      1.0000    155  
+152                      1.0000    180  153                      1.0000    286  
+154                      1.0000    447  155                      1.0000    495  
+156                      1.0000    184  157                      1.0000    172  
+158                      1.0000    435  159                      1.0000    407  
+160                      1.0000     74  161                      1.0000    343  
+162                      1.0000     70  163                      1.0000    205  
+164                      1.0000    346  165                      1.0000    151  
+166                      1.0000    232  167                      1.0000    511  
+168                      1.0000     62  169                      1.0000    420  
+170                      1.0000    144  171                      1.0000    681  
+172                      1.0000    289  173                      1.0000    284  
+174                      1.0000     91  175                      1.0000    273  
+176                      1.0000    148  177                      1.0000    125  
+178                      1.0000    421  179                      1.0000    259  
+180                      1.0000    413  181                      1.0000    910  
+182                      1.0000    289  183                      1.0000    316  
+184                      1.0000    504  185                      1.0000    440  
+186                      1.0000    243  187                      1.0000    157  
+188                      1.0000    312  189                      1.0000    405  
+190                      1.0000    236  191                      1.0000    280  
+192                      1.0000    182  193                      1.0000    125  
+194                      1.0000    340  195                      1.0000    351  
+196                      1.0000    109  197                      1.0000    262  
+198                      1.0000    271  199                      1.0000    406  
+200                      1.0000    601  201                      1.0000    190  
+202                      1.0000    172  203                      1.0000    198  
+204                      1.0000    208  205                      1.0000    407  
+206                      1.0000    335  207                      1.0000    150  
+208                      1.0000    181  209                      1.0000    455  
+210                      1.0000    145  211                      1.0000     91  
+212                      1.0000    444  213                      1.0000    254  
+214                      1.0000    887  215                      1.0000    134  
+216                      1.0000    301  217                      1.0000    414  
+218                      1.0000    114  219                      1.0000    172  
+220                      1.0000    169  221                      1.0000     94  
+222                      1.0000    273  223                      1.0000    332  
+224                      1.0000    370  225                      1.0000    140  
+226                      1.0000    327  227                      1.0000    181  
+228                      1.0000    204  229                      1.0000    203  
+230                      1.0000    192  231                      1.0000    290  
+232                      1.0000    552  233                      1.0000    293  
+234                      1.0000    529  235                      1.0000    102  
+236                      1.0000    184  237                      1.0000    547  
+238                      1.0000    733  239                      1.0000    136  
+240                      1.0000    283  241                      1.0000    294  
+242                      1.0000    414  243                      1.0000    637  
+244                      1.0000    196  245                      1.0000    246  
+246                      1.0000    209  247                      1.0000    273  
+248                      1.0000    241  249                      1.0000    155  
+250                      1.0000    229  251                      1.0000    678  
+252                      1.0000    301  253                      1.0000    306  
+254                      1.0000    334  255                      1.0000    489  
+256                      1.0000    162  257                      1.0000    225  
+258                      1.0000    334  259                      1.0000    340  
+260                      1.0000    332  261                      1.0000    173  
+262                      1.0000    277  263                      1.0000    272  
+264                      1.0000    166  265                      1.0000    147  
+266                      1.0000    355  267                      1.0000    460  
+268                      1.0000    134  269                      1.0000    324  
+270                      1.0000   1248  271                      1.0000    396  
+272                      1.0000    149  273                      1.0000    422  
+274                      1.0000    180  275                      1.0000    115  
+276                      1.0000    510  277                      1.0000    339  
+278                      1.0000    423  279                      1.0000     66  
+280                      1.0000    232  281                      1.0000    149  
+282                      1.0000    165  283                      1.0000    275  
+284                      1.0000    280  285                      1.0000    101  
+286                      1.0000    712  287                      1.0000    224  
+288                      1.0000    218  289                      1.0000    466  
+290                      1.0000    313  291                      1.0000    264  
+292                      1.0000    301  293                      1.0000    197  
+********************************************************************************
+
+********************************************************************************
+COMMAND LINE SUMMARY
+********************************************************************************
+This information can also be useful in the event you wish to report a
+problem with the MEME software.
+
+command: meme solubility_common_misclassified.fasta -protein -oc . -nostatus -time 14400 -mod zoops -nmotifs 3 -minw 6 -maxw 50 -objfun classic -markov_order 0 
+
+model:  mod=         zoops    nmotifs=         3    evt=           inf
+objective function:           em=       E-value of product of p-values
+                              starts=   E-value of product of p-values
+width:  minw=            6    maxw=           50
+nsites: minsites=        2    maxsites=      294    wnsites=       0.8
+theta:  spmap=         pam    spfuzz=        120
+em:     prior=       megap    b=          419060    maxiter=        50
+        distance=    1e-05
+trim:   wg=             11    ws=              1    endgaps=       yes
+data:   n=           83812    N=             294
+sample: seed=            0    hsfrac=          0
+        searchsize=  83812    norand=         no    csites=       1000
+Dirichlet mixture priors file: prior30.plib
+Letter frequencies in dataset:
+A 0.0781 C 0.0125 D 0.0587 E 0.0707 F 0.0385 G 0.0672 H 0.033 I 0.0584 K 0.0592 
+L 0.092 M 0.0237 N 0.0416 P 0.0443 Q 0.0381 R 0.0555 S 0.0667 T 0.0525 V 0.0637 
+W 0.012 Y 0.0335 
+Background letter frequencies (from file dataset with add-one prior applied):
+A 0.0781 C 0.0125 D 0.0587 E 0.0707 F 0.0385 G 0.0672 H 0.033 I 0.0584 K 0.0592 
+L 0.092 M 0.0237 N 0.0416 P 0.0443 Q 0.0381 R 0.0555 S 0.0667 T 0.0525 V 0.0638 
+W 0.012 Y 0.0335 
+Background model order: 0
+********************************************************************************
+
+
+********************************************************************************
+MOTIF KIHHHHHH MEME-1	width =   8  sites = 144  llr = 3295  E-value = 1.6e-884
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif KIHHHHHH MEME-1 Description
+--------------------------------------------------------------------------------
+Simplified        A  :1::::::
+pos.-specific     C  ::::::::
+probability       D  ::::::::
+matrix            E  22::::::
+                  F  ::::::::
+                  G  :3::::::
+                  H  ::aaaaaa
+                  I  :3::::::
+                  K  3:::::::
+                  L  2:::::::
+                  M  2:::::::
+                  N  ::::::::
+                  P  ::::::::
+                  Q  ::::::::
+                  R  ::::::::
+                  S  11::::::
+                  T  ::::::::
+                  V  ::::::::
+                  W  ::::::::
+                  Y  ::::::::
+
+         bits    6.4         
+                 5.7         
+                 5.1   ******
+                 4.5   ******
+Relative         3.8   ******
+Entropy          3.2   ******
+(33.0 bits)      2.6   ******
+                 1.9 ********
+                 1.3 ********
+                 0.6 ********
+                 0.0 --------
+
+Multilevel           KIHHHHHH
+consensus            LG      
+sequence             EE      
+                             
+                             
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif KIHHHHHH MEME-1 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value              Site
+-------------             ----- ---------            --------
+288                           1  3.84e-12          . MGHHHHHH SHMDRSGLPD
+280                           1  3.84e-12          . MGHHHHHH SHMNEVKESL
+279                           1  3.84e-12          . MGHHHHHH SHMNSKIEEM
+261                           1  3.84e-12          . MGHHHHHH SHIEVKFRVN
+173                           1  3.84e-12          . MGHHHHHH SHMIQCVVCE
+126                           1  3.84e-12          . MGHHHHHH GGHMSLVIRM
+95                            1  3.84e-12          . MGHHHHHH SHMTWATDRL
+43                            1  3.84e-12          . MGHHHHHH SLRDLKEENR
+27                            1  3.84e-12          . MGHHHHHH SHMEARDKQV
+290                           5  1.05e-11       MGSD KIHHHHHH LNSSYVNGNT
+287                           5  1.05e-11       MGSD KIHHHHHH MRKVACANTY
+284                           5  1.05e-11       MGSD KIHHHHHH MLDEGSQRSF
+283                           5  1.05e-11       MGSD KIHHHHHH MAATNHWTRD
+282                           5  1.05e-11       MGSD KIHHHHHH MTVHDDAAAA
+274                           5  1.05e-11       MGSD KIHHHHHH MDTQPEDDDV
+271                           5  1.05e-11       MGSD KIHHHHHH MHWTIIGGGL
+269                           5  1.05e-11       MGSD KIHHHHHH MAEPRILLES
+267                           5  1.05e-11       MGSD KIHHHHHH MIVSFSLENW
+265                           5  1.05e-11       MGSD KIHHHHHH MDAKFERRFK
+263                           5  1.05e-11       MGSD KIHHHHHH MEQSVILVSD
+256                           5  1.05e-11       MGSD KIHHHHHH MKNIFTPEVT
+255                           5  1.05e-11       MGSD KIHHHHHH MVPRLDFASS
+254                           5  1.05e-11       MGSD KIHHHHHH MVTQNETYTS
+253                           5  1.05e-11       MGSD KIHHHHHH MQLFVKDLTV
+250                           5  1.05e-11       MGSD KIHHHHHH MSKHNIVKAT
+246                           5  1.05e-11       MGSD KIHHHHHH MIILDTIYFI
+245                           5  1.05e-11       MGSD KIHHHHHH MKLGHRLAHI
+244                           5  1.05e-11       MGSD KIHHHHHH MKQRVETEKF
+240                           5  1.05e-11       MGSD KIHHHHHH MQNTHLKIAE
+230                           5  1.05e-11       MGSD KIHHHHHH MDGKPLARTT
+229                           5  1.05e-11       MGSD KIHHHHHH MNEIKYAITR
+225                           5  1.05e-11       MGSD KIHHHHHH MDKMNTIGFF
+222                           5  1.05e-11       MGSD KIHHHHHH MCFRYGRGMT
+220                           5  1.05e-11       MGSD KIHHHHHH MILSAEQSFT
+217                           5  1.05e-11       MGSD KIHHHHHH MICASGARIV
+216                           5  1.05e-11       MGSD KIHHHHHH MAATSGNILD
+210                           5  1.05e-11       MGSD KIHHHHHH MTYEILDHES
+209                           5  1.05e-11       MGSD KIHHHHHH MMEMFEVNEL
+207                           5  1.05e-11       MGSD KIHHHHHH ANKAAEAEAD
+206                           5  1.05e-11       MGSD KIHHHHHH MIVTLSITFT
+204                           5  1.05e-11       MGSD KIHHHHHH MLDKTHRPTW
+203                           5  1.05e-11       MGSD KIHHHHHH IPSFAHGHGH
+196                           5  1.05e-11       MGSD KIHHHHHH MIKELNMNKA
+194                           5  1.05e-11       MGSD KIHHHHHH KVNLISMDGG
+191                           5  1.05e-11       MGSD KIHHHHHH MSVQVTPTLV
+190                           5  1.05e-11       MGSD KIHHHHHH MKIVFLECSV
+188                           5  1.05e-11       MGSD KIHHHHHH MALDKDIVGS
+186                           5  1.05e-11       MGSD KIHHHHHH MSHYHNDTAR
+71                            5  1.05e-11       MGSD KIHHHHHH MRTLNKDEHN
+286                           1  2.87e-11          . MAHHHHHH MTETFAFQAE
+276                           1  2.87e-11          . MAHHHHHH MSPSYSCSMS
+264                           1  2.87e-11          . MAHHHHHH MEEHHRGGKK
+223                           1  2.87e-11          . MAHHHHHH MNCRKRGESV
+202                           1  2.87e-11          . MAHHHHHH MRGADQVLVI
+200                           1  2.87e-11          . MAHHHHHH MENIKNEQVM
+189                           1  2.87e-11          . MAHHHHHH MLQRFSNVSE
+185                           1  2.87e-11          . MAHHHHHH VDDDDKMEEL
+153                           1  2.87e-11          . MAHHHHHH MHPGFSFNGI
+145                           1  2.87e-11          . MAHHHHHH MGTLEAQTQG
+129                           1  2.87e-11          . MAHHHHHH MPHFSLPAHE
+119                           1  2.87e-11          . MAHHHHHH MNIEKVNAVK
+107                           1  2.87e-11          . MAHHHHHH MMGSSSPTQR
+87                            1  2.87e-11          . MAHHHHHH MKTHISCSYS
+66                            1  2.87e-11          . MAHHHHHH MPDSPTSQRC
+50                            1  2.87e-11          . MAHHHHHH MWDFEQCDPN
+24                            1  2.87e-11          . MAHHHHHH MADGPPRFFT
+14                            1  2.87e-11          . MAHHHHHH MSAFLTPKIH
+8                             1  2.87e-11          . MAHHHHHH VDDDDKMAAT
+293                         190  3.49e-11 APGQVVAEGL EGHHHHHH           
+251                         671  3.49e-11 YRYDRDSITR EGHHHHHH           
+243                         630  3.49e-11 IKCTLINKNN EGHHHHHH           
+234                         522  3.49e-11 LKVYNYCVSK EGHHHHHH           
+231                         283  3.49e-11 RNAIGTVASK EGHHHHHH           
+171                         674  3.49e-11 VLVFQRKEAS EGHHHHHH           
+165                         144  3.49e-11 VEWDREIYGG EGHHHHHH           
+154                         440  3.49e-11 KERIEKGEFS EGHHHHHH           
+152                         173  3.49e-11 IKVIDNSSGD EGHHHHHH           
+142                         384  3.49e-11 QIEPPLDGDS EGHHHHHH           
+140                         182  3.49e-11 AAARAPRLRG EGHHHHHH           
+137                         313  3.49e-11 QVSIIQLEER EGHHHHHH           
+132                         346  3.49e-11 DDTTLIISII EGHHHHHH           
+101                         298  3.49e-11 QALARAAAVR EGHHHHHH           
+85                          176  3.49e-11 PKSNKSHTED EGHHHHHH           
+84                          297  3.49e-11 ALRGQEPVVK EGHHHHHH           
+78                          152  3.49e-11 TADRVTIQAA EGHHHHHH           
+73                          298  3.49e-11 LIIRESCGSK EGHHHHHH           
+65                          346  3.49e-11 KLTKNSEVAK EGHHHHHH           
+56                          360  3.49e-11 SAKSGKAIYF EGHHHHHH           
+53                          219  3.49e-11 VIFQSCGLIL EGHHHHHH           
+51                          270  3.49e-11 DVLPIKRDST EGHHHHHH           
+49                          415  3.49e-11 EVLNESINHL EGHHHHHH           
+42                          369  3.49e-11 IPANTPTDWN EGHHHHHH           
+39                          242  3.49e-11 LGHRIFICEK EGHHHHHH           
+36                          221  3.49e-11 LNEDEVNSTS EGHHHHHH           
+33                          316  3.49e-11 MRATWHKRLN EGHHHHHH           
+30                          249  3.49e-11 IQFVKSKLRR EGHHHHHH           
+21                          519  3.49e-11 AQIKALVESA EGHHHHHH           
+13                          228  3.49e-11 SGWSTFRSFD EGHHHHHH           
+291                         257  7.27e-11 LLPLQAVFKM LEHHHHHH           
+273                         415  7.27e-11 RLAGTARTSG LEHHHHHH           
+268                         127  7.27e-11 ALNYVKILFL LEHHHHHH           
+219                         165  7.27e-11 GVYIGNVVRI LEHHHHHH           
+172                         282  7.27e-11 VFFAWAQKVG LEHHHHHH           
+161                         336  7.27e-11 VFTYRGKYFI LEHHHHHH           
+159                         400  7.27e-11 GQIKAKHSGK LEHHHHHH           
+156                         177  7.27e-11 EAFKDRLKND LEHHHHHH           
+144                         134  7.27e-11 CHEGRCPLML LEHHHHHH           
+136                         114  7.27e-11 DRRTGRVITP LEHHHHHH           
+130                         400  7.27e-11 LRNAKEYKIA LEHHHHHH           
+128                         427  7.27e-11 IIKKLNIATE LEHHHHHH           
+121                          68  7.27e-11 IIVSQDDTQR LEHHHHHH           
+120                          71  7.27e-11 KGVPGLWRLL LEHHHHHH           
+117                         215  7.27e-11 YYKNEETTSK LEHHHHHH           
+112                          88  7.27e-11 QALGDYVEII LEHHHHHH           
+105                          99  7.27e-11 RPTPMRGLLI LEHHHHHH           
+104                         382  7.27e-11 KMRADNSAYR LEHHHHHH           
+102                         242  7.27e-11 SSSDSPEQTT LEHHHHHH           
+99                          463  7.27e-11 SSSVDKLAAA LEHHHHHH           
+97                          261  7.27e-11 IVALHRGYKF LEHHHHHH           
+86                          231  7.27e-11 GSGEGGTVLQ LEHHHHHH           
+82                          139  7.27e-11 NHLENQKKEV LEHHHHHH           
+81                          351  7.27e-11 TTGTLEPPKL LEHHHHHH           
+80                          287  7.27e-11 SSSVDKLAAA LEHHHHHH           
+68                          265  7.27e-11 KKAIDGLKMK LEHHHHHH           
+64                          247  7.27e-11 EGFDPRALIA LEHHHHHH           
+57                          215  7.27e-11 SDNVKPLGGD LEHHHHHH           
+47                          442  7.27e-11 TRSRLDDDGK LEHHHHHH           
+35                          190  7.27e-11 TFVIGVKVIY LEHHHHHH           
+34                          752  7.27e-11 PDSGIAWREA LEHHHHHH           
+22                          357  7.27e-11 KIYQLATQLS LEHHHHHH           
+15                           92  7.27e-11 NIHASANIYR LEHHHHHH           
+281                           3  1.49e-10         MG SSHHHHHH GGTGENLYFQ
+170                           3  1.49e-10         MG SSHHHHHH SSGRENLYFQ
+124                           3  1.49e-10         MG SSHHHHHH SSGLVPRGSH
+123                           3  1.49e-10         MG SSHHHHHH SSGRENLYFQ
+111                           3  1.49e-10         MG SSHHHHHH SSGLVPRGSH
+109                           3  1.49e-10         MG SSHHHHHH SSGLVPRGSH
+79                            3  1.49e-10         MG SSHHHHHH SSGRENLYFQ
+69                            3  1.49e-10         MG SSHHHHHH SSGLVPRGSH
+12                            3  1.49e-10         MG SSHHHHHH SSGLVPRGSH
+91                          463  1.58e-10 GHQFPGDDDD KHHHHHHH HSGD      
+277                           3  1.78e-10         MG GSHHHHHH GMASALGNLL
+106                         241  1.78e-10 KTAPEKEELR GSHHHHHH           
+89                            3  1.78e-10         MR GSHHHHHH GSMTQVAKKI
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif KIHHHHHH MEME-1 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+288                               3.8e-12  [1]_210
+280                               3.8e-12  [1]_224
+279                               3.8e-12  [1]_58
+261                               3.8e-12  [1]_165
+173                               3.8e-12  [1]_276
+126                               3.8e-12  [1]_449
+95                                3.8e-12  [1]_163
+43                                3.8e-12  [1]_101
+27                                3.8e-12  [1]_201
+290                                 1e-11  4_[1]_301
+287                                 1e-11  4_[1]_212
+284                                 1e-11  4_[1]_268
+283                                 1e-11  4_[1]_263
+282                                 1e-11  4_[1]_153
+274                                 1e-11  4_[1]_168
+271                                 1e-11  4_[1]_384
+269                                 1e-11  4_[1]_312
+267                                 1e-11  4_[1]_448
+265                                 1e-11  4_[1]_135
+263                                 1e-11  4_[1]_260
+256                                 1e-11  4_[1]_150
+255                                 1e-11  4_[1]_477
+254                                 1e-11  4_[1]_322
+253                                 1e-11  4_[1]_294
+250                                 1e-11  4_[1]_217
+246                                 1e-11  4_[1]_197
+245                                 1e-11  4_[1]_234
+244                                 1e-11  4_[1]_184
+240                                 1e-11  4_[1]_271
+230                                 1e-11  4_[1]_180
+229                                 1e-11  4_[1]_191
+225                                 1e-11  4_[1]_128
+222                                 1e-11  4_[1]_261
+220                                 1e-11  4_[1]_157
+217                                 1e-11  4_[1]_402
+216                                 1e-11  4_[1]_289
+210                                 1e-11  4_[1]_133
+209                                 1e-11  4_[1]_443
+207                                 1e-11  4_[1]_138
+206                                 1e-11  4_[1]_323
+204                                 1e-11  4_[1]_196
+203                                 1e-11  4_[1]_186
+196                                 1e-11  4_[1]_97
+194                                 1e-11  4_[1]_328
+191                                 1e-11  4_[1]_268
+190                                 1e-11  4_[1]_224
+188                                 1e-11  4_[1]_300
+186                                 1e-11  4_[1]_231
+71                                  1e-11  4_[1]_147
+286                               2.9e-11  [1]_704
+276                               2.9e-11  [1]_502
+264                               2.9e-11  [1]_158
+223                               2.9e-11  [1]_324
+202                               2.9e-11  [1]_164
+200                               2.9e-11  [1]_593
+189                               2.9e-11  [1]_397
+185                               2.9e-11  [1]_432
+153                               2.9e-11  [1]_278
+145                               2.9e-11  [1]_296
+129                               2.9e-11  [1]_254
+119                               2.9e-11  [1]_225
+107                               2.9e-11  [1]_289
+87                                2.9e-11  [1]_366
+66                                2.9e-11  [1]_160
+50                                2.9e-11  [1]_251
+24                                2.9e-11  [1]_231
+14                                2.9e-11  [1]_247
+8                                 2.9e-11  [1]_405
+293                               3.5e-11  189_[1]
+251                               3.5e-11  670_[1]
+243                               3.5e-11  629_[1]
+234                               3.5e-11  521_[1]
+231                               3.5e-11  282_[1]
+171                               3.5e-11  673_[1]
+165                               3.5e-11  143_[1]
+154                               3.5e-11  439_[1]
+152                               3.5e-11  172_[1]
+142                               3.5e-11  383_[1]
+140                               3.5e-11  181_[1]
+137                               3.5e-11  312_[1]
+132                               3.5e-11  345_[1]
+101                               3.5e-11  297_[1]
+85                                3.5e-11  175_[1]
+84                                3.5e-11  296_[1]
+78                                3.5e-11  151_[1]
+73                                3.5e-11  297_[1]
+65                                3.5e-11  345_[1]
+56                                3.5e-11  359_[1]
+53                                3.5e-11  218_[1]
+51                                3.5e-11  269_[1]
+49                                3.5e-11  414_[1]
+42                                3.5e-11  368_[1]
+39                                3.5e-11  241_[1]
+36                                3.5e-11  220_[1]
+33                                3.5e-11  315_[1]
+30                                3.5e-11  248_[1]
+21                                3.5e-11  518_[1]
+13                                3.5e-11  227_[1]
+291                               7.3e-11  256_[1]
+273                               7.3e-11  414_[1]
+268                               7.3e-11  126_[1]
+219                               7.3e-11  164_[1]
+172                               7.3e-11  281_[1]
+161                               7.3e-11  335_[1]
+159                               7.3e-11  399_[1]
+156                               7.3e-11  176_[1]
+144                               7.3e-11  133_[1]
+136                               7.3e-11  113_[1]
+130                               7.3e-11  399_[1]
+128                               7.3e-11  426_[1]
+121                               7.3e-11  67_[1]
+120                               7.3e-11  70_[1]
+117                               7.3e-11  214_[1]
+112                               7.3e-11  87_[1]
+105                               7.3e-11  98_[1]
+104                               7.3e-11  381_[1]
+102                               7.3e-11  241_[1]
+99                                7.3e-11  462_[1]
+97                                7.3e-11  260_[1]
+86                                7.3e-11  230_[1]
+82                                7.3e-11  138_[1]
+81                                7.3e-11  350_[1]
+80                                7.3e-11  286_[1]
+68                                7.3e-11  264_[1]
+64                                7.3e-11  246_[1]
+57                                7.3e-11  214_[1]
+47                                7.3e-11  441_[1]
+35                                7.3e-11  189_[1]
+34                                7.3e-11  751_[1]
+22                                7.3e-11  356_[1]
+15                                7.3e-11  91_[1]
+281                               1.5e-10  2_[1]_139
+170                               1.5e-10  2_[1]_134
+124                               1.5e-10  2_[1]_526
+123                               1.5e-10  2_[1]_135
+111                               1.5e-10  2_[1]_295
+109                               1.5e-10  2_[1]_112
+79                                1.5e-10  2_[1]_157
+69                                1.5e-10  2_[1]_302
+12                                1.5e-10  2_[1]_336
+91                                1.6e-10  462_[1]_4
+277                               1.8e-10  2_[1]_329
+106                               1.8e-10  240_[1]
+89                                1.8e-10  2_[1]_550
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif KIHHHHHH MEME-1 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF KIHHHHHH width=8 seqs=144
+288                      (    1) MGHHHHHH  1 
+280                      (    1) MGHHHHHH  1 
+279                      (    1) MGHHHHHH  1 
+261                      (    1) MGHHHHHH  1 
+173                      (    1) MGHHHHHH  1 
+126                      (    1) MGHHHHHH  1 
+95                       (    1) MGHHHHHH  1 
+43                       (    1) MGHHHHHH  1 
+27                       (    1) MGHHHHHH  1 
+290                      (    5) KIHHHHHH  1 
+287                      (    5) KIHHHHHH  1 
+284                      (    5) KIHHHHHH  1 
+283                      (    5) KIHHHHHH  1 
+282                      (    5) KIHHHHHH  1 
+274                      (    5) KIHHHHHH  1 
+271                      (    5) KIHHHHHH  1 
+269                      (    5) KIHHHHHH  1 
+267                      (    5) KIHHHHHH  1 
+265                      (    5) KIHHHHHH  1 
+263                      (    5) KIHHHHHH  1 
+256                      (    5) KIHHHHHH  1 
+255                      (    5) KIHHHHHH  1 
+254                      (    5) KIHHHHHH  1 
+253                      (    5) KIHHHHHH  1 
+250                      (    5) KIHHHHHH  1 
+246                      (    5) KIHHHHHH  1 
+245                      (    5) KIHHHHHH  1 
+244                      (    5) KIHHHHHH  1 
+240                      (    5) KIHHHHHH  1 
+230                      (    5) KIHHHHHH  1 
+229                      (    5) KIHHHHHH  1 
+225                      (    5) KIHHHHHH  1 
+222                      (    5) KIHHHHHH  1 
+220                      (    5) KIHHHHHH  1 
+217                      (    5) KIHHHHHH  1 
+216                      (    5) KIHHHHHH  1 
+210                      (    5) KIHHHHHH  1 
+209                      (    5) KIHHHHHH  1 
+207                      (    5) KIHHHHHH  1 
+206                      (    5) KIHHHHHH  1 
+204                      (    5) KIHHHHHH  1 
+203                      (    5) KIHHHHHH  1 
+196                      (    5) KIHHHHHH  1 
+194                      (    5) KIHHHHHH  1 
+191                      (    5) KIHHHHHH  1 
+190                      (    5) KIHHHHHH  1 
+188                      (    5) KIHHHHHH  1 
+186                      (    5) KIHHHHHH  1 
+71                       (    5) KIHHHHHH  1 
+286                      (    1) MAHHHHHH  1 
+276                      (    1) MAHHHHHH  1 
+264                      (    1) MAHHHHHH  1 
+223                      (    1) MAHHHHHH  1 
+202                      (    1) MAHHHHHH  1 
+200                      (    1) MAHHHHHH  1 
+189                      (    1) MAHHHHHH  1 
+185                      (    1) MAHHHHHH  1 
+153                      (    1) MAHHHHHH  1 
+145                      (    1) MAHHHHHH  1 
+129                      (    1) MAHHHHHH  1 
+119                      (    1) MAHHHHHH  1 
+107                      (    1) MAHHHHHH  1 
+87                       (    1) MAHHHHHH  1 
+66                       (    1) MAHHHHHH  1 
+50                       (    1) MAHHHHHH  1 
+24                       (    1) MAHHHHHH  1 
+14                       (    1) MAHHHHHH  1 
+8                        (    1) MAHHHHHH  1 
+293                      (  190) EGHHHHHH  1 
+251                      (  671) EGHHHHHH  1 
+243                      (  630) EGHHHHHH  1 
+234                      (  522) EGHHHHHH  1 
+231                      (  283) EGHHHHHH  1 
+171                      (  674) EGHHHHHH  1 
+165                      (  144) EGHHHHHH  1 
+154                      (  440) EGHHHHHH  1 
+152                      (  173) EGHHHHHH  1 
+142                      (  384) EGHHHHHH  1 
+140                      (  182) EGHHHHHH  1 
+137                      (  313) EGHHHHHH  1 
+132                      (  346) EGHHHHHH  1 
+101                      (  298) EGHHHHHH  1 
+85                       (  176) EGHHHHHH  1 
+84                       (  297) EGHHHHHH  1 
+78                       (  152) EGHHHHHH  1 
+73                       (  298) EGHHHHHH  1 
+65                       (  346) EGHHHHHH  1 
+56                       (  360) EGHHHHHH  1 
+53                       (  219) EGHHHHHH  1 
+51                       (  270) EGHHHHHH  1 
+49                       (  415) EGHHHHHH  1 
+42                       (  369) EGHHHHHH  1 
+39                       (  242) EGHHHHHH  1 
+36                       (  221) EGHHHHHH  1 
+33                       (  316) EGHHHHHH  1 
+30                       (  249) EGHHHHHH  1 
+21                       (  519) EGHHHHHH  1 
+13                       (  228) EGHHHHHH  1 
+291                      (  257) LEHHHHHH  1 
+273                      (  415) LEHHHHHH  1 
+268                      (  127) LEHHHHHH  1 
+219                      (  165) LEHHHHHH  1 
+172                      (  282) LEHHHHHH  1 
+161                      (  336) LEHHHHHH  1 
+159                      (  400) LEHHHHHH  1 
+156                      (  177) LEHHHHHH  1 
+144                      (  134) LEHHHHHH  1 
+136                      (  114) LEHHHHHH  1 
+130                      (  400) LEHHHHHH  1 
+128                      (  427) LEHHHHHH  1 
+121                      (   68) LEHHHHHH  1 
+120                      (   71) LEHHHHHH  1 
+117                      (  215) LEHHHHHH  1 
+112                      (   88) LEHHHHHH  1 
+105                      (   99) LEHHHHHH  1 
+104                      (  382) LEHHHHHH  1 
+102                      (  242) LEHHHHHH  1 
+99                       (  463) LEHHHHHH  1 
+97                       (  261) LEHHHHHH  1 
+86                       (  231) LEHHHHHH  1 
+82                       (  139) LEHHHHHH  1 
+81                       (  351) LEHHHHHH  1 
+80                       (  287) LEHHHHHH  1 
+68                       (  265) LEHHHHHH  1 
+64                       (  247) LEHHHHHH  1 
+57                       (  215) LEHHHHHH  1 
+47                       (  442) LEHHHHHH  1 
+35                       (  190) LEHHHHHH  1 
+34                       (  752) LEHHHHHH  1 
+22                       (  357) LEHHHHHH  1 
+15                       (   92) LEHHHHHH  1 
+281                      (    3) SSHHHHHH  1 
+170                      (    3) SSHHHHHH  1 
+124                      (    3) SSHHHHHH  1 
+123                      (    3) SSHHHHHH  1 
+111                      (    3) SSHHHHHH  1 
+109                      (    3) SSHHHHHH  1 
+79                       (    3) SSHHHHHH  1 
+69                       (    3) SSHHHHHH  1 
+12                       (    3) SSHHHHHH  1 
+91                       (  463) KHHHHHHH  1 
+277                      (    3) GSHHHHHH  1 
+106                      (  241) GSHHHHHH  1 
+89                       (    3) GSHHHHHH  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif KIHHHHHH MEME-1 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 20 w= 8 n= 81754 bayes= 11.3184 E= 1.6e-884 
+  -612   -695   -537    156   -825   -168   -600   -740    226    129    301   -563   -701   -444   -419    -10   -607   -692   -741   -724 
+    77   -514   -686    169   -839    200   -224    223   -788   -851   -760   -644   -710   -695   -807     34   -578   -689   -838   -856 
+ -1099   -913  -1029  -1141  -1043   -944    492  -1189  -1095  -1099  -1153  -1042   -962  -1048  -1039  -1070  -1056  -1153   -953  -1033 
+ -1099   -913  -1029  -1141  -1043   -944    492  -1189  -1095  -1099  -1153  -1042   -962  -1048  -1039  -1070  -1056  -1153   -953  -1033 
+ -1099   -913  -1029  -1141  -1043   -944    492  -1189  -1095  -1099  -1153  -1042   -962  -1048  -1039  -1070  -1056  -1153   -953  -1033 
+ -1099   -913  -1029  -1141  -1043   -944    492  -1189  -1095  -1099  -1153  -1042   -962  -1048  -1039  -1070  -1056  -1153   -953  -1033 
+ -1099   -913  -1029  -1141  -1043   -944    492  -1189  -1095  -1099  -1153  -1042   -962  -1048  -1039  -1070  -1056  -1153   -953  -1033 
+ -1099   -913  -1029  -1141  -1043   -944    492  -1189  -1095  -1099  -1153  -1042   -962  -1048  -1039  -1070  -1056  -1153   -953  -1033 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif KIHHHHHH MEME-1 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 20 w= 8 nsites= 144 E= 1.6e-884 
+ 0.000000  0.000000  0.000000  0.208333  0.000000  0.020833  0.000000  0.000000  0.284722  0.229167  0.194444  0.000000  0.000000  0.000000  0.000000  0.062500  0.000000  0.000000  0.000000  0.000000 
+ 0.131944  0.000000  0.000000  0.229167  0.000000  0.270833  0.006944  0.277778  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.083333  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif KIHHHHHH MEME-1 regular expression
+--------------------------------------------------------------------------------
+[KLE][IGE]HHHHHH
+--------------------------------------------------------------------------------
+
+
+
+
+Time 179.57 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF SSGLVPRGSHM MEME-2	width =  11  sites =   5  llr = 159  E-value = 4.9e-013
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif SSGLVPRGSHM MEME-2 Description
+--------------------------------------------------------------------------------
+Simplified        A  :::::::::::
+pos.-specific     C  :::::::::::
+probability       D  :::::::::::
+matrix            E  :::::::::::
+                  F  :::::::::::
+                  G  ::a::::a:::
+                  H  :::::::::a:
+                  I  :::::::::::
+                  K  :::::::::::
+                  L  :::a:::::::
+                  M  ::::::::::a
+                  N  :::::::::::
+                  P  :::::a:::::
+                  Q  :::::::::::
+                  R  ::::::a::::
+                  S  aa::::::a::
+                  T  :::::::::::
+                  V  ::::a::::::
+                  W  :::::::::::
+                  Y  :::::::::::
+
+         bits    6.4            
+                 5.7            
+                 5.1          **
+                 4.5      **  **
+Relative         3.8 *** *******
+Entropy          3.2 ***********
+(45.9 bits)      2.6 ***********
+                 1.9 ***********
+                 1.3 ***********
+                 0.6 ***********
+                 0.0 -----------
+
+Multilevel           SSGLVPRGSHM
+consensus                       
+sequence                        
+                                
+                                
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGLVPRGSHM MEME-2 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value               Site  
+-------------             ----- ---------            -----------
+124                          11  1.51e-14 MGSSHHHHHH SSGLVPRGSHM FRSRPNALSQ
+111                          11  1.51e-14 MGSSHHHHHH SSGLVPRGSHM ASMTGGEEMG
+109                          11  1.51e-14 MGSSHHHHHH SSGLVPRGSHM VAVHKVRYNV
+69                           11  1.51e-14 MGSSHHHHHH SSGLVPRGSHM KGIVLAGGSG
+12                           11  1.51e-14 MGSSHHHHHH SSGLVPRGSHM ASMTGGQQMG
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGLVPRGSHM MEME-2 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+124                               1.5e-14  10_[2]_515
+111                               1.5e-14  10_[2]_284
+109                               1.5e-14  10_[2]_101
+69                                1.5e-14  10_[2]_291
+12                                1.5e-14  10_[2]_325
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGLVPRGSHM MEME-2 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF SSGLVPRGSHM width=11 seqs=5
+124                      (   11) SSGLVPRGSHM  1 
+111                      (   11) SSGLVPRGSHM  1 
+109                      (   11) SSGLVPRGSHM  1 
+69                       (   11) SSGLVPRGSHM  1 
+12                       (   11) SSGLVPRGSHM  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGLVPRGSHM MEME-2 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 20 w= 11 n= 80872 bayes= 14.2329 E= 4.9e-013 
+  -165   -138   -333   -391   -351   -280   -360   -384   -316   -395   -306   -181   -312   -314   -318    362     39   -349   -351   -343 
+  -165   -138   -333   -391   -351   -280   -360   -384   -316   -395   -306   -181   -312   -314   -318    362     39   -349   -351   -343 
+  -212   -270   -279   -354   -429    374   -363   -448   -321   -482   -372   -217   -371   -350   -322   -239   -334   -390   -345   -396 
+  -324   -222   -484   -424   -132   -448   -384    -88   -382    320     -5   -399   -372   -298   -350   -375   -290   -141   -266   -284 
+  -135   -114   -389   -369   -258   -379   -356      7   -356   -185   -168   -350   -333   -345   -335   -310   -161    364   -357   -370 
+  -185   -258   -325   -316   -361   -320   -332   -361   -280   -338   -322   -307    430   -249   -306   -218   -241   -312   -389   -399 
+  -348   -215   -438   -445   -439   -392   -235   -399   -120   -392   -357   -297   -337   -211    402   -346   -348   -452   -270   -394 
+  -212   -270   -279   -354   -429    374   -363   -448   -321   -482   -372   -217   -371   -350   -322   -239   -334   -390   -345   -396 
+  -165   -138   -333   -391   -351   -280   -360   -384   -316   -395   -306   -181   -312   -314   -318    362     39   -349   -351   -343 
+  -370   -250   -299   -355   -238   -370    469   -430   -369   -349   -279   -119   -355    -88   -220   -273   -292   -379   -240    -94 
+  -442   -293   -532   -546   -366   -509   -502   -256   -481   -206    529   -470   -483   -461   -528   -450   -407   -309   -298   -331 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGLVPRGSHM MEME-2 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 20 w= 11 nsites= 5 E= 4.9e-013 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGLVPRGSHM MEME-2 regular expression
+--------------------------------------------------------------------------------
+SSGLVPRGSHM
+--------------------------------------------------------------------------------
+
+
+
+
+Time 322.09 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+MOTIF SSGRENLYFQGHMNP MEME-3	width =  15  sites =   3  llr = 131  E-value = 4.1e-007
+********************************************************************************
+--------------------------------------------------------------------------------
+	Motif SSGRENLYFQGHMNP MEME-3 Description
+--------------------------------------------------------------------------------
+Simplified        A  :::::::::::::::
+pos.-specific     C  :::::::::::::::
+probability       D  :::::::::::::::
+matrix            E  ::::a::::::::::
+                  F  ::::::::a::::::
+                  G  ::a:::::::a::::
+                  H  :::::::::::a:::
+                  I  :::::::::::::::
+                  K  :::::::::::::::
+                  L  ::::::a::::::::
+                  M  ::::::::::::a::
+                  N  :::::a:::::::3:
+                  P  :::::::::::::37
+                  Q  :::::::::a:::::
+                  R  :::a:::::::::::
+                  S  aa:::::::::::3:
+                  T  :::::::::::::::
+                  V  :::::::::::::::
+                  W  ::::::::::::::3
+                  Y  :::::::a:::::::
+
+         bits    6.4                
+                 5.7                
+                 5.1        *   **  
+                 4.5    * * *** ** *
+Relative         3.8 ****** ****** *
+Entropy          3.2 ************* *
+(63.2 bits)      2.6 ***************
+                 1.9 ***************
+                 1.3 ***************
+                 0.6 ***************
+                 0.0 ---------------
+
+Multilevel           SSGRENLYFQGHMNP
+consensus                         PW
+sequence                          S 
+                                    
+                                    
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGRENLYFQGHMNP MEME-3 sites sorted by position p-value
+--------------------------------------------------------------------------------
+Sequence name             Start   P-value                 Site    
+-------------             ----- ---------            ---------------
+170                          11  2.14e-20 MGSSHHHHHH SSGRENLYFQGHMNP IQSRFSSVQE
+79                           11  4.41e-20 MGSSHHHHHH SSGRENLYFQGHMPP EPVWHISAVT
+123                          11  9.96e-20 MGSSHHHHHH SSGRENLYFQGHMSW RYSILTVDGS
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGRENLYFQGHMNP MEME-3 block diagrams
+--------------------------------------------------------------------------------
+SEQUENCE NAME            POSITION P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+170                               2.1e-20  10_[3]_119
+79                                4.4e-20  10_[3]_142
+123                                 1e-19  10_[3]_120
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGRENLYFQGHMNP MEME-3 in BLOCKS format
+--------------------------------------------------------------------------------
+BL   MOTIF SSGRENLYFQGHMNP width=15 seqs=3
+170                      (   11) SSGRENLYFQGHMNP  1 
+79                       (   11) SSGRENLYFQGHMPP  1 
+123                      (   11) SSGRENLYFQGHMSW  1 
+//
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGRENLYFQGHMNP MEME-3 position-specific scoring matrix
+--------------------------------------------------------------------------------
+log-odds matrix: alength= 20 w= 15 n= 79696 bayes= 15.1447 E= 4.1e-007 
+  -119    -96   -270   -314   -301   -235   -302   -324   -249   -339   -251   -126   -262   -250   -260    347     86   -292   -307   -291 
+  -119    -96   -270   -314   -301   -235   -302   -324   -249   -339   -251   -126   -262   -250   -260    347     86   -292   -307   -291 
+  -188   -247   -256   -329   -406    371   -341   -423   -297   -457   -349   -194   -349   -325   -300   -215   -308   -365   -326   -373 
+  -333   -206   -419   -415   -425   -378   -223   -385   -103   -377   -340   -280   -325   -195    400   -330   -330   -431   -261   -378 
+  -465   -484   -211    376   -574   -496   -475   -518   -486   -590   -518   -383   -567   -325   -520   -491   -484   -523   -535   -558 
+  -333   -240   -190   -356   -339   -304   -125   -312   -274   -391   -309    436   -340   -225   -316   -150   -216   -344   -290   -316 
+  -282   -186   -445   -382    -99   -413   -347    -51   -339    312     25   -358   -338   -263   -313   -334   -250   -101   -232   -245 
+  -251   -165   -328   -326    103   -328    -76   -238   -286   -208   -182   -240   -312   -250   -274   -241   -260   -230    -12    447 
+  -325   -164   -432   -434    446   -429   -365   -216   -419   -143   -171   -379   -367   -401   -430   -307   -360   -240   -136    -26 
+  -245   -229   -318   -119   -365   -375    -55   -339   -221   -261   -147   -199   -284    441   -186   -254   -254   -322   -263   -347 
+  -188   -247   -256   -329   -406    371   -341   -423   -297   -457   -349   -194   -349   -325   -300   -215   -308   -365   -326   -373 
+  -309   -202   -241   -288   -183   -321    456   -367   -289   -293   -222    -64   -305    -34   -163   -215   -234   -319   -189    -40 
+  -423   -283   -520   -527   -344   -497   -487   -240   -463   -192    528   -456   -472   -444   -507   -436   -391   -290   -291   -321 
+  -107   -152    -79   -117   -256   -156   -118   -258    -93   -261   -190    258    233    -73   -144    160    -21   -218   -263   -214 
+  -134   -192   -266   -248   -200   -263   -246   -264   -205   -247   -223   -229    387   -180   -230   -161   -176   -227    346   -180 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGRENLYFQGHMNP MEME-3 position-specific probability matrix
+--------------------------------------------------------------------------------
+letter-probability matrix: alength= 20 w= 15 nsites= 3 E= 4.1e-007 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000 
+ 0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  1.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.333333  0.333333  0.000000  0.000000  0.333333  0.000000  0.000000  0.000000  0.000000 
+ 0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.666667  0.000000  0.000000  0.000000  0.000000  0.000000  0.333333  0.000000 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+	Motif SSGRENLYFQGHMNP MEME-3 regular expression
+--------------------------------------------------------------------------------
+SSGRENLYFQGHM[NPS][PW]
+--------------------------------------------------------------------------------
+
+
+
+
+Time 464.85 secs.
+
+********************************************************************************
+
+
+********************************************************************************
+SUMMARY OF MOTIFS
+********************************************************************************
+
+--------------------------------------------------------------------------------
+	Combined block diagrams: non-overlapping sites with p-value < 0.0001
+--------------------------------------------------------------------------------
+SEQUENCE NAME            COMBINED P-VALUE  MOTIF DIAGRAM
+-------------            ----------------  -------------
+0                                6.05e-01  553
+1                                1.35e-01  322
+2                                4.30e-01  194
+3                                5.86e-01  369
+4                                3.98e-02  318_[1(4.46e-06)]_95
+5                                9.24e-01  375
+6                                3.20e-01  365
+7                                9.19e-01  407
+8                                2.47e-07  [1(2.87e-11)]_405
+9                                8.44e-01  86
+10                               7.45e-02  118
+11                               1.81e-01  295
+12                               2.10e-16  2_[1(1.49e-10)]_[2(1.51e-14)]_325
+13                               3.78e-07  227_[1(3.49e-11)]
+14                               2.05e-11  [1(2.87e-11)]_54_[3(2.43e-06)]_13_\
+    [2(3.96e-05)]_154
+15                               4.19e-07  91_[1(7.27e-11)]
+16                               6.97e-01  210
+17                               9.25e-01  342
+18                               8.18e-01  167
+19                               9.93e-01  149
+20                               3.71e-01  311
+21                               2.76e-06  518_[1(3.49e-11)]
+22                               7.01e-07  356_[1(7.27e-11)]
+23                               5.37e-01  56
+24                               1.63e-07  [1(2.87e-11)]_231
+25                               4.15e-01  131
+26                               9.40e-01  269
+27                               1.33e-07  [1(3.84e-12)]_201
+28                               9.21e-01  601
+29                               8.16e-01  103
+30                               7.45e-07  248_[1(3.49e-11)]
+31                               7.52e-01  357
+32                               9.02e-01  126
+33                               4.94e-07  315_[1(3.49e-11)]
+34                               7.93e-07  751_[1(7.27e-11)]
+35                               6.76e-07  189_[1(7.27e-11)]
+36                               2.05e-07  220_[1(3.49e-11)]
+37                               9.21e-01  110
+38                               3.19e-01  99
+39                               1.38e-06  241_[1(3.49e-11)]
+40                               7.26e-02  157
+41                               9.69e-01  312
+42                               5.94e-07  368_[1(3.49e-11)]
+43                               8.62e-08  [1(3.84e-12)]_101
+44                               6.77e-01  590
+45                               7.04e-02  98_[2(5.14e-05)]_137
+46                               5.28e-01  118
+47                               2.90e-07  441_[1(7.27e-11)]
+48                               1.99e-01  284
+49                               6.11e-07  414_[1(3.49e-11)]
+50                               8.63e-07  [1(2.87e-11)]_251
+51                               8.22e-08  269_[1(3.49e-11)]
+52                               3.70e-01  365
+53                               3.20e-08  218_[1(3.49e-11)]
+54                               7.34e-01  430
+55                               9.31e-01  444
+56                               3.30e-08  10_[2(8.96e-05)]_338_[1(3.49e-11)]
+57                               4.65e-07  214_[1(7.27e-11)]
+58                               9.92e-01  262
+59                               4.99e-01  350
+60                               7.54e-01  250
+61                               5.58e-01  280
+62                               3.40e-01  330
+63                               2.99e-03  56_[3(1.22e-06)]_184
+64                               9.69e-08  246_[1(7.27e-11)]
+65                               1.63e-06  345_[1(3.49e-11)]
+66                               3.04e-08  [1(2.87e-11)]_160
+67                               8.05e-01  114
+68                               2.00e-06  264_[1(7.27e-11)]
+69                               1.65e-16  2_[1(1.49e-10)]_[2(1.51e-14)]_291
+70                               4.45e-01  156
+71                               6.50e-08  4_[1(1.05e-11)]_147
+72                               1.84e-01  199
+73                               6.85e-07  297_[1(3.49e-11)]
+74                               5.90e-01  540
+75                               6.55e-01  128
+76                               2.54e-01  64
+77                               6.37e-01  139
+78                               4.21e-07  151_[1(3.49e-11)]
+79                               2.39e-22  2_[1(1.49e-10)]_[3(4.41e-20)]_142
+80                               1.04e-06  286_[1(7.27e-11)]
+81                               1.14e-06  350_[1(7.27e-11)]
+82                               4.12e-07  138_[1(7.27e-11)]
+83                               1.00e+00  273
+84                               2.04e-07  296_[1(3.49e-11)]
+85                               4.88e-07  175_[1(3.49e-11)]
+86                               4.44e-07  230_[1(7.27e-11)]
+87                               1.24e-06  [1(2.87e-11)]_366
+88                               5.78e-01  185
+89                               5.98e-06  2_[1(1.78e-10)]_550
+90                               6.78e-01  162
+91                               3.73e-06  462_[1(1.58e-10)]_4
+92                               6.45e-01  387
+93                               3.95e-01  323
+94                               6.34e-01  70
+95                               7.54e-08  [1(3.84e-12)]_163
+96                               8.37e-01  98
+97                               1.41e-06  260_[1(7.27e-11)]
+98                               6.09e-01  583
+99                               7.64e-08  148_[3(8.50e-05)]_270_[1(2.13e-05)]_\
+    21_[1(7.27e-11)]
+100                              7.76e-01  325
+101                              1.77e-07  297_[1(3.49e-11)]
+102                              2.44e-07  241_[1(7.27e-11)]
+103                              6.60e-01  296
+104                              1.90e-06  381_[1(7.27e-11)]
+105                              5.63e-07  98_[1(7.27e-11)]
+106                              4.79e-06  240_[1(1.78e-10)]
+107                              1.06e-07  [1(2.87e-11)]_289
+108                              3.09e-01  351
+109                              1.44e-17  2_[1(1.49e-10)]_[2(1.51e-14)]_101
+110                              4.88e-01  494
+111                              6.93e-17  2_[1(1.49e-10)]_[2(1.51e-14)]_284
+112                              1.39e-07  87_[1(7.27e-11)]
+113                              9.67e-01  112
+114                              5.51e-01  96
+115                              7.74e-01  137
+116                              8.66e-01  121
+117                              7.67e-08  214_[1(7.27e-11)]
+118                              9.58e-01  139
+119                              6.80e-07  [1(2.87e-11)]_225
+120                              6.78e-07  70_[1(7.27e-11)]
+121                              9.11e-08  67_[1(7.27e-11)]
+122                              5.11e-01  132
+123                              1.85e-22  2_[1(1.49e-10)]_[3(9.96e-20)]_120
+124                              4.59e-16  2_[1(1.49e-10)]_[2(1.51e-14)]_353_\
+    [2(6.71e-06)]_151
+125                              5.33e-01  329
+126                              5.86e-08  [1(3.84e-12)]_449
+127                              6.50e-01  302
+128                              2.14e-06  426_[1(7.27e-11)]
+129                              6.15e-07  [1(2.87e-11)]_254
+130                              1.56e-06  399_[1(7.27e-11)]
+131                              8.27e-01  243
+132                              1.70e-06  345_[1(3.49e-11)]
+133                              1.96e-02  171_[3(2.82e-05)]_74
+134                              9.46e-01  163
+135                              8.78e-01  375
+136                              6.81e-07  113_[1(7.27e-11)]
+137                              1.17e-06  312_[1(3.49e-11)]
+138                              6.08e-01  203
+139                              5.03e-01  157
+140                              3.79e-07  181_[1(3.49e-11)]
+141                              6.67e-02  256
+142                              1.24e-07  383_[1(3.49e-11)]
+143                              4.75e-01  216
+144                              7.17e-08  133_[1(7.27e-11)]
+145                              5.30e-07  [1(2.87e-11)]_296
+146                              9.32e-01  512
+147                              2.15e-01  448
+148                              9.43e-01  65
+149                              5.25e-01  238
+150                              8.47e-01  158
+151                              9.23e-01  155
+152                              6.30e-07  172_[1(3.49e-11)]
+153                              8.04e-07  [1(2.87e-11)]_278
+154                              5.05e-07  439_[1(3.49e-11)]
+155                              2.26e-01  495
+156                              3.12e-07  176_[1(7.27e-11)]
+157                              5.29e-01  172
+158                              3.89e-01  435
+159                              3.28e-06  399_[1(7.27e-11)]
+160                              7.19e-01  74
+161                              3.41e-06  335_[1(7.27e-11)]
+162                              2.88e-01  70
+163                              6.14e-01  205
+164                              6.70e-01  346
+165                              4.66e-07  143_[1(3.49e-11)]
+166                              7.56e-01  232
+167                              6.77e-01  511
+168                              9.84e-01  62
+169                              8.88e-01  420
+170                              9.30e-24  2_[1(1.49e-10)]_[3(2.14e-20)]_119
+171                              3.19e-07  673_[1(3.49e-11)]
+172                              1.58e-06  281_[1(7.27e-11)]
+173                              2.83e-08  [1(3.84e-12)]_276
+174                              5.94e-01  91
+175                              3.66e-01  273
+176                              1.05e-01  148
+177                              9.96e-01  125
+178                              6.24e-01  421
+179                              7.38e-01  259
+180                              9.24e-01  413
+181                              6.75e-01  910
+182                              9.54e-01  289
+183                              5.52e-01  316
+184                              9.42e-01  504
+185                              1.31e-06  [1(2.87e-11)]_432
+186                              3.15e-07  4_[1(1.05e-11)]_231
+187                              9.20e-01  157
+188                              8.44e-08  4_[1(1.05e-11)]_300
+189                              1.02e-08  [1(2.87e-11)]_377_[3(9.96e-05)]_5
+190                              1.49e-08  4_[1(1.05e-11)]_224
+191                              3.95e-08  4_[1(1.05e-11)]_268
+192                              4.70e-01  182
+193                              5.98e-01  125
+194                              3.64e-07  4_[1(1.05e-11)]_328
+195                              9.25e-01  351
+196                              3.72e-09  4_[1(1.05e-11)]_97
+197                              4.80e-02  98_[1(7.52e-05)]_156
+198                              9.67e-01  271
+199                              3.86e-01  406
+200                              2.91e-07  [1(2.87e-11)]_593
+201                              9.41e-01  190
+202                              6.78e-07  [1(2.87e-11)]_164
+203                              2.98e-07  4_[1(1.05e-11)]_11_[1(4.45e-08)]_\
+    167
+204                              1.61e-07  4_[1(1.05e-11)]_196
+205                              2.24e-01  106_[3(9.20e-05)]_286
+206                              4.49e-07  4_[1(1.05e-11)]_323
+207                              2.57e-07  4_[1(1.05e-11)]_138
+208                              2.17e-01  181
+209                              9.70e-08  4_[1(1.05e-11)]_443
+210                              1.30e-07  4_[1(1.05e-11)]_133
+211                              8.41e-01  91
+212                              9.59e-01  444
+213                              2.37e-01  254
+214                              8.10e-01  887
+215                              9.07e-02  134
+216                              1.91e-08  4_[1(1.05e-11)]_289
+217                              4.37e-07  4_[1(1.05e-11)]_402
+218                              9.43e-01  114
+219                              1.61e-06  164_[1(7.27e-11)]
+220                              9.10e-08  4_[1(1.05e-11)]_157
+221                              9.92e-01  94
+222                              2.67e-07  4_[1(1.05e-11)]_261
+223                              2.99e-07  [1(2.87e-11)]_324
+224                              7.45e-01  370
+225                              7.02e-08  4_[1(1.05e-11)]_128
+226                              9.86e-01  327
+227                              9.73e-01  181
+228                              9.90e-01  204
+229                              5.12e-08  4_[1(1.05e-11)]_191
+230                              1.95e-07  4_[1(1.05e-11)]_180
+231                              5.48e-07  282_[1(3.49e-11)]
+232                              3.04e-02  269_[2(2.46e-05)]_272
+233                              1.35e-01  293
+234                              7.28e-07  521_[1(3.49e-11)]
+235                              5.06e-01  102
+236                              5.21e-01  184
+237                              2.48e-01  547
+238                              8.52e-01  733
+239                              9.54e-01  136
+240                              4.88e-08  4_[1(1.05e-11)]_271
+241                              7.54e-01  294
+242                              2.01e-01  414
+243                              5.53e-07  629_[1(3.49e-11)]
+244                              5.75e-08  4_[1(1.05e-11)]_184
+245                              1.91e-07  4_[1(1.05e-11)]_234
+246                              1.82e-07  4_[1(1.05e-11)]_197
+247                              4.02e-01  273
+248                              9.96e-01  241
+249                              8.02e-01  155
+250                              2.44e-07  4_[1(1.05e-11)]_217
+251                              9.27e-07  670_[1(3.49e-11)]
+252                              7.64e-01  301
+253                              2.03e-07  4_[1(1.05e-11)]_294
+254                              1.57e-08  4_[1(1.05e-11)]_248_[2(8.23e-05)]_\
+    63
+255                              4.23e-07  4_[1(1.05e-11)]_477
+256                              3.07e-08  4_[1(1.05e-11)]_150
+257                              6.33e-01  225
+258                              9.34e-01  334
+259                              7.59e-01  340
+260                              9.93e-01  332
+261                              6.80e-08  [1(3.84e-12)]_165
+262                              4.89e-01  277
+263                              3.06e-07  4_[1(1.05e-11)]_260
+264                              5.12e-07  [1(2.87e-11)]_158
+265                              1.07e-07  4_[1(1.05e-11)]_135
+266                              9.58e-01  355
+267                              3.33e-07  4_[1(1.05e-11)]_448
+268                              1.61e-06  126_[1(7.27e-11)]
+269                              4.69e-07  4_[1(1.05e-11)]_312
+270                              6.85e-01  1248
+271                              5.34e-08  4_[1(1.05e-11)]_384
+272                              9.99e-01  149
+273                              1.06e-06  414_[1(7.27e-11)]
+274                              1.22e-07  4_[1(1.05e-11)]_168
+275                              9.97e-01  115
+276                              2.33e-07  [1(2.87e-11)]_502
+277                              7.75e-06  2_[1(1.78e-10)]_329
+278                              3.61e-01  423
+279                              8.00e-09  [1(3.84e-12)]_58
+280                              1.21e-08  [1(3.84e-12)]_224
+281                              1.56e-09  2_[1(1.49e-10)]_[3(1.94e-06)]_124
+282                              1.83e-07  4_[1(1.05e-11)]_153
+283                              1.06e-07  4_[1(1.05e-11)]_263
+284                              4.14e-07  4_[1(1.05e-11)]_268
+285                              8.30e-01  101
+286                              1.94e-06  [1(2.87e-11)]_704
+287                              9.88e-08  4_[1(1.05e-11)]_212
+288                              3.14e-08  [1(3.84e-12)]_210
+289                              6.69e-01  466
+290                              2.78e-07  4_[1(1.05e-11)]_301
+291                              4.42e-07  256_[1(7.27e-11)]
+292                              9.52e-02  110_[3(9.96e-05)]_176
+293                              2.49e-07  189_[1(3.49e-11)]
+--------------------------------------------------------------------------------
+
+********************************************************************************
+
+
+********************************************************************************
+Stopped because requested number of motifs (3) found.
+********************************************************************************
+
+CPU: noble-meme.grid.gs.washington.edu
+
+********************************************************************************

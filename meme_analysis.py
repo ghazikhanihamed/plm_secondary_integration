@@ -28,30 +28,34 @@ def parse_meme_xml(file_path):
     return motifs
 
 # Parse the XML
-motifs_data = parse_meme_xml(file_path)
-motifs_data  # Display a sample of the parsed data for verification purposes
+# motifs_data = parse_meme_xml(file_path)
+# motifs_data  # Display a sample of the parsed data for verification purposes
 
 
 
 # ----- Separately
 
-# Path to the newly uploaded XML files
-misclassified_file_path = '/mnt/data/ionchannels_misclassified_meme.xml'
-correctly_classified_file_path = '/mnt/data/ionchannels_correctly_classified_meme.xml'
+# # Path to the newly uploaded XML files
+# misclassified_file_path = './meme_files/localization_common_misclassified_meme.xml'
+# correctly_classified_file_path = './meme_files/localization_common_correctly_classified_meme.xml'
 
-# Parsing both XML files
-misclassified_motifs = parse_meme_xml(misclassified_file_path)
-correctly_classified_motifs = parse_meme_xml(correctly_classified_file_path)
+# # Parsing both XML files
+# misclassified_motifs = parse_meme_xml(misclassified_file_path)
+# correctly_classified_motifs = parse_meme_xml(correctly_classified_file_path)
 
-# Display a sample of the parsed data from both files for verification
-misclassified_motifs, correctly_classified_motifs
+# # Display a sample of the parsed data from both files for verification
+# print('Misclassified motifs:')
+# print(misclassified_motifs)
+# print('Correctly classified motifs:')
+# print(correctly_classified_motifs)
+
 
 
 # ------- Using text output
 
 # Reading the text files containing the MEME results for both misclassified and correctly classified sequences
-misclassified_txt_path = '/mnt/data/ionchannels_common_misclassified_meme.txt'
-correctly_classified_txt_path = '/mnt/data/ionchannels_common_correctly_classified_meme.txt'
+misclassified_txt_path = './meme_files/solubility_common_misclassified_meme.txt'
+correctly_classified_txt_path = './meme_files/solubility_common_correctly_classified_meme.txt'
 
 # Function to extract motif information from the text file
 def extract_motif_info_from_txt(file_path):
@@ -72,4 +76,8 @@ def extract_motif_info_from_txt(file_path):
 misclassified_motifs_info = extract_motif_info_from_txt(misclassified_txt_path)
 correctly_classified_motifs_info = extract_motif_info_from_txt(correctly_classified_txt_path)
 
-misclassified_motifs_info, correctly_classified_motifs_info
+# Display a sample of the extracted data for verification
+print('Misclassified motifs:')
+print(misclassified_motifs_info)
+print('Correctly classified motifs:')
+print(correctly_classified_motifs_info)
