@@ -14,53 +14,81 @@ data['model'].replace({'p2s': 'TooT-PLM-P2S', 'ankh': 'Ankh'}, inplace=True)
 # Filtering data for cross-validation results only
 cv_data = data[data['data_split'] == 'cross-validation'].copy()
 
-# Setting the appropriate metric for each task
-# For 'fluorescence', use 'eval_spearmanr'
-cv_data.loc[cv_data['task'] == 'fluorescence', 'metric'] = 'eval_spearmanr'
+# Adjusting the code to create three different plots: one for MCC, one for Fluorescence, and separate ones for SSP3 and SSP8
 
-# For 'ssp', distinguish between 'ssp3' and 'ssp8' and use 'eval_accuracy'
-cv_data.loc[(cv_data['task'] == 'ssp') & (cv_data['ssp'] == 'ssp3'), 'metric'] = 'eval_accuracy'
-cv_data.loc[(cv_data['task'] == 'ssp') & (cv_data['ssp'] == 'ssp8'), 'metric'] = 'eval_accuracy'
+# Define a function for plotting
+def plot_performance(data, title, ylabel, is_ssp=False):
+    plt.figure(figsize=(12, 6))
+    x_axis = 'Task_SSP' if is_ssp else 'task'
+    
+    barplot = sns.barplot(x=x_axis, y='value', hue='model', data=data, palette='viridis', ci='sd')
 
-# For all other tasks, use 'eval_mcc'
-for task in cv_data['task'].unique():
-    if task not in ['fluorescence', 'ssp']:
-        cv_data.loc[cv_data['task'] == task, 'metric'] = 'eval_mcc'
+    # Annotating each bar with its value
+    for p in barplot.patches:
+        barplot.annotate(format(p.get_height(), '.3f'),
+                         (p.get_x() + p.get_width() / 2., p.get_height()),
+                         ha='center', va='center',
+                         xytext=(0, 10), textcoords='offset points')
 
-# # Adjust the task column for SSP tasks to include SSP type
-# cv_data.loc[cv_data['task'] == 'ssp', 'task'] = cv_data['task'] + '_' + cv_data['ssp']
+    plt.xlabel('Task', fontsize=14)
+    plt.ylabel(ylabel, fontsize=14)
+    plt.title(title, fontsize=16)
+    plt.xticks(rotation=45)
+    plt.legend(title='Model', loc='upper right')
+    plt.tight_layout()
+    plt.show()
 
-# Now filter the data based on the metric conditions specified
-filtered_data = cv_data[
-    ((cv_data['task'] == 'fluorescence') & (cv_data['metric'] == 'eval_spearmanr')) |
-    (cv_data['task'].str.contains('ssp') & (cv_data['metric'] == 'eval_accuracy')) |
-    (~cv_data['task'].str.contains('ssp|fluorescence') & (cv_data['metric'] == 'eval_mcc'))
-]
 
-# Setting up the figure for plotting
-plt.figure(figsize=(14, 8))
+# Plot for tasks with MCC metric
+mcc_data = cv_data[(~cv_data['task'].str.contains('fluorescence|ssp')) & (cv_data['metric'] == 'eval_mcc')]
+plot_performance(mcc_data, 'Performance Overview Across Tasks with MCC', 'MCC')
 
-# Creating a barplot for comparison of models across different tasks including SSP types
-sns.barplot(x='task', y='value', hue='model', data=filtered_data, palette='viridis')
+# Plot for Fluorescence with Spearman's correlation
+fluorescence_data = cv_data[(cv_data['task'] == 'fluorescence') & (cv_data['metric'] == 'eval_spearmanr')]
+plot_performance(fluorescence_data, 'Fluorescence Task Performance (Spearman\'s Correlation)', 'Spearman\'s Correlation')
 
-# Adding labels and title to the plot
-plt.xlabel('Task', fontsize=14)
-plt.ylabel('Metric Value', fontsize=14)
-plt.title('Comparative Performance Overview Across Tasks Including SSP Types', fontsize=16)
-plt.xticks(rotation=45)
-plt.legend(title='Model')
+# Separate plots for SSP3 and SSP8 with accuracy
+ssp3_data = cv_data[(cv_data['task'] == 'SSP') & (cv_data['metric'] == 'eval_accuracy') & (cv_data['ssp'] == 'ssp3')]
+ssp8_data = cv_data[(cv_data['task'] == 'SSP') & (cv_data['metric'] == 'eval_accuracy') & (cv_data['ssp'] == 'ssp8')]
 
-# Display the plot
-plt.tight_layout()
-plt.show()
+# Combine SSP3 and SSP8 data
+ssp_data = pd.concat([ssp3_data, ssp8_data])
 
-# Preparing data for the table: Aggregating metric values by model and task including SSP types
-summary_table = filtered_data.groupby(['model', 'task', 'metric'])['value'].mean().unstack().unstack()
+# Ensure 'SSP Type' column is correctly added to distinguish between SSP3 and SSP8
+ssp_data['SSP Type'] = ssp_data['ssp']
 
-# Generating the LaTeX table with the summary data
-latex_table = summary_table.to_latex(float_format="%.3f", header=True, index=True, 
-                                     caption="Comparative Performance Overview Across Tasks Including SSP Types",
-                                     label="tab:performance_overview_ssp", position="ht",
-                                     column_format='lccc', bold_rows=True)
+# Ensure 'Task_SSP' column combines task name with SSP type for clear distinction
+ssp_data['Task_SSP'] = ssp_data['task'] + ' (' + ssp_data['SSP Type'] + ')'
 
+# Now plot the combined SSP3 and SSP8 data using the adjusted plot_performance function
+plot_performance(ssp_data, 'Comparative Performance on SSP3 and SSP8 Tasks', 'Accuracy', is_ssp=True)
+
+
+# Ensure the 'value' column is numeric for aggregation
+cv_data['value'] = pd.to_numeric(cv_data['value'], errors='coerce')
+
+# Selecting the appropriate metric for each task
+cv_data['selected_metric'] = cv_data.apply(
+    lambda x: 'eval_spearmanr' if x['task'] == 'fluorescence' else (
+        'eval_accuracy' if 'ssp' in x['task'] else 'eval_mcc'), axis=1)
+
+# Update task names for SSP3 and SSP8 and format metrics correctly
+cv_data['task'] = cv_data.apply(lambda x: f"{x['task']}_ssp3" if x['ssp'] == 'ssp3' else (f"{x['task']}_ssp8" if x['ssp'] == 'ssp8' else x['task']), axis=1)
+cv_data['selected_metric'] = cv_data['selected_metric'].str.replace('eval_', '').str.upper()
+cv_data['selected_metric'] = cv_data['selected_metric'].replace({'MCC': 'MCC', 'ACCURACY': 'Accuracy', 'SPEARMANR': 'SpearmanR'})
+
+# Recalculate mean and standard deviation for each task, model, and selected metric
+grouped_data = cv_data.groupby(['task', 'model', 'selected_metric'])['value'].agg(['mean', 'std']).reset_index()
+
+# Create a performance column displaying mean ± std
+grouped_data['Performance'] = grouped_data.apply(lambda x: f"{x['mean']:.3f} ± {x['std']:.3f}", axis=1)
+
+# Pivot the table for a side-by-side comparison
+pivot_table = grouped_data.pivot_table(index=['task', 'selected_metric'], columns='model', values='Performance', aggfunc='first').reset_index()
+
+# Convert the pivot table to LaTeX format
+latex_table = pivot_table.to_latex(index=False, escape=False, column_format='llcc', float_format="%.3f")
+
+# Display the LaTeX table
 print(latex_table)
+
