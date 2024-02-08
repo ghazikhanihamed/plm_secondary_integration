@@ -162,7 +162,7 @@ for idx, metric in enumerate(key_metrics):
     highest_bar = max(subset["mean"]) + max(subset["std"])
     ax.text(
         0,
-        highest_bar + 0.05,  # Add an offset
+        highest_bar,  # Add an offset
         f"p-value: {transporters_p_values.get(metric_name, np.nan)}",
         ha="center",
         va="bottom",
@@ -170,7 +170,7 @@ for idx, metric in enumerate(key_metrics):
     )
 
     # Move the legend to the top right of the plot
-    ax.legend(title="Model", loc="upper right")
+    ax.legend(title="Model", loc="lower right")
 
     if idx == 4:  # Break the loop after placing the last plot
         break

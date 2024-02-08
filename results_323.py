@@ -170,7 +170,7 @@ for idx, metric in enumerate(key_metrics):
     )
 
     # Move the legend to the top right of the plot
-    ax.legend(title="Model", loc="upper right")
+    ax.legend(title="Model", loc="lower right")
 
     if idx == 4:  # Break the loop after placing the last plot
         break
