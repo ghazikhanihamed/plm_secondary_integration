@@ -244,7 +244,7 @@ for i, task in enumerate(task_order):
         plt.text(x, height + 0.04, f'Δ={delta:.2f}', ha="center", fontsize=12, color='red', fontweight='bold')
 
 # Customizing the plot
-plt.title("Comparative Performance Overview of Ankh and TooT-PLM-P2S")
+# plt.title("Comparative Performance Overview of Ankh and TooT-PLM-P2S")
 plt.xlabel("Task")
 plt.ylabel("Mean ± Std")
 plt.xticks(np.arange(num_tasks) * (group_width + bar_width), task_order, rotation=45)
