@@ -96,10 +96,6 @@ consolidated_results["Task"] = pd.Categorical(
 
 # more detail results:
 
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-
 # Assuming consolidated_results is prepared and loaded
 
 # Filter to include only SSP tasks and convert percentage strings to float values
@@ -125,7 +121,7 @@ for ssp_type in ['ssp3', 'ssp8']:
     )
 
     # Set plot title and labels
-    ax.set_title(f'Comparison of Models Across {ssp_type.upper()} Tasks and Datasets')
+    # ax.set_title(f'Comparison of Models Across {ssp_type.upper()} Tasks and Datasets')
     ax.set_ylabel("Accuracy (%)")
     ax.set_xlabel("Task and Dataset")
     ax.legend(title="Model", loc='upper left')
@@ -148,7 +144,7 @@ for ssp_type in ['ssp3', 'ssp8']:
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig(f"./plots/{ssp_type}_tasks_test.png", dpi=300, bbox_inches="tight")  # Save plot
-    plt.show()  # Optionally display the plot
+    # plt.show()  # Optionally display the plot
 
 
 
@@ -190,7 +186,7 @@ ax = sns.barplot(
     order=ssp_data["Task"].cat.categories
 )
 
-ax.set_title('Comparison of Models Across SSP Tasks and Datasets')
+# ax.set_title('Comparison of Models Across SSP Tasks and Datasets')
 ax.set_ylabel("Metric Value")
 ax.set_xlabel("Task")
 ax.legend(title="Model", loc="upper left")
