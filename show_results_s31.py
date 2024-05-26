@@ -132,7 +132,7 @@ consolidated_results.columns = ["Task", "Model", "Mean", "Std", "P-Value"]
 
 # Combine mean and standard deviation into one column with the format "mean ± std"
 consolidated_results["Mean ± Std"] = consolidated_results.apply(
-    lambda row: f"{row['Mean']:.3f} ± {row['Std']:.3f}", axis=1
+    lambda row: f"{row['Mean']:.4f} ± {row['Std']:.4f}", axis=1
 )
 
 # Apply the function to create a new 'Metric' column

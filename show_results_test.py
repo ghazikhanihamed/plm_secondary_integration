@@ -7,7 +7,6 @@ from settings.settings import task_order
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mtick
 
 # Load the CSV file
 file_path = "./results/combined_results.csv"
@@ -17,6 +16,10 @@ data = pd.read_csv(file_path)
 test_data = data[
     data["data_split"].isin(["test", "casp12", "casp13", "casp14", "ts115", "cb513"])
 ]
+
+sns.set_style("whitegrid")
+sns.set_context("paper", font_scale=1.4)
+sns.set_palette("colorblind")
 
 
 # Function to filter and process data for given task and metric
@@ -100,34 +103,33 @@ consolidated_results["Task"] = pd.Categorical(
 
 # Filter to include only SSP tasks and convert percentage strings to float values
 ssp_data = consolidated_results[consolidated_results["Task"].str.contains("ssp")]
-ssp_data['value'] = ssp_data['value'].replace('%', '', regex=True).astype(float) / 100.0
+ssp_data["value"] = ssp_data["value"].replace("%", "", regex=True).astype(float) / 100.0
 
 # Convert categorical data to string if necessary and create a new 'Detailed Task' column
-ssp_data['Detailed Task'] = ssp_data['Task'].astype(str) + ' ' + ssp_data['data_split']
+ssp_data["Detailed Task"] = ssp_data["Task"].astype(str) + " " + ssp_data["data_split"]
 
 # Separate plots for SSP3 and SSP8
-for ssp_type in ['ssp3', 'ssp8']:
+for ssp_type in ["ssp3", "ssp8"]:
     # Filter data for the current SSP type
-    plot_data = ssp_data[ssp_data['Task'].str.contains(ssp_type)]
+    plot_data = ssp_data[ssp_data["Task"].str.contains(ssp_type)]
 
     # Set up the plot
     plt.figure(figsize=(12, 6))
     ax = sns.barplot(
         data=plot_data,
-        x='Detailed Task',
-        y='value',
-        hue='model',
-        palette='Set2'
+        x="Detailed Task",
+        y="value",
+        hue="model",
     )
 
     # Set plot title and labels
     # ax.set_title(f'Comparison of Models Across {ssp_type.upper()} Tasks and Datasets')
     ax.set_ylabel("Accuracy (%)")
     ax.set_xlabel("Task and Dataset")
-    ax.legend(title="Model", loc='upper left')
+    ax.legend(title="Model", loc="upper left")
 
     # Set y-axis limits based on data
-    ax.set_ylim(0, plot_data['value'].max() * 1.1)
+    ax.set_ylim(0, plot_data["value"].max() * 1.1)
 
     # Annotate each bar with the numeric value
     for p in ax.patches:
@@ -138,15 +140,15 @@ for ssp_type in ['ssp3', 'ssp8']:
                 ha="center",
                 va="center",
                 xytext=(0, 9),
-                textcoords="offset points"
+                textcoords="offset points",
             )
 
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig(f"./plots/{ssp_type}_tasks_test.png", dpi=300, bbox_inches="tight")  # Save plot
+    plt.savefig(
+        f"./plots/{ssp_type}_tasks_test.png", dpi=300, bbox_inches="tight"
+    )  # Save plot
     # plt.show()  # Optionally display the plot
-
-
 
 
 #  ------------
@@ -170,10 +172,10 @@ ssp_data = consolidated_results[
 ]
 
 # Convert percentage strings to float values and handle other values already in float
-ssp_data['value'] = ssp_data['value'].replace('%', '', regex=True).astype(float) / 100.0
+ssp_data["value"] = ssp_data["value"].replace("%", "", regex=True).astype(float) / 100.0
 
 # Remove unused categories from the Task column
-ssp_data['Task'] = ssp_data['Task'].cat.remove_unused_categories()
+ssp_data["Task"] = ssp_data["Task"].cat.remove_unused_categories()
 
 # Plotting setup for SSP tasks
 plt.figure(figsize=(14, 7))
@@ -182,8 +184,7 @@ ax = sns.barplot(
     x="Task",
     y="value",
     hue="model",
-    palette="Set1",
-    order=ssp_data["Task"].cat.categories
+    order=ssp_data["Task"].cat.categories,
 )
 
 # ax.set_title('Comparison of Models Across SSP Tasks and Datasets')
@@ -192,7 +193,7 @@ ax.set_xlabel("Task")
 ax.legend(title="Model", loc="upper left")
 
 # Correctly setting y-axis limits based on the data
-ax.set_ylim(0, ssp_data['value'].max() * 1.1)
+ax.set_ylim(0, ssp_data["value"].max() * 1.1)
 
 # Annotate each bar with the numeric value
 for p in ax.patches:
@@ -227,7 +228,6 @@ ax = sns.barplot(
     x="Task",
     y="value",
     hue="model",
-    palette="Set2",
     order=non_ssp_data["Task"].cat.categories,
 )
 
