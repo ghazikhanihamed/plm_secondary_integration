@@ -185,7 +185,7 @@ plt.close()
 
 # Preparing data for LaTeX table
 mp_results["Mean ± Std"] = mp_results.apply(
-    lambda row: f"{row['mean']:.3f} ± {row['std']:.3f}", axis=1
+    lambda row: f"{row['mean']:.4f} ± {row['std']:.4f}", axis=1
 )
 mp_results["P-Value"] = mp_results["metric"].map(mp_p_values)
 
@@ -285,7 +285,7 @@ latex_code_transposed = transposed_df.to_latex(
     caption="Membrane Proteins Prediction Performance Comparison Transposed with P-Values",
     label="tab:mp_comparison_transposed_p_values",
     column_format="l" + "c" * len(key_metrics),  # One column for each metric
-    float_format="%.3f",
+    float_format="%.4f",
     escape=False,
 )
 

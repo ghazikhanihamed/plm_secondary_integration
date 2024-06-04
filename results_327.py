@@ -252,7 +252,7 @@ plt.close()
 
 # Preparing data for LaTeX table
 ssp3_results["Mean ± Std"] = ssp3_results.apply(
-    lambda row: f"{row['mean']:.3f} ± {row['std']:.3f}", axis=1
+    lambda row: f"{row['mean']:.4f} ± {row['std']:.4f}", axis=1
 )
 ssp3_results["P-Value"] = ssp3_results["metric"].map(ssp3_p_values)
 
@@ -349,7 +349,7 @@ latex_code_transposed = transposed_df.to_latex(
     caption="SSP3 Prediction Performance Comparison",
     label="tab:ssp_comparison_transposed_p_values",
     column_format="l" + "c" * len(key_metrics),  # One column for each metric
-    float_format="%.3f",
+    float_format="%.4f",
     escape=False,
 )
 
@@ -358,7 +358,7 @@ print(latex_code_transposed)
 
 # Preparing data for LaTeX table
 ssp8_results["Mean ± Std"] = ssp8_results.apply(
-    lambda row: f"{row['mean']:.3f} ± {row['std']:.3f}", axis=1
+    lambda row: f"{row['mean']:.4f} ± {row['std']:.4f}", axis=1
 )
 ssp8_results["P-Value"] = ssp8_results["metric"].map(ssp8_p_values)
 
@@ -455,7 +455,7 @@ latex_code_transposed = transposed_df.to_latex(
     caption="SSP8 Prediction Performance Comparison",
     label="tab:ssp_comparison_transposed_p_values",
     column_format="l" + "c" * len(key_metrics),  # One column for each metric
-    float_format="%.3f",
+    float_format="%.4f",
     escape=False,
 )
 
