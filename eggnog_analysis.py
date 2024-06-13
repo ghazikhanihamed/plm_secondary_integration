@@ -58,11 +58,11 @@ def plot_cog_distributions(cog_counts_correct, cog_counts_misclassified, task_na
     ax.legend()
 
     # save the plot
-    plt.savefig(
-        f"./eggNOG/{task_name}_COG_distribution.png", bbox_inches="tight", dpi=300
-    )
-    # plt.tight_layout()
-    # plt.show()
+    # plt.savefig(
+    #     f"./eggNOG/{task_name}_COG_distribution.png", bbox_inches="tight", dpi=300
+    # )
+    plt.tight_layout()
+    plt.show()
 
 
 # Apply the code for each task
